@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="pHard" Id="{799d287a-5190-452f-b408-a440d4b25fae}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM pHard
+VAR
+	DI_Device AT %I*: ARRAY[1..Max_DI_Beck] OF BOOL;
+	DO_Device AT %Q*: ARRAY[1..Max_DO_Beck] OF BOOL;
+	AI_Device AT %I*: ARRAY[1..Max_AI_Beck] OF INT;
+	AO_Device AT %Q*: ARRAY[1..Max_AO_Beck] OF INT;
+	CNT_Device AT %I*: ARRAY[1..Max_CNT_Beck] OF UDINT;
+	Borrar:BOOL;
+	
+	iPunt: WORD;
+END_VAR
+
+
+(*==============================================================
+1001= DI
+1002= DO
+1003= AI 0..10V
+1004= AI 4..20mA
+1005= AO 0..10V
+1006= AO 4..20mA
+1007= AI pt-100
+1008= CNT
+
+===================================================================*)]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*==============================================================
+1001= DI
+1002= DO
+1003= AI 0..10V
+1004= AI 4..20mA
+1005= AO 0..10V
+1006= AO 4..20mA
+1007= AI pt-100
+1008= CNT
+
+===================================================================*)(*-------------------------------------------------------------------------*)
+(*CArgar configuracion Beckhoff a la variable HArd*)
+(*-------------------------------------------------------------------------*)
+(*DI*)
+iPunt:=1;
+WHILE ipunt< Max_DI_Beck+1
+	DO
+	hard.Beck[1].DIN[iPunt]:=DI_Device[ipunt];
+	iPunt:=iPunt+1;
+END_WHILE
+(*-------------------------------------------------------------------------*)
+(*DO*)
+iPunt:=1;
+WHILE ipunt< Max_DO_Beck+1
+	DO
+	DO_Device[ipunt]:=hard.Beck[1].DOUT[iPunt];
+	iPunt:=iPunt+1;
+END_WHILE
+(*-------------------------------------------------------------------------*)
+(*AI*)
+iPunt:=1;
+WHILE ipunt< Max_AI_Beck+1
+	DO
+	hard.Beck[1].AIN[iPunt]:=AI_Device[ipunt];
+	iPunt:=iPunt+1;
+END_WHILE
+(*-------------------------------------------------------------------------*)
+(*AO*)
+Borrar:=TRUE;
+iPunt:=1;
+WHILE ipunt< Max_AO_Beck+1
+	DO
+	AO_Device[ipunt]:=REAL_TO_INT(hard.Beck[1].AOUT[iPunt]);
+	iPunt:=iPunt+1;
+END_WHILE
+
+(*-------------------------------------------------------------------------*)
+(*CNT*)
+iPunt:=1;
+WHILE ipunt< Max_CNT_Beck+1
+	DO
+	hard.Beck[1].CNT[iPunt]:=CNT_Device[ipunt];
+	iPunt:=iPunt+1;
+END_WHILE
+(*-------------------------------------------------------------------------*)
+]]></ST>
+    </Implementation>
+    <LineIds Name="pHard">
+      <LineId Id="146" Count="9" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="40" Count="17" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="58" Count="5" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="116" Count="7" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="CONSUMP_00" Id="{de008614-06f0-498d-9a55-91e09f0fa7c4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK CONSUMP_00
+VAR_INPUT
+	///General
+	InicioBarcada: BOOL;
+	///Tiempo ciclo en mseg
+	T_Cicle: DWORD;
+	///CD Barcada atual
+	Barcada: STRING(10);
+	///Contaje Flujometro 
+	H2O_CounterInput: DINT;
+	///Factor  (Pulsos/litro) 
+	H2O_FactorLts: REAL;
+	///Se esta realizando una subida de temperatura
+	KgV_Heat: BOOL;
+	///Se está manteniendo a una temperatura determinada
+	KgV_Keep: BOOL;
+	///Temperatura de setpoint 
+	KgV_T_sp: REAL;
+	///Temperatura actual
+	KgV_T_act: REAL;
+	///Estado de la bomba de circulacion. Debe estar en marcha
+	KgV_PumpRun: BOOL;
+	///Tiempo que debe estar la bomba en marcha para asegurar que la temperatura inicial es homogenea
+	KgV_PF_TmPRun: REAL;
+	///Litros totales de la barcada
+	KgV_Lit: REAL;
+	///Kilos de tejido
+	KgV_Kg_f: REAL;
+	///Corriente (A) 
+	Kwh_I_amp: REAL;
+	///Voltaje (V) 
+	Kwh_Vpp: REAL;
+	///Factors
+	PF_grCo2_kw: REAL;
+	PF_grCo2_KgV: REAL;
+	PF_grCo2_H2O: REAL;
+	PF_kWh_to_tep: REAL;
+	PF_kgV_tep: REAL;
+	PF_Agua_tep: REAL;
+END_VAR
+VAR_OUTPUT
+	///General
+	///Litros de Agua
+	///Actual
+	H2O_Lt: REAL;
+	H2O_LtxKg: REAL;
+	H2O_KgCo: REAL;
+	H2O_tep: REAL;
+	///Anterior
+	H2O_Lt_bf: REAL;
+	H2O_LtxKg_bf: REAL;
+	H2O_KgCo_bf: REAL;
+	H2O_tep_bf: REAL;
+	///kg Vapor
+	///Actual
+	KgV: REAL;
+	KgVxKg: REAL;
+	KgV_KgCo: REAL;
+	KgV_tep: REAL;
+	///Anterior
+	KgV_bf: REAL;
+	KgVxKg_bf: REAL;
+	KgV_KgCo_bf: REAL;
+	KgV_tep_bf: REAL;
+	///kW Eletricidad
+	///Actual
+	Kwh: REAL;
+	KwhxKg: REAL;
+	Kwh_KgCo: REAL;
+	Kwh_tep: REAL;
+	///Anterior
+	Kwh_bf: REAL;
+	KwhxKg_bf: REAL;
+	Kwh_KgCo_bf: REAL;
+	Kwh_tep_bf: REAL;
+	/// Codigo da Barcada anterior
+	Ult_Barcada: STRING(10);
+	Ult_Kg: REAL;
+	///Consumos Totales
+	TOTAL_KGCO2: REAL;
+	TOTAL_KGCO2_bf: REAL;
+	TOTAL_tep: REAL;
+	TOTAL_tep_bf: REAL;
+	TOTAL_KGCO2_kg: REAL;
+	TOTAL_KGCO2_kg_bf: REAL;
+	TOTAL_tep_kg: REAL;
+	TOTAL_tep_kg_bf: REAL;
+END_VAR
+VAR
+	C_Litros: Lit_H2O_00;
+	Litros: REAL;
+	C_KgVapor: KG_vapor_00;
+	C_Kwh: Kwh_00;
+	C_Tabla_00: Tabla_00;
+	TOTAL_CO2: REAL;
+	TOTAL_CO2_bf: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>> CONVERSIONES VALORES  >>>>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+
+C_Tabla_00(
+	Barcada:= 		Barcada,
+	Cons_Kwh:= 		C_Kwh.Kwh,
+	Cons_Agua:= 	C_Litros.Lts,
+	Cons_Vapor:= 	C_KgVapor.KG_vapor,
+	Reset:= 		inicioBarcada,
+	FinCiclo:= 		FALSE,
+	Kg_lote:=		KgV_Kg_f,
+	PF_grCo2_kw:= 	PF_grCo2_kw,
+	PF_grCo2_KgV:= 	PF_grCo2_KgV,
+	PF_grCo2_H2O:= 	PF_grCo2_H2O,
+	PF_kWh_to_tep:= PF_kWh_to_tep,
+	PF_kgV_tep:= 	PF_kgV_tep,
+	PF_Agua_tep:= 	PF_Agua_tep,
+	Kg_lote:=		KgV_Kg_f
+	);
+
+
+
+
+(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>> CALCUL CONSUM H2O  >>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+
+
+C_Litros(
+	FLS_counter:= 	H2O_CounterInput ,
+	FactorLts:= 	H2O_FactorLts ,
+	Reset:=			InicioBarcada ,
+	Lts=> 			Litros );
+
+(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>> CALCUL CONSUM KgVapor  >>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+
+C_KgVapor(
+	Heat:= 		KgV_Heat,
+	Keep:= 		KgV_Keep,
+	T_sp:= 		KgV_T_sp,
+	T_act:= 	KgV_T_act ,
+	PumpRun:= 	KgV_PumpRun,
+	PF_TmPRun:= KgV_PF_TmPRun,
+	Lit:= 		KgV_Lit,
+	Kg_f:= 		KgV_Kg_f,
+	Reset:=		InicioBarcada ,
+	KG_vapor=>	 );
+
+
+
+(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>> CALCUL CONSUM KWh  >>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+
+
+C_Kwh(
+	I_amp:= Kwh_I_amp,
+	Vpp:= 	Kwh_Vpp,
+	fact:= 	1,
+	Reset:= inicioBarcada,
+	TM:= 	T_Cicle ,
+	Kwh=> );
+
+
+
+
+(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>> CARGAR VALORES  >>>>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+
+
+
+(*kW Eletricidad*)
+(*Actual*)
+	Kwh			:=C_Kwh.Kwh;
+	Kwh_KgCo	:=C_Tabla_00.Kwh_KgCo_atual;
+	Kwh_tep		:=C_Tabla_00.Kwh_tep_atual;
+(*Anterior*)
+	Kwh_bf		:=C_Tabla_00.Kwh_ant;
+	Kwh_KgCo_bf	:=C_Tabla_00.Kwh_KgCo_ant;
+	Kwh_tep_bf	:=C_Tabla_00.Kwh_tep_ant;
+
+
+
+(*Litros de Agua*)
+(*Actual*)
+	H2O_Lt		:=C_Litros.Lts;
+	H2O_LtxKg	:=C_Tabla_00.H20_Lt_KG_atual;
+	H2O_KgCo	:=C_Tabla_00.H20_KgCo_atual;
+	H2O_tep		:=C_Tabla_00.H20_tep_atual;
+(*Anterior*)
+	H2O_Lt_bf	:=C_Tabla_00.H20_Lt_ant;
+	H2O_LtxKg_bf:= C_Tabla_00.H20_Lt_kg_ant;
+	H2O_KgCo_bf	:=C_Tabla_00.H20_KgCo_ant;
+	H2O_tep_bf	:=C_Tabla_00.H20_tep_ant;
+
+(*kg Vapor*)
+(*Actual*)
+	KgV  		:=C_Tabla_00.kgV_atual;
+	KgVxKg 		:=C_Tabla_00.kgV_kg_atual;
+	KgV_KgCo	:=C_Tabla_00.kgV_KgCo_atual;
+	KgV_tep		:=C_Tabla_00.kgV_tep_atual;
+(*Anterior*)
+	KgV_bf		:=C_Tabla_00.kgV_ant;
+	KgVxKg_bf	:=C_Tabla_00.kgV_Kg_ant;
+	KgV_KgCo_bf	:=C_Tabla_00.kgV_KgCo_ant;
+	KgV_tep_bf	:=C_Tabla_00.kgV_tep_ant;
+
+(*kW Eletricidad*)
+(*Actual*)
+	Kwh			:=C_Tabla_00.Kwh_atual;
+	KwhxKg		:=C_Tabla_00.Kwh_Kg_atual;
+	Kwh_KgCo	:=C_Tabla_00.Kwh_KgCo_atual;
+	Kwh_tep		:=C_Tabla_00.Kwh_tep_atual;
+(*Anterior*)
+	Kwh_bf		:=C_Tabla_00.Kwh_ant;
+	Kwhxkg_bf	:=C_Tabla_00.Kwh_Kg_ant;
+	Kwh_KgCo_bf	:=C_Tabla_00.Kwh_KgCo_ant;
+	Kwh_tep_bf	:=C_Tabla_00.Kwh_tep_ant;
+
+
+(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>> VALORES TOTALES   >>>>>>>>>>>>>>>>>>>>>>>>>*)
+(*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*)
+
+
+(*TOTAL CO2*)
+TOTAL_CO2:= H2O_KgCo + KgV_KgCo + Kwh_KgCo;
+TOTAL_KGCO2:= TOTAL_CO2;
+IF KgV_Kg_f>0 THEN
+	TOTAL_KGCO2_kg:=TOTAL_CO2/KgV_Kg_f;
+ELSE
+	TOTAL_KGCO2_kg:=0;
+END_IF
+
+
+(*TOTAL CO2 ANTERIRO*)
+TOTAL_CO2_bf:= H2O_KgCo_bf + KgV_KgCo_bf + Kwh_KgCo_bf;
+TOTAL_KGCO2_bf:= TOTAL_CO2_BF;
+IF C_tabla_00.Kg_lote_ant>0 THEN
+	TOTAL_KGCO2_kg_bf:=TOTAL_CO2_bf/C_tabla_00.Kg_lote_ant;
+ELSE
+	TOTAL_KGCO2_kg_bf:=0;
+END_IF
+
+(*TOTAL TEP*)
+TOTAL_TEP:= H2O_tep + KgV_tep + Kwh_tep;
+
+
+
+(*TOTAL TEP ANTERIRO*)
+TOTAL_TEP_BF:=  H2O_tep_bf + KgV_tep_bf + Kwh_tep_bf;
+
+
+
+
+
+
+
+
+
+(* Codigo da Barcada anterior*)
+Ult_Barcada	:=C_Tabla_00.BARCADA_ANT;
+Ult_Kg	:=C_Tabla_00.Kg_lote_ant;]]></ST>
+    </Implementation>
+    <LineIds Name="CONSUMP_00">
+      <LineId Id="3" Count="165" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

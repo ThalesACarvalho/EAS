@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="dutValve" Id="{cc557c84-5fbc-4957-bcba-094c178641d9}">
+    <Declaration><![CDATA[TYPE dutValve :
+STRUCT
+	
+xOpen: BOOL;		// Salida activa vávlula
+xFCo: BOOL;			// In FC NO
+xFCc: BOOL;			// IN FC NC
+xFailFCo: BOOL;		// Out fallo FC NO
+xFailFCc: BOOL;		// Out fallo FC NC
+xFailFC: BOOL;		// Out fallo FC
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

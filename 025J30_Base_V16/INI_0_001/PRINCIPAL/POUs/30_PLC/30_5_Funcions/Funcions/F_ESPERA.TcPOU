@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_ESPERA" Id="{e2dac170-9b05-4107-aedb-c64a6af9bfb5}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_ESPERA
+VAR_INPUT
+	Func:E_funcio;
+	
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	///Parametros
+	wP_Time: WORD;
+	wP_Turns: WORD;
+	///Fin Funcion
+	xFiFunc: BOOL;
+	
+	/// Time left to finish the circulation
+	dwTimeLeft: DWORD;
+	srActvCirc: SR;
+	tTiempoPas: TMP_P;
+	tFiFunc: TP;
+	ctNumPas: CTU;
+	///Variables 
+	EsperaPasajes: BOOL;
+	EsperaTiempo: BOOL;
+	/// Pause the function temporary	
+	xPause: BOOL;
+	/// Rope pass
+	xRopePass: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+xActv:= Func.Actv_Funcio;
+
+wP_Time:= Func.ParamFunc[1];
+wP_Turns:= Func.ParamFunc[2];
+
+
+(*Activa funcio 6 Espera*)
+
+(*Definir Pausa*)
+xPause:= 	Mc._00_GENERAL.p407_Pause.xPul OR
+			mc._09_CPUMP.b450_CircPump.xNo_Ok;
+				
+(********** Inicia la funcion *************)
+
+srActvCirc(SET1:= xActv AND NOT xFiFunc, RESET:= xFiFunc OR NOT  xActv, Q1=> );
+
+(* Verifica si es por tiempo o passajes *)
+IF wP_Time >0 THEN
+	EsperaPasajes := FALSE;
+	EsperaTiempo := TRUE;
+ELSE
+	EsperaPasajes := TRUE;
+	EsperaTiempo := FALSE;
+END_IF
+
+(* Executa por tiempo *)
+tTiempoPas( 
+	xIN:= srActvCirc.Q1 AND EsperaTiempo, 
+	xPausa:= xPause, 
+	dwSegons:= INT_TO_WORD(wP_Time*60), 
+	 );
+	
+dwTimeLeft := WORD_TO_DWORD(wP_Time*60)-(tTiempoPas.dwTsegons);
+
+(* Executa por pasajes *)
+ctNumPas(
+	CU:= srActvCirc.Q1 AND EsperaPasajes AND xRopePass AND NOT xPause, 
+	RESET:=NOT xActv, 
+	PV:= INT_TO_WORD(wP_Turns+1), 
+	Q=> , 
+	CV=> );
+
+(****************** Finaliza la funcion ******************)
+tFiFunc(IN:= tTiempoPas.xQ OR ctNumPas.Q, PT:= T#1S, Q=>, ET=> );	
+	
+xFiFunc:=tFiFunc.Q;	
+				
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_ESPERA">
+      <LineId Id="48" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="99" Count="2" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="5" Count="3" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="52" Count="30" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="_00_GENERAL" Id="{9b113e1a-23b3-4f91-9e9a-4e27b9745e37}">
+    <Declaration><![CDATA[TYPE _00_GENERAL :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	p400_PMAn: dutPul;
+	p401_PAuto: dutPul;
+	p402_StopAlarm: dutPul;
+	p403_ContProg: dutPul;
+	p404_Alarm: dutpul;
+	p405_Horn: dutpul;
+	p406_McHot: dutpul;
+	p407_Pause: dutPul;
+	p408_CallOpr: dutpul;
+	p409_Sample: dutpul;
+	p410_EndCicle: dutpul;
+	p411_FailPump: dutpul;
+	///+++++++++++++++++++++++++++++++++++++++
+	///READINGS
+	///+++++++++++++++++++++++++++++++++++++++
+	xAlarmActv: BOOL;
+	xMcHot: BOOL;
+	xMcPaused: BOOL;
+	rLitBBatch: REAL;
+	///+++++++++++++++++++++++++++++++++++++++
+	///CONFIG
+	///+++++++++++++++++++++++++++++++++++++++
+	iPFTempAlta: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

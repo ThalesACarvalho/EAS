@@ -1,0 +1,33 @@
+[Resource IDs]
+Device=2
+DataPoint=1245
+Network=3
+Font=12
+Mask=15091
+Text=37
+Bitmap=2
+[Config]
+Type=CM211
+RemoteType=<none>
+FWBelow152=0
+FWVersion=230
+Version=2910
+UnicodeResource=0
+[Connection]
+Slot=<7934A8C0>
+Network=ETHERNET
+NetworkPara=192.168.52.121
+Node=N100
+[Resource Offset]
+Bitmap=1000000
+Text=2000000
+DataPoint=3000000
+Mask=4000000
+Driver=5000000
+Device=6000000
+Font=7000000
+System=8000000
+Diary=9000000
+LogIDTable=10000000
+Menu=11000000
+Event=12000000

@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Lit_H2O_00" Id="{10e1ee11-caba-4729-ad72-9f9f1921cbcc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Lit_H2O_00
+VAR_INPUT
+	///Contaje Flujometro) 
+	FLS_counter: DINT;
+	///Factor flujometro (Pulsos/litro) 
+	FactorLts: REAL;
+	///Reset de los calculos
+	Reset: BOOL;
+END_VAR
+VAR_OUTPUT
+	///consumo de Agua (Litros)
+	Lts: REAL;
+END_VAR
+VAR
+	A: REAL;
+	INICIO: BOOL;
+	///Valor Acumulado
+	VAL_ACUM: REAL;
+	///Valor Actual 
+	VAL_ACT: REAL;
+	PAUSE: BOOL;
+	///Valor Inicial Litros
+	Lts_Ini: REAL;
+	///Valor Litros 1
+	Lts_1: REAL;
+	///Valor Litros 2
+	Lts_2: REAL;
+END_VAR
+VAR RETAIN
+	///Valor Total
+	VAL_TOT: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*///// INICIALIZACIÓN ////////*)
+
+A:= A+1;
+
+(* CARGAR VALOR ACUMULADO EN ARRANQUE *)
+IF NOT(INICIO)
+	THEN
+		VAL_ACUM:= VAL_TOT;
+		INICIO:= TRUE;
+END_IF
+
+
+(* RESET*)
+IF RESET
+	THEN
+	VAL_ACUM := 0 ;
+	VAL_ACT  := 0 ;
+	VAL_TOT  := 0 ;
+	Lts_1    := 0 ;
+
+END_IF
+
+
+(*///// CALCULO ////////*)
+IF FactorLts = 0 THEN
+	FactorLts := 100;
+END_IF
+
+
+IF RESET THEN
+	Lts_Ini := DINT_TO_REAL(FLS_counter);
+END_IF
+
+
+Lts_1 := (DINT_TO_REAL(FLS_counter)-Lts_Ini)/FactorLts;
+
+
+VAL_TOT:= Lts_1+VAL_ACUM;
+Lts:=VAL_TOT;]]></ST>
+    </Implementation>
+    <LineIds Name="Lit_H2O_00">
+      <LineId Id="3" Count="37" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

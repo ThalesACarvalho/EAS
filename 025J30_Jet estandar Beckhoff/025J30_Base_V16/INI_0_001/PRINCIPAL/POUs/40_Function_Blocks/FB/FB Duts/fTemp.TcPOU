@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fTemp" Id="{5849953f-bdb4-4f35-9702-6e3af3710252}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fTemp
+VAR_INPUT
+	iAnalog:INT;
+END_VAR
+VAR_OUTPUT	
+	rValue:REAL;
+END_VAR
+
+VAR
+	A: INT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+A:= A+1;
+(*Conversion UF a temperatura ºC*)
+rValue :=INT_TO_REAL(iAnalog)/10.0;
+]]></ST>
+    </Implementation>
+    <LineIds Name="fTemp">
+      <LineId Id="15" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="28" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

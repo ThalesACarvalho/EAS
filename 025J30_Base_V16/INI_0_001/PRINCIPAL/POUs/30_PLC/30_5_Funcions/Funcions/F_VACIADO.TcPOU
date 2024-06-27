@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_VACIADO" Id="{bceeb4df-7a76-4893-9e76-be17ca38060d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_VACIADO
+VAR_INPUT
+	Func:E_funcio;
+END_VAR
+
+VAR
+	/// Enable the function
+	xActv: BOOL;
+	// End Function
+	xFiFunc: BOOL;
+	
+	/// Pause the function temporary	
+	xPause: BOOL;
+	/// Stop Pump for drain
+	xStopPump: BOOL;
+	/// Drain Valve per pump
+	xDrainValvePump: BOOL;
+	/// Drain Valve per gravity
+	xDrainValveGrv: BOOL;
+	/// Close the Cutting Valve (V 42)
+	xCloseCuttingV: BOOL;
+	/// Did'nt finish the draining in the maximum time
+	xMaxTimeDraining: BOOL;
+	/// Enable when the machine is pressurized, in this case won't be possible to fill the tank from machine.
+	xAlarmTempBloqValves: BOOL;
+	
+
+	/// Funcions 
+	srActivDrain: SR;
+	tIniciaVaciado: TON;
+	tVaciado: TMP_P;
+	tFiFunc: TP;
+	tMaxDrain: Ton;
+	///Variables 
+	SegOK: BOOL;
+	srActvDrain: SR;
+	xResetCuentalitrosExt: BOOL;
+	z_DrainValvePump: BOOL;
+	z_DrainValveGrv: BOOL;
+	z_CloseCuttingV: BOOL;
+	z_xActvVent: BOOL;
+	xA_TempoMaximoVaciado: BOOL;
+	xA_TempBloqValves: BOOL;
+	a: INT;
+	AAA: REAL;
+	D: TMP_P;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[a:= a +1;
+
+
+(*ACTIVA FUNCIÓN*)
+xActv:=func.Actv_Funcio;
+
+
+(*Condiciones iniciales*)
+(********** Seguridads *************)
+SegOk := MC._03_PRESS.xOKVent AND NOT MC._01_SEG.xBloqValv;
+(********** Inicia la funcion *************)
+
+srActivDrain(	SET1:=xActv AND SegOK ,
+ 
+				RESET:= xFiFunc OR NOT xActv OR xPause OR NOT(SegOK), 
+				Q1=> );
+
+tIniciaVaciado(IN:=srActivDrain.Q1, PT:= T#1S, Q=> , ET=> );
+
+(*********** Tiempos vaciado ***************)
+
+tVaciado(
+	xIN:= (srActivDrain.Q1 AND NOT mc._06_LEVEL.s031_Min.xPul), 
+	xPausa:= FALSE, 
+	dwSegons:= INT_TO_DWORD(Mc._05_DRAIN.iPFTimeDrenado), 
+	xQ=> , 
+	dwTsegons=> , 
+	rTsegons=> );
+
+(************* Activa salidas *****************)
+
+(* Vaciado Gravedad*)
+xDrainValveGrv:= SegOk AND srActivDrain.Q1 ;
+xStopPump:= xDrainValveGrv; 	
+
+(*out para reset cuentalitros externo*)
+ xResetCuentalitrosExt:=xDrainValveGrv;
+	
+
+(****************** Finaliza la funcion ******************)
+tFiFunc(IN:=tIniciaVaciado.Q AND tVaciado.xQ , PT:=T#2S  );
+xFiFunc:=tFiFunc.Q;
+
+
+(******************** Alarmas *********************** *)
+(*Tiempo Maximo*)
+tMaxDrain(IN:= srActivDrain.Q1, PT:= INT_TO_TIME(Mc._05_DRAIN.iPFMaxTimeDrain*1000) );
+xMaxTimeDraining:= tMaxDrain.Q; 
+
+xAlarmTempBloqValves := mc._01_SEG.xBloqValv AND xActv;
+
+
+(*ACTIVAR SALIDA*)
+// Vaciado con Bomba
+z_DrainValvePump := xDrainValvePump AND NOT Mc._01_SEG.xBloqValv AND Mc._03_PRESS.xOKVent;
+// Vaciado por gravidad
+z_DrainValveGrv := xDrainValveGrv AND NOT Mc._01_SEG.xBloqValv AND Mc._03_PRESS.xOKVent;
+// Cerrar intercepta bomba
+z_CloseCuttingV := xCloseCuttingV AND NOT Mc._01_SEG.xBloqValv AND Mc._03_PRESS.xOKVent;
+(*Activa vent*)
+z_xActvVent := xActv AND NOT(Mc._01_SEG.xBloqValv);
+
+
+(* Alarmas *)
+// Tiempo Maximo Vaciado
+xA_TempoMaximoVaciado := xMaxTimeDraining;
+// Temperatura Bloq. Valves
+// **** FALTA FINALIZAR CONFIG PRESS ****  
+xA_TempBloqValves := xActv AND NOT(Mc._03_PRESS.xOKVent);
+ 
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_VACIADO">
+      <LineId Id="196" Count="1" />
+      <LineId Id="3" Count="1" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="367" Count="0" />
+      <LineId Id="310" Count="0" />
+      <LineId Id="111" Count="5" />
+      <LineId Id="250" Count="0" />
+      <LineId Id="117" Count="2" />
+      <LineId Id="415" Count="1" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="513" Count="0" />
+      <LineId Id="515" Count="5" />
+      <LineId Id="514" Count="0" />
+      <LineId Id="126" Count="21" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="20" Count="17" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

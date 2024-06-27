@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="id" Id="{1226a603-978d-49d4-80c5-8b0dc7f310a3}">
+    <Declaration><![CDATA[TYPE id : (*Id: Idicate the position of element*)
+	
+(*==============================================================
+1001= DI
+1002= DO
+1003= AI 0..10V
+1004= AI 4..20mA
+1005= AO 0..10V
+1006= AO 4..20mA
+1007= AI pt-100
+
+
+===================================================================*)
+STRUCT
+	T:WORD; 	(*Type*)
+	N:WORD; 	(*Node*)
+	Sn:WORD; 	(*Subnode*)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fCaudal" Id="{57be61f8-3af6-4b0b-bf9c-06095aa90b5b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fCaudal
+VAR_INPUT
+	///Posicion del contador
+	iCnt: UDINT;
+	///Reset Contador
+	xReset: BOOL;
+	///PF Frecuencia maxima caudalimetro Hz
+	iPFFrec: INT;
+	///PF Caudal a la freq maxima lit/min
+	iPFFlowMax: INT;
+	///PF Tiempo para el calculo de lcaudal
+	iPFTmClcFlow: TIME;
+END_VAR
+VAR_OUTPUT
+	///Acumulado litros
+	rLit: REAL;
+	///Valor instantaneo Caudal
+	rFlow: REAL;
+END_VAR
+VAR
+	iCnt_acu: UDINT;
+	iPulsos: UDINT;
+	iprueba: UDINT;
+	imax: UDINT;
+	imanual: UDINT;
+	xresetMan: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+//Reset 
+IF xReset OR xresetMan
+ THEN
+	iCnt_acu:=iCnt;
+END_IF
+iPulsos :=iCnt-iCnt_acu;
+
+iprueba:= imax - imanual;
+
+//Calculo Litros -----------------------------------------
+//asegurar que el divisor tiene valor
+IF iPFFrec=0 THEN
+	iPFFrec:=1000;
+END_IF
+
+rLit:= (UDINT_TO_REAL(iPulsos)*iPFFlowMax)/(iPFFrec*60);
+
+
+
+//Calculo Caudal    FALTA]]></ST>
+    </Implementation>
+    <LineIds Name="fCaudal">
+      <LineId Id="3" Count="2" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="6" Count="15" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

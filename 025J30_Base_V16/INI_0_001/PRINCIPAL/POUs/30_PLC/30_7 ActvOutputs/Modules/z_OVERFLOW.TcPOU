@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="z_OVERFLOW" Id="{f62553af-7074-4de8-b8bf-590cad3bfc8f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM z_OVERFLOW
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+
+
+(*v025 Ev. Rebosadero*)
+MC._07_OVERFLOW.v025_Valv.xOpen:= F_LAVADO_CONT.z_xOverflow;
+							
+(*V004 Ev. Agua lavado continuo*)
+MC._07_OVERFLOW.v004_WaterInlet.xOpen:= F_LAVADO_CONT.z_xLavadoCont;]]></ST>
+    </Implementation>
+    <LineIds Name="z_OVERFLOW">
+      <LineId Id="3" Count="3" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

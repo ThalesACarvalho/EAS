@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Kwh_00" Id="{83bf46d5-994f-44f1-aa27-3ae3ae4d9b30}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Kwh_00
+VAR_INPUT
+	///Corriente (A) 
+	I_amp: REAL;
+	///Voltaje (V) 
+	Vpp: REAL;
+	///Factor - reserva :=1
+	fact: REAL := 1;
+	///Reset de los calculos
+	Reset: BOOL;
+	///Tiempo ciclo en mseg
+	TM: DWORD;
+END_VAR
+VAR_OUTPUT
+	///consumo de Kwh
+	Kwh: REAL;
+END_VAR
+VAR
+	INICIO: BOOL;
+	///Valor Acumulado
+	VAL_ACUM: REAL;
+	///Valor Actual 
+	VAL_ACT: REAL;
+	PAUSE: BOOL;
+	inte: INTEGRAL;
+	res_i: BOOL;
+	overflow_i: BOOL;
+	VAL_INTERGR: REAL;
+	Kw_1: REAL;
+	Potencia: REAL;
+END_VAR
+VAR RETAIN
+	///Valor Total
+	VAL_TOT: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*///// INICIALIZACIÓN ////////*)
+
+(* CARGAR VALOR ACUMULADO EN ARRANQUE *)
+IF NOT(INICIO)
+	THEN
+		VAL_ACUM:= VAL_TOT;
+		INICIO:= TRUE;
+END_IF
+
+
+(* RESET*)
+IF RESET
+	THEN
+	VAL_ACUM := 0 ;
+	VAL_ACT  := 0 ;
+	VAL_TOT  := 0 ;
+END_IF
+
+
+
+(*///// CALCULO ////////*)
+
+Potencia:= I_amp*Vpp*1.732*fact/1000;
+
+
+
+inte(
+	IN:= Potencia ,
+	TM:= TM,
+	RESET:=Reset ,
+	OUT=> VAL_INTERGR,
+	OVERFLOW=> overflow_i);
+
+
+Kw_1:= VAL_INTERGR/3600;
+
+
+
+
+
+(*///// CARGAR LA SALIDA ////////*)
+
+VAL_ACT:= Kw_1 ;
+
+VAL_TOT:= VAL_ACT+ VAL_ACUM ;
+Kwh:= VAL_TOT;]]></ST>
+    </Implementation>
+    <LineIds Name="Kwh_00">
+      <LineId Id="3" Count="44" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

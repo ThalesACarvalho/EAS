@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_PRESURIZAR" Id="{e51a0d5c-960d-4f96-8cce-d1733018d4d5}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_PRESURIZAR
+VAR_INPUT
+	Func:E_funcio;
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	///Fin Funcion
+	xFinFunc: BOOL;
+	
+	xA_VACIADO: BOOL;
+	xA_PRESURIZA: BOOL;
+	z_xPresuriza: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*Activa funcio *)
+xActv:= func.Actv_Funcio;
+
+(*FIN FUNCION*)
+				xFinFunc	:=	xActv AND F_DESPRESURIZA.xDESPRESURIZA;
+
+(*ACTIVA SALIDAS*)
+z_xPresuriza:= xActv  ;
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_PRESURIZAR">
+      <LineId Id="3" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="4" Count="2" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

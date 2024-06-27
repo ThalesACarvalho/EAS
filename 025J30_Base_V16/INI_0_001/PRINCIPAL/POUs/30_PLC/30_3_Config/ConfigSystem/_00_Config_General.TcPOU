@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_00_Config_General" Id="{08067d0e-11d1-425b-a03a-b97c0c671301}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _00_Config_General
+VAR
+	ActvHorn: fBHorn;
+	TestSirena: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+(*-------------------------------------------------------------------------------------------------------*)
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*Pulsadores auto man*)
+ATL.PE.xPulAuto := mc._00_GENERAL.p401_PAuto.xPul;
+ATL.PE.xPulMan := Mc._00_GENERAL.p400_PMAn.xPul;
+Mc._00_GENERAL.p400_PMAn.xPil:= aTL.PE.xMan;
+MC._00_GENERAL.p401_PAuto.xPil:= ATL.PE.xAuto; 
+ 
+(*-------------------------------------------------------------------------------------------------------*)
+(*Gestion Alarmes*)
+ActvHorn(
+	axAlarm:= ATL.PE.axAlarm, 
+	axHorn:= ATL.PE.axHorn, 
+	xStopHorn:= ATL.PE_COM.xStopAlarm OR Mc._00_GENERAL.p402_StopAlarm.xPul, 
+	);
+
+Mc._00_GENERAL.xAlarmActv:= ActvHorn.xAlarmActv;
+TestSirena := ActvHorn.xHornActv;
+
+(*Maquina Caliente*)
+Mc._00_GENERAL.xMcHot:= (Mc._02_TEMP.rMacTemperature>Mc._00_GENERAL.iPFTempAlta);
+
+(*Maquina Pausada*)
+Mc._00_GENERAL.xMcPaused:= Mc._00_GENERAL.p407_Pause.xPul;]]></ST>
+    </Implementation>
+    <LineIds Name="_00_Config_General">
+      <LineId Id="3" Count="1" />
+      <LineId Id="8" Count="19" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

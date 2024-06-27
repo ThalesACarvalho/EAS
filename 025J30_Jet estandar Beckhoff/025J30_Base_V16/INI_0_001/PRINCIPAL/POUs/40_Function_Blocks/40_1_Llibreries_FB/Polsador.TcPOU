@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Polsador" Id="{57e842f2-4bf4-4224-bfe8-638a32a2f72d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Polsador
+VAR_INPUT
+	Pols:BOOL;
+	Reset:BOOL;
+END_VAR
+VAR_OUTPUT
+	Q:BOOL;
+END_VAR
+VAR
+	Estat:BOOL;
+	Activa:BOOL;
+	Desactiva:BOOL;
+	rsEstat:RS;
+	Flanc:R_Trig;
+	rsEstat2:rs;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+Flanc(CLK:=Pols,Q=>Activa);
+rsEstat(SET:= (Activa AND NOT Estat), RESET1:= (Activa AND Estat) OR Reset, Q1=>Estat);
+Q:=Estat;
+]]></ST>
+    </Implementation>
+    <LineIds Name="Polsador">
+      <LineId Id="17" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

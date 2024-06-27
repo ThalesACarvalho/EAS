@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<TcLicenseInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2011/11/TcLicenseInfo">
+	<TargetInfo>
+		<TcTargetDesc>
+			<TargetType>CX9020-B000-CE</TargetType>
+			<TargetVersion>
+				<Version>3</Version>
+				<Revision>1</Revision>
+				<Build>4024</Build>
+			</TargetVersion>
+			<TargetFeatures>
+				<NetId>5.110.215.48.1.1</NetId>
+			</TargetFeatures>
+			<Hardware>
+				<Model>CX9020-B000</Model>
+				<SerialNo>000sbkgy</SerialNo>
+				<CPUVersion>3.1</CPUVersion>
+				<Date>18.5.22</Date>
+				<CPUArchitecture>5</CPUArchitecture>
+			</Hardware>
+			<OsImage>
+				<ImageDevice>CX9020</ImageDevice>
+				<ImageVersion>6.08p</ImageVersion>
+				<ImageLevel>HPS</ImageLevel>
+				<OsName>Windows CE</OsName>
+				<OsVersion>7.0</OsVersion>
+			</OsImage>
+		</TcTargetDesc>
+	</TargetInfo>
+	<LicenseInfo>
+		<SystemId Level="30" SerialNo="000sbkgy" MacAddress="0001056ed730">{0A8BCE5E-C56D-68EE-223D-53F16C5F5E34}</SystemId>
+		<PurchaseOrder><![CDATA[00775341]]></PurchaseOrder>
+		<IssueTime>2022-11-11T07:15:00</IssueTime>
+		<License>
+			<LicenseId>{66689887-CCBD-452C-AC9A-039D997C6E66}</LicenseId>
+			<Name>TC3 PLC</Name>
+			<OrderNo>TC1200</OrderNo>
+		</License>
+		<License ManuallyAdded="true">
+			<LicenseId>{6952449D-F68C-49A2-ADE4-8639D85B33A4}</LicenseId>
+			<Name>TC3 Modbus-TCP</Name>
+			<OrderNo>TF6250</OrderNo>
+		</License>
+	</LicenseInfo>
+</TcLicenseInfo>

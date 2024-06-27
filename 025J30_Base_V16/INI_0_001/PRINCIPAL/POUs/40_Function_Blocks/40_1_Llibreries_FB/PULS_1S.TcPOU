@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="PULS_1S" Id="{19ea2cee-b869-4927-88e8-a6e83cc81e94}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PULS_1S
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	Q: BOOL;
+END_VAR
+VAR
+	PULSO : BLINK;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[PULSO(ENABLE:= TRUE, TIMELOW:= T#1S, TIMEHIGH:= T#1S, OUT=> Q);
+]]></ST>
+    </Implementation>
+    <LineIds Name="PULS_1S">
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

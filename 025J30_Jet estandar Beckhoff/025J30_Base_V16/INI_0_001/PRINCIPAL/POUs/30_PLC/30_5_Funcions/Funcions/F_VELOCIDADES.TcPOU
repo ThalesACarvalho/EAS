@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_VELOCIDADES" Id="{26e5b4cd-1fa4-47e9-ac1e-20319444c7ee}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_VELOCIDADES
+VAR_INPUT
+	Func:E_Funcio;
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	///Parametros
+	wP_SP_SpeedPumpC: WORD;
+	wP_SP_Speed: WORD;
+	wP_SP_T_Pass: WORD;
+	///Fin Funcion
+	xFinFunc: BOOL;
+	tFinFuncion: Ton;
+	a: INT;
+	rOutAnalogSpeedPumpC: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+a:=a+1;
+
+(*Activa funcio *)
+xActv:= func.Actv_Funcio;
+
+wP_SP_SpeedPumpC:= func.ParamFunc[1];
+wP_SP_Speed:= func.ParamFunc[2];
+wP_SP_T_Pass:= func.ParamFunc[3];
+
+(*
+IF xActv
+	THEN
+	(*Torniquets*)
+	IF wP_SP_Speed>0 THEN
+		Mc.WINCH.iSP_Speed:=WORD_TO_INT(wP_SP_Speed);
+	END_IF
+
+	IF wP_SP_T_Pass>0 THEN
+		Mc.WINCH.iSP_T_Pass:=WORD_TO_INT(wP_SP_T_Pass);
+	END_IF
+	*)
+
+(*Bomba*)
+IF wP_SP_SpeedPumpC >0 THEN
+		mc._08_CIRC.rSP_SpeedPumpC:=  Canvi_Escala(
+													In:= wP_SP_SpeedPumpC, 
+													In_Min:= Mc._09_CPUMP.iPF_AnaMin_UF, 
+													In_Max:= Mc._09_CPUMP.iPF_AnaMax_UF, 
+													Out_Min:= 0, 
+													Out_Max:= 100);
+END_IF
+	
+		
+(*Fin funcio *)
+tFinFuncion(IN:=xActv , PT:=T#5S);
+xFinFunc:= tFinFuncion.Q;
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_VELOCIDADES">
+      <LineId Id="3" Count="3" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="96" Count="1" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="7" Count="10" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="18" Count="7" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="32" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

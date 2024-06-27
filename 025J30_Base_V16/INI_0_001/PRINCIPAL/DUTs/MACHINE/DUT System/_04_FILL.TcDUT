@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="_04_FILL" Id="{b9cca936-f594-4a81-9a27-803dec130e38}">
+    <Declaration><![CDATA[TYPE _04_FILL :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	v001_Cool: dutValve;
+	v002_Hot: dutValve;
+	v003_Hard: dutValve;
+	v004_ContW: dutValve;
+	v005_Salt: dutValve;
+	v006_InterMc: dutValve;
+	v007_InterCW: dutValve;
+	v008_InterMod: dutValve;
+	v009_RetSer: dutValve;
+	s010_Flowm: FCnt;
+	s011_FillTemp: dutAin;
+	s012_FlowmSalt: FCnt;
+	
+	/// Lectura del contador 
+	iCnt: UDINT;
+	/// Lectura del conta litros 
+	rCntLitr: REAL;
+	///Lectura de litros de maquina
+	rLitMc: REAL;
+	/// Temperatura Llenado      
+	rFillTemp: REAL;
+	fCaudalimetro: fCAUDAL;
+	///PF Frecuencia maxima caudalimetro
+	iPFFrec: INT := 60;
+	///PF Caudal a la freq maxima
+	iPFFlowMax: INT := 100;
+	///PF Tiempo para el calculo de lcaudal
+	iPFTmClcFlow: TIME := TIME#2S0MS;
+	/// PF Maximo tiempo Llenado
+	IPFMaxFillTime:WORD:=600;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

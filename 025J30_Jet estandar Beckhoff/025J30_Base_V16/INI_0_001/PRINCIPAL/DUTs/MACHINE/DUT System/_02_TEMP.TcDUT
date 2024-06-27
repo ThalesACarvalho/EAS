@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="_02_TEMP" Id="{dd6027e3-2ea0-4b08-9a90-772f508f0f2d}">
+    <Declaration><![CDATA[TYPE _02_TEMP :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	v060_Aper: dutAOut;
+	v061_Steam: dutValve;
+	v062_Cool: dutValve;
+	v063_RetCon: dutValve;
+	v064_RecW: dutValve;
+	s065_Reg: ftemp;
+	s066_Mc: ftemp;
+	s067_RetCon: ftemp;
+	v068_Purge: dutValve;
+	v069_AperCool: dutAout;
+	/// Temperatura Maquina 
+	rMacTemperature: REAL;
+	///Temperatura  Impuesta
+	rTempImp: REAL;
+	///Señal para abrir retorno de condensados
+	xRetCond: BOOL;
+	/// PT100 Failure 
+	xPT100Failure: BOOL;
+	xMaxDifTemp: BOOL;
+	///Gradiente por defecto
+	iPFDefauldGrad: INT := 0;
+	///Tiempo de bomba en m,archa para iniciar termorreg
+	iPFTimeOfPumpToRun: INT := 60;
+	///Grados para integracion
+	iPFGradIntegra: INT := 2;
+	///Grados para forzar calentamiento
+	iPFGradForzCal: INT := 4;
+	///Tiempo de seguridad para conmutacion vapor-frio
+	iPFTmpComutac: INT := 30;
+	///Grados para conmutacion en Mantenimiento
+	iPFGradComutac: INT := 5;
+	///PID_ Banda proporcional
+	iPFPID_P: INT;
+	///PID_ I= Parte integral
+	iPFPID_I: INT;
+	///PID_ D= Parte Derivada
+	iPFPID_D: INT;
+	///Temprearatura por debajo no se calienta
+	iPFTempMinCool: INT := 45;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

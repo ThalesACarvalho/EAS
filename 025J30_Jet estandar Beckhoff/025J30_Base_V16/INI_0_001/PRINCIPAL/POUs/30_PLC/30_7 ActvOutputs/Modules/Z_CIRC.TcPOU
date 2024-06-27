@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="Z_CIRC" Id="{3ae77c83-523f-48c1-a6aa-a4978d7e8d00}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Z_CIRC
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+
+(*v042 Ev. Intercepta Salida Bomba*)
+
+MC._08_CIRC.v042_OutPump.xOpen:= F_VACIADO.z_CloseCuttingV;
+
+(*v044 Ev. Spray*)
+MC._08_CIRC.v044_Spray.xOpen:= F_DUCHAS.Z_Spray;
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="Z_CIRC">
+      <LineId Id="3" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

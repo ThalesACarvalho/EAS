@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fB_Intro_TK" Id="{db951951-6a8a-43d7-8916-799a72a44278}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fB_Intro_TK
+VAR_INPUT
+	///Enable the function
+	xActvIntro: BOOL;
+	/// Dosing curve
+	dwCurve: DWORD;
+	/// Duration Time
+	dwTime: DWORD;
+	/// Tank Level
+	rLevel: REAL;
+	/// Tank Minimun Level
+	xLevelMin: BOOL;
+	/// Initial condicions
+	xIniCond: BOOL;
+	/// Pause the function
+	xPause: BOOL;
+END_VAR
+VAR_OUTPUT
+	/// End of the introduction
+	xFiIntro: BOOL;
+	/// Teoric Quantity of the introduction (%)
+	rQTeoric: REAL;
+	/// Real Quantity of the introduction (%)
+	rQreal: REAL;
+	/// Prepare an Introduction
+	xPrepareIntro: BOOL;
+	/// Introduct dosing (slow)
+	xDosIntro: BOOL;
+	/// Introduct transfering (fast)
+	xTransferIntro: BOOL;
+END_VAR
+VAR
+	IniciarIntro: BOOL;
+	TEmpoInici: TMP_P;
+	calculQt: CHARCURVE;
+	rampatems: RAMP_REAL;
+	tempsreal: REAL;
+	Tempsensegons: REAL;
+	IntroduccioDosificada: BOOL;
+	IntroduccioDirecte: BOOL;
+	TempsEnPercentatge: REAL;
+	TaulaCurva: ARRAY[0..10] OF point;
+	RampaTempsInt: INT;
+	QteoricaINT: INT;
+	ERROR: BYTE;
+	entradaRampa: REAL;
+	NivellInicial: REAL;
+	TempsNivellinim: TMP_P;
+	FiIntroDosificada: BOOL;
+	TempsNivellinimDir: TMP_P;
+	FiDirecte: BOOL;
+	srFiIntro: SR;
+	A: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Inicia Intro
+TEmpoInici(xIN:=xActvIntro AND xIniCond , dwSegons:=2 , xQ=>IniciarIntro , dwTsegons=> );
+
+// Verifica si es introducion directa o dosificada
+IF dwTime > 0
+	THEN
+		IntroduccioDosificada := TRUE;
+		IntroduccioDirecte := FALSE;
+	ELSE
+		IntroduccioDosificada := FALSE;
+		IntroduccioDirecte := TRUE;
+END_IF
+
+// Calculos del tiempo
+Tempsensegons := DWORD_TO_REAL(dwTime*60);
+
+IF IniciarIntro
+	THEN
+		EntradaRampa := Tempsensegons;
+	ELSE
+		EntradaRampa := 0;	
+		NivellInicial := rLevel;
+END_IF
+
+// Si es introducin dosificada calcula la rampa
+IF IntroduccioDosificada
+	THEN
+		rampatems(
+			IN:= EntradaRampa, 
+			ASCEND:= 1, 
+			DESCEND:= Tempsensegons, 
+			TIMEBASE:= T#1S, 
+			RESET:= (IniciarIntro AND xPause) , 
+			OUT=> tempsreal);
+
+		TempsEnPercentatge := (tempsreal/Tempsensegons)*100;
+END_IF
+
+RampaTempsInt := REAL_TO_INT(TempsEnPercentatge*100);
+
+TaulaCurva :=  fCurvePerCen(Curve:=DWORD_TO_INT (dwCurve));
+
+calculQt(
+	IN:= RampaTempsInt , 
+	N:=11 , 
+	P:=TaulaCurva , 
+	OUT=>QteoricaINT , 
+	ERR=>ERROR );
+
+// Si se ha iniciado la introducion calcula el Qreal
+IF IniciarIntro AND NivellInicial > 0
+	THEN
+		rQreal := (rLevel/NivellInicial)*100;
+END_IF
+
+rQTeoric := (INT_TO_REAL(QteoricaINT))/100;
+
+xPrepareIntro := IniciarIntro AND NOT xFiIntro;
+
+IF rQreal > rQTeoric AND IniciarIntro AND IntroduccioDosificada AND NOT xFiIntro
+	THEN
+		xDosIntro := TRUE;
+	ELSE
+		xDosIntro := FALSE;
+END_IF
+
+xTransferIntro := NOT(IntroduccioDosificada) AND IniciarIntro AND NOT xFiIntro;
+
+TempsNivellinim(xIN:=NOT(xLevelMin) , dwSegons:=60 , xQ=> , dwTsegons=> );
+
+IF 	rQTeoric <= 0 OR 
+	rQTeoric <= 0 OR 
+	TempsNivellinim.xQ (* OR 
+	IntroduccioDosificada OR 
+	IniciarIntro OR 
+	NOT xLevelMin *)
+	THEN
+		FiIntroDosificada := TRUE;
+	ELSE
+		FiIntroDosificada := FALSE;
+END_IF
+
+TempsNivellinimDir(xIN:= NOT xLevelMin , dwSegons:=3 , xQ=> , dwTsegons=> );
+
+FiDirecte := NOT IntroduccioDosificada AND IniciarIntro AND TempsNivellinimDir.xQ;
+
+
+srFiIntro(  SET1:=(FiIntroDosificada OR FiDirecte) AND xActvIntro, 
+			RESET:= NOT xActvIntro , Q1=>xFiIntro);
+
+
+A:=A+1;
+]]></ST>
+    </Implementation>
+    <LineIds Name="fB_Intro_TK">
+      <LineId Id="3" Count="87" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="145" Count="1" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

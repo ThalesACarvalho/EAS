@@ -1,0 +1,6 @@
+[GlobalVariables]
+DataPoints=Data_points
+InputOutput=Input_Output
+Communication=Communication
+[CoDeSys]
+Version=2.3.9.68

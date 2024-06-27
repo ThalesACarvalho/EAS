@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_03_Config_PRESS" Id="{b43d1197-1f30-4413-91c9-12fa091c3fb7}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _03_Config_PRESS
+VAR
+	tOKVent: Ton;
+	ExisteSensorPressMaq: BOOL;
+	PressCargaDigital: BOOL;
+	PressDescargaDigital: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*-------------------------------------------------------------------------------------------------------*)
+(*Configuracion sensor presion*)
+Mc._03_PRESS.s075_Sensor.rAna_min := 0;
+Mc._03_PRESS.s075_Sensor.rAna_max := mc._03_PRESS.IPF_FS_Press ;
+
+(*Comprobar si hay presencia de sensor presion *)
+ExisteSensorPressMaq:=TRUE;
+
+IF ExisteSensorPressMaq
+	THEN
+		Mc._03_PRESS.rPress		:=Mc._03_PRESS.s075_Sensor.rValue;
+	ELSE
+		Mc._03_PRESS.rPress		:= 0;		
+END_IF
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*Pression de carga*)
+PressCargaDigital:=TRUE;
+
+IF PressCargaDigital
+	THEN
+		Mc._03_PRESS.xPrsLoad     := Mc._03_PRESS.s072_Chargr.xPul ;
+	ELSIF (Mc._03_PRESS.iPFPresLoad>0 AND NOT PressCargaDigital) THEN
+		Mc._03_PRESS.xPrsLoad 	:=(Mc._03_PRESS.rPress)>(Mc._03_PRESS.iPFPresLoad );
+	ELSE
+		Mc._03_PRESS.xPrsLoad	:=FALSE;
+END_IF
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*Pression de descarga*)
+PressDescargaDigital:=TRUE;
+IF PressDescargaDigital
+	THEN
+		Mc._03_PRESS.xPrsUnload    := Mc._03_PRESS.s073_Discharge.xPul ;
+	ELSIF (Mc._03_PRESS.IPFPresUnload>0 AND NOT PressDescargaDigital) THEN
+		Mc._03_PRESS.xPrsUnload 	:=(Mc._03_PRESS.rPress)>(Mc._03_PRESS.IPFPresUnload );
+	ELSE
+		Mc._03_PRESS.xPrsUnload	:=FALSE;
+END_IF
+
+(*****************************************************************************)
+//OK Respiradero por tiempo FALTA HACER POR FC o POR presion minima
+
+tOKVent(IN:=  Mc._03_PRESS.v070_Vent.xOpen, PT:=T#5S  );
+MC._03_PRESS.xOKVent := tOKVent.Q ;
+]]></ST>
+    </Implementation>
+    <LineIds Name="_03_Config_PRESS">
+      <LineId Id="13" Count="6" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="20" Count="7" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="64" Count="1" />
+      <LineId Id="31" Count="11" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="43" Count="13" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

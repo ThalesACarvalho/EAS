@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_PREP_TK2" Id="{0befb0c6-fd50-4097-b125-4414e8682af9}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_PREP_TK2
+VAR_INPUT
+	Func:E_funcio;
+END_VAR
+VAR
+		///Activa
+	xActv: BOOL;
+	///Parametros
+	wP_PrepType: WORD;
+	wP_PrepPhase: WORD;
+	///Fin Funcion
+	xFiFunc: BOOL;
+	xA_PrepareTK1: BOOL;
+	z_PreAviso: BOOL;
+	z_Sirena: BOOL;
+	xA_PrepareTK2: BOOL;
+	RESETMAN: BOOL;
+	PUL: PULS_1S;
+	tmpActivFunc: TMP_P;
+	xResetInicio: BOOL;
+	xIniciaPrep: BOOL;
+	xFinPeticion: BOOL;
+	xOK_TK: BOOL;
+	xPedirAuto: bool;
+	rsDosAuto: RS;
+	xResetAuto1: BOOL;
+	DosificacioAutomatica: BOOL;
+	DosificacioManual: BOOL;
+	xPedirMan: BOOL;
+	rsDosMan: Rs;
+	ResetMan1: BOOL;
+	xCondOkManCub: BOOL;
+	rsOKMAN: Rs;
+	xOkManCub: BOOL;
+	xOpCall: BOOL;
+	xSirena: BOOL;
+	RTPulseAuto: R_Trig;
+	wRequestPhase: WORD;
+	xRequestDosing: BOOL;
+	xPedirDosif: BOOL;
+	tOkDos: TMP_P;
+	srOkDosadora: SR;
+	xOkAutoCub: BOOL;
+	xOK_Auto_TK: bool;
+	SROkCubeta: SR;
+	RESET_MAN: BOOL;
+	xEnableMixer: BOOL;
+	xEnableSteam: BOOL;
+	xCondFiFunc: BOOL;
+	TONFiFunc: TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*ACTIVAR FUNCION*)
+xActv:=func.Actv_Funcio;
+
+wP_PrepPhase:= func.ParamFunc[1];
+wP_PrepType	:= func.ParamFunc[2];
+
+
+//GENERAR PULSO 1 segundo
+PUL(Q=> );
+
+//Reset inicial
+tmpActivFunc(xIN:=xActv , dwSegons:=3  );
+xResetInicio:=xActv AND NOT(tmpActivFunc.xQ);
+//Inicia
+xIniciaPrep:= tmpActivFunc.xQ;
+
+
+(********Tipo Preparacion********************)
+//Finalizar Petición
+xFinPeticion:=	xResetInicio OR
+				ATL.PE.xEndBatch OR
+				ATL.PE.xStartBatch OR
+				(F_INTRO_TK2.xIntroRun OR F_INTRO_TK2.srActivIntro.Q1) OR 
+				xOK_TK;
+		
+
+//Auto
+xPedirAuto:= (wP_PrepType=2)OR (wP_PrepType=3);
+rsDosAuto(	SET:= 		xIniciaPrep	AND 
+						xPedirAuto , 
+			RESET1:= 	xFinPeticion OR xResetAuto1, 
+			);
+DosificacioAutomatica:=rsDosAuto.Q1;
+
+//Man
+xPedirMan:= (wP_PrepType=1)OR (wP_PrepType=3);
+rsDosMan(	SET:= 		xIniciaPrep	AND 
+						xPedirMan  , 
+			RESET1:= 	xFinPeticion OR ResetMan1, 
+			);
+DosificacioManual:=rsDosMan.Q1;
+
+(**************************************************************************************)	
+(************************** Peticion Dosificacion Manual **************************)
+(**************************************************************************************)
+//Ok Dosificacion Manual
+xCondOkManCub:= 	DosificacioManual AND 		//realizar Peticion manual
+			MC._11_TK2.p250_OKprod.xPul AND 	//Confimacion producto
+			Mc._11_TK2.xLvl_min;				//Nivel miniMO; 					 
+rsOKMAN(SET:= xCondOkManCub , 
+		RESET1:= NOT(Mc._11_TK2.xLvl_min) );
+
+xOkManCub:=rsOkMan.Q1;
+		
+// Piloto Pre Aviso
+xOpCall := (PUL.Q AND DosificacioManual AND NOT(xOkManCub)) OR xOkManCub;
+// Sirena Pre Aviso para manual
+xSirena := (PUL.Q AND DosificacioManual AND NOT(xOkManCub));
+		
+
+(**************************************************************************************)	
+(************************** Peticion Dosificacion Automatica **************************)
+(**************************************************************************************)
+//Pulso inicio pedicion Auto
+RTPulseAuto(CLK:= DosificacioAutomatica );
+
+//Reset Inicial
+IF xResetInicio OR RTPulseAuto.Q OR xOK_TK
+	THEN
+	wRequestPhase := 0;
+	xRequestDosing := FALSE;
+//	xOkRequest:=FALSE;
+END_IF
+
+//Pedir dosificacion
+xPedirDosif:= 	DosificacioAutomatica AND NOT(ATL.PE_COM.axOkDemand[2](*XC63[1]*) OR 
+				ATL.PE_COM.axOkDosage[2](*XC64[1]*));
+IF xPedirDosif 
+	THEN
+	wRequestPhase := wP_PrepPhase;
+	xRequestDosing := TRUE;
+END_IF
+
+//Confirmar Dosificacion	
+tOkDos(xIN:= (ATL.PE_COM.axOkDosage[2](*XC64[1]*) ), dwSegons:=1  );
+srOkDosadora(SET1:= ATL.PE_COM.axOkDosage[2](*XC64[1]*), 
+			 RESET:= F_INTRO_TK2.xIntroRun OR F_INTRO_TK2.srActivIntro.Q1 OR
+					xResetInicio OR 
+					RTPulseAuto.Q OR
+					xFinPeticion );
+//OK DOS AUTO
+xOkAutoCub:=srOKDosadora.Q1;					
+xOK_Auto_TK:= xOkAutoCub;					
+
+(**************************************************************************************)
+(********** Ok Cubeta *************)
+(**************************************************************************************)
+
+SROkCubeta(
+	SET1:= 	(wP_PrepType = 1 AND xOkManCub) OR 
+			(wP_PrepType = 2 AND xOkAutoCub) OR 
+			(wP_PrepType = 3 AND xOkAutoCub AND xOkManCub),
+	RESET:= NOT(mc._11_TK2.xLvl_min), // OR xStartIntro,
+	);
+
+xOK_TK:=SROkCubeta.Q1 OR RESET_MAN;
+
+IF XOK_TK 
+	THEN
+	xOkAutoCub:=FALSE;
+	xOkManCub:=FALSE;
+//	xOkRequest:=FALSE;
+END_IF	
+
+
+
+
+
+(**************************************************************************************)
+
+(********** Agitador y Mixador *************)
+xEnableMixer:=FALSE;
+xEnableSteam:=FALSE;
+
+(************** Fin Funcion **************)
+xCondFiFunc := 	(rsDosAuto.Q1 AND NOT(rsDosMan.Q1) AND ATL.PE_COM.axOkDemand[2](*XC63[1]*)) OR
+			(NOT(rsDosAuto.Q1) AND rsDosMan.Q1)  OR
+			xOK_TK OR
+			ATL.PE.xMan; 	
+TONFiFunc(IN:= xCondFiFunc, PT:= T#5S );				
+XFiFunc:= TONfIfUNC.Q;
+
+
+IF xOK_Auto_TK OR RESETMAN THEN
+	ATL.PE_COM.axOkDemand[2]:=FALSE;
+	ATL.PE_COM.axOkDosage[2]:=FALSE;
+	ATL.PE_COM.axDemandDos[2]:=FALSE;
+	atl.PE_COM.aiNumDos[2]:=0;
+END_IF
+
+
+(*FINALIZAR FUNCION*)
+xFiFunc:=F_PREP_TK2.xFiFunc;/////////////////////////////////////////////
+
+	 
+(*ACTIVAR SALIDAS*)
+// Variables Peticion
+ATL.PE_COM.axDemandDos[2] := xRequestDosing;
+ATL.PE_COM.aiNumDos[2] := wRequestPhase ;
+// Sirena Preaviso
+z_PreAviso  :=  xOpCall;
+z_Sirena 	:= 	xSirena;
+
+
+
+(* Alarmas *)
+// Pré Aviso
+xA_PrepareTK2 := xSirena;
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_PREP_TK2">
+      <LineId Id="3" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="80" Count="2" />
+      <LineId Id="84" Count="66" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="151" Count="53" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="18" Count="25" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_LLENADO" Id="{618273f6-50fd-418b-8f07-33f36be40894}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_LLENADO
+VAR_INPUT
+	
+Func:E_funcio;
+
+END_VAR
+
+VAR
+	///Activa
+	xActv: BOOL;
+	///FIn Funcion
+	xFiFunc: BOOL;
+	
+	
+	/// SP Liter of water
+	wLtsWater: WORD;
+	/// SP Water Level
+	wLevelWater: WORD;
+	/// SP Liters of salt
+	wLtsSalt: WORD;
+	/// Counter Input: Salt Liters (Liters)
+	rCntLtsSalt: REAL;
+	
+	
+		
+	xA_LLENADO: BOOL;
+	z_xCWater: BOOL;
+	z_xHWater: BOOL;
+	z_xSalt: BOOL;
+	z_xActvVent: BOOL;
+	xA_TempBloqValves: BOOL;
+	xA_FlowMeterFailure: BOOL;
+	xResetLitros: BOOL;
+	iTimeCntrl: INT := 20;
+	xResetLit: BOOL;
+	fContador: fCaudal;
+	rLitAct: REAL;
+	pResetLitros: R_trig;
+	xValvLLenadoActv: BOOL;
+	tCalcFalloLit: Ton;
+	pPulseFalloLit: R_Trig;
+	Lit_Ant2: REAL;
+	Lit_Ant1: REAL;
+	tFalloContlit: Ton;
+	z_xHardWater: BOOL;
+	srActvLlenado: SR;
+	tIniciaLlenado: TON;
+	SegOK: BOOL;
+	rtCargaValores: R_TRIG;
+	xColdWater: BOOL;
+	xHotWater: BOOL;
+	xHardWater: BOOL;
+	wLevelH2o: WORD;
+	RLtsH2o: REAL;
+	xResetLiters: BOOL;
+	LtsMaq: REAL;
+	xFillByLevel: BOOL;
+	xFillToLevel1: BOOL;
+	xFillToLevel2: BOOL;
+	EndFillByLevel: BOOL;
+	EndFillByLtrs: BOOL;
+	xFillByLtrs: BOOL;
+	xLlenaAgua: BOOL;
+	xEvWater: BOOL;
+	LtsLlH2o: REAL;
+	FiLlenaAgua: BOOL;
+	xHWater: BOOL;
+	xCWater: BOOL;
+	xStopPump: BOOL;
+	xStartPump: BOOL;
+	xFillInterceptValve: BOOL;
+	tFiFunc: Ton;
+	tmpTiempoMaximoLlenado: TMP_P;
+	xAlarmMaxFillTime: BOOL;
+	xAlarmMaxLvlMac: BOOL;
+	xAlarmTempBloqValves: BOOL;
+
+		D: TMP_P;
+END_VAR
+VAR PERSISTENT
+	fContLlenado: fbCntLiters;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+xActv:=func.Actv_Funcio;
+
+//Contador litros llenado
+
+//reset litros maquina
+pResetLitros(CLK:= F_VACIADO.xActv );
+
+//Activa contador
+
+fContLlenado(	xActv:= xActv, 
+				xReset:= F_VACIADO.xActv, 
+				rInLiters:= Mc._14_CONSUM.rLit_Batch ); 
+
+Mc._04_FILL.rLitMc:= fContLlenado.rLiters;
+  
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(********** Inicia la funcion *************)
+srActvLlenado(SET1:=tIniciaLlenado.Q AND SegOK AND NOT xFiFunc, RESET:= xFiFunc OR NOT xActv, Q1=> );
+
+tIniciaLlenado(IN:= xActv, PT:= T#1S, Q=> , ET=> );
+
+rtCargaValores(CLK:=xActv AND NOT xFiFunc, Q=> );
+
+(* Carga Valores *)
+IF tIniciaLlenado.Q THEN
+		
+	xColdWater:= WORD_TO_BOOL(Func.ParamFunc[1]); 	
+	xHotWater:= WORD_TO_BOOL(Func.ParamFunc[2]);
+	xHardWater:= WORD_TO_BOOL(Func.ParamFunc[3]);
+	wLtsWater:= Func.ParamFunc[4];
+	wLevelWater:= Func.ParamFunc[5];
+	xResetLiters := TRUE;
+	LtsMaq := Mc._04_FILL.rLitMc;
+END_IF
+
+(****************** Verifica las seguridads ******************)
+SegOK := NOT mc._01_SEG.xBloqValv AND _00_vent.z_xRespiradero AND NOT MC._06_LEVEL.s033_max.xPul;
+
+(****************** Inicia el llenado ******************)
+
+(*Activa llenado por nivel y el nivel deseado*)
+IF (wLevelWater > 0) AND srActvLlenado.Q1
+	THEN
+	xFillByLevel :=TRUE;
+	
+	CASE (wLevelWater) OF
+	1:	xFillToLevel1 := TRUE;
+		xFillToLevel2 := FALSE;
+		
+	2:	xFillToLevel1 := FALSE;
+		xFillToLevel2 := TRUE;
+	ELSE
+		xFillToLevel1:= FALSE;
+		xFillToLevel2:= FALSE;
+	END_CASE
+	ELSE
+		xFillByLevel :=FALSE;
+END_IF
+
+(*Fin de llenado por Nivel*)
+IF (srActvLlenado.Q1 AND xFillByLevel)AND((xFillToLevel1 AND MC._06_LEVEL.s036_L1.xPul) OR (xFillToLevel2 AND MC._06_LEVEL.s035_L2.xPul))
+	THEN
+	EndFillByLevel :=TRUE;	
+	ELSE
+	EndFillByLevel :=FALSE;	
+END_IF
+	
+(*Activa llenado por litros*)
+IF srActvLlenado.Q1 AND (wLtsWater = 0)   //(wLtsWater > 0) AND (wLtsWater > LtsMaq) 
+	THEN
+	EndFillByLtrs := TRUE;
+	//xFillByLtrs := FALSE;	
+END_IF	 
+IF	srActvLlenado.Q1 AND (wLtsWater > 0) AND (wLtsWater < LtsMaq) 
+	THEN
+	EndFillByLtrs := TRUE;
+	//xFillByLtrs := FALSE;
+END_IF
+IF 	srActvLlenado.Q1 AND (wLtsWater > 0) AND (wLtsWater > LtsMaq) 
+	THEN
+	EndFillByLtrs := FALSE;
+	xFillByLtrs := TRUE;
+END_IF
+
+	
+xLlenaAgua:= (xFillByLtrs OR xFillByLevel);
+
+
+(****************** Activa salidas y compara el llenado ******************)
+(* Agua *)
+xEvWater := xLlenaAgua AND SegOK;
+
+IF srActvLlenado.Q1 AND (xFillByLevel AND EndFillByLevel) OR (xFillByLtrs AND EndFillByLtrs)
+	THEN
+	FiLlenaAgua := TRUE;
+END_IF
+
+//xQSalt := EvSalm;
+xHWater := xEvWater AND xHotWater;
+xCWater := xEvWater AND xColdWater;
+
+xStopPump := srActvLlenado.Q1;
+xStartPump := xFiFunc;
+
+IF srActvLlenado.Q1 AND xEvWater 
+	THEN
+	xFillInterceptValve := TRUE;
+	ELSE
+	xFillInterceptValve := FALSE;	
+END_IF
+
+(****************** Finaliza la funcion ******************)
+tFiFunc(IN:= FiLlenaAgua OR Mc._06_LEVEL.s033_max.xPul, PT:= T#2S, Q=>xFiFunc, ET=> );
+
+
+(* Reseta valores *)
+IF xFiFunc OR NOT xActv THEN
+rCntLtsSalt:=0;
+//LlenaSal:= FALSE;
+xLlenaAgua:= FALSE;
+FiLlenaAgua := FALSE;
+xFillToLevel1:= FALSE;
+xFillToLevel2:= FALSE;
+xFillByLevel:= FALSE;
+xFillByLtrs:= FALSE;
+
+END_IF
+
+IF 	xResetLiters THEN
+	xResetLiters := FALSE;
+END_IF
+
+(****************** Alarmas ******************)
+(*Tiempo maximo de llenado *)
+tmpTiempoMaximoLlenado(
+	xIN:= srActvLlenado.Q1, 
+	xPausa:= , 
+	dwSegons:= MC._04_FILL.IPFMaxFillTime, 
+	xQ=> xAlarmMaxFillTime , 
+	dwTsegons=> , 
+	rTsegons=> );
+
+(* Level Maximo Maquina *)
+xAlarmMaxLvlMac :=  Mc._06_LEVEL.s033_max.xPul;
+(* Temperatura Bloqueo de Valvulas *)
+xAlarmTempBloqValves := srActvLlenado.Q1 AND mc._01_SEG.xBloqValv;
+
+
+(*ACTIVAR SALIDAS*)
+z_xCWater := xActv AND xCWater AND NOT Mc._01_SEG.xBloqValv AND Mc._03_PRESS.xOKVent;
+
+z_xHWater := xActv AND xHWater AND NOT Mc._01_SEG.xBloqValv AND Mc._03_PRESS.xOKVent;
+
+z_xHardWater:=xActv AND xHardWater AND NOT Mc._01_SEG.xBloqValv AND Mc._03_PRESS.xOKVent;
+
+
+
+(*Activa vent*)
+z_xActvVent := xActv AND NOT(Mc._01_SEG.xBloqValv);
+
+(*FINALIZAR FUNCION*)
+xFiFunc:=TFiFunc.Q;
+
+
+(* Alarmas *)
+// Temperatura bloqueio de valvulas
+xA_TempBloqValves := xAlarmTempBloqValves;	
+
+// Fallo Cuenta Litros
+xValvLLenadoActv:=z_xCWater OR z_xHWater OR z_xSalt;  //alguna valvula de llenado activa
+tCalcFalloLit(IN:=NOT(tCalcFalloLit.Q) , PT:=T#5S ); //Temporizador base tiempo
+pResetLitros(CLK:=tCalcFalloLit.Q);					//Pulsos para revisar el cuentalitros
+
+IF pResetLitros.Q THEN								//Carga valores
+	Lit_Ant2:=Lit_Ant1;
+	Lit_ant1:=Mc._04_FILL.rLitMc;
+END_IF
+
+tCalcFalloLit(IN:= xValvLLenadoActv AND
+						Lit_Ant2=Lit_Ant1,
+			 PT:= T#20S );
+
+xA_FlowMeterFailure := 	tCalcFalloLit.Q;
+
+// Tiempo Maximo Llenado
+xAlarmMaxFillTime := xAlarmTempBloqValves;	
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_LLENADO">
+      <LineId Id="584" Count="0" />
+      <LineId Id="352" Count="1" />
+      <LineId Id="582" Count="0" />
+      <LineId Id="3" Count="5" />
+      <LineId Id="10" Count="9" />
+      <LineId Id="181" Count="2" />
+      <LineId Id="666" Count="1" />
+      <LineId Id="186" Count="3" />
+      <LineId Id="580" Count="0" />
+      <LineId Id="191" Count="2" />
+      <LineId Id="481" Count="0" />
+      <LineId Id="194" Count="1" />
+      <LineId Id="197" Count="50" />
+      <LineId Id="249" Count="2" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="258" Count="1" />
+      <LineId Id="484" Count="0" />
+      <LineId Id="260" Count="0" />
+      <LineId Id="485" Count="0" />
+      <LineId Id="264" Count="10" />
+      <LineId Id="278" Count="9" />
+      <LineId Id="290" Count="4" />
+      <LineId Id="297" Count="15" />
+      <LineId Id="671" Count="5" />
+      <LineId Id="670" Count="0" />
+      <LineId Id="669" Count="0" />
+      <LineId Id="314" Count="3" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="54" Count="14" />
+      <LineId Id="71" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

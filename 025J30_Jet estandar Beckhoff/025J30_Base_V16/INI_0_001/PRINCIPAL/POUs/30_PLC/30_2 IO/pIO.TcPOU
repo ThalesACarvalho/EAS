@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="pIO" Id="{b80e4f96-b19b-41f4-af5f-aa7b5f163e67}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM pIO
+VAR
+	Cargar: INT;
+	aaa: INT;
+	MANUAL: INT;
+	AA: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*======================================================================*)
+(*			COUNTER INPUTS												*)
+(*======================================================================*)
+MC._04_FILL.s010_Flowm.iCnt  			:= hard.Beck[1].CNT[1];
+//MC.CONSUM.s500_Amperimetre.R	:= hard.Beck[1].CNT[2];
+(*======================================================================*)
+(*			DIGITAL INPUTS												*)
+(*======================================================================*)
+(*========= MODULO 2 ===================================================*)
+
+Mc._00_GENERAL.p400_PMAn.xPul			:= hard.Beck[1].DIN[1];
+Mc._00_GENERAL.p401_PAuto.xPul			:= hard.Beck[1].DIN[2];
+Mc._00_GENERAL.p402_StopAlarm.xPul		:= hard.Beck[1].DIN[3];
+Mc._00_GENERAL.p403_ContProg.xPul		:= hard.Beck[1].DIN[4];
+Mc._00_GENERAL.p411_FailPump.xPul		:= hard.Beck[1].DIN[5];  				 
+Mc._01_SEG.s420_MaxPresTemp.xPul		:= hard.Beck[1].DIN[6];
+Mc._01_SEG.s421_BloqValv.xPul			:= hard.Beck[1].DIN[7];
+Mc._06_LEVEL.s031_Min.xPul				:= hard.Beck[1].DIN[8];
+Mc._01_SEG.s422_McClose.xPul			:= hard.Beck[1].DIN[9];
+//Mc._00_GENERAL.p400_PMAn.xPul	 		:= hard.Beck[1].DIN[10];
+mc._06_LEVEL.s036_L1.xPul				:= hard.Beck[1].DIN[11];
+Mc._06_LEVEL.s035_L2.xPul				:= hard.Beck[1].DIN[12];
+Mc._06_LEVEL.s034_L3.xPul				:= hard.Beck[1].DIN[13];
+Mc._15_WINCH.W[1].s07_Tangle.xPul		:= hard.Beck[1].DIN[14];
+Mc._15_WINCH.W[2].s07_Tangle.xPul		:= hard.Beck[1].DIN[15];					
+//Mc._15_WINCH.W[1].p00_Winch.xInCons	:= hard.Beck[1].DIN[16];			  
+
+(*========= MODULO 3 ===================================================*)
+
+Mc._09_CPUMP.p451_P_Run.xPul		:= hard.Beck[1].DIN[17];	
+Mc._09_CPUMP.p452_P_Stop.xPul			:= hard.Beck[1].DIN[18];
+Mc._09_CPUMP.b450_CircPump.xInCons		:=true;//:= hard.Beck[1].DIN[19];
+Mc._09_CPUMP.p453_P_AutoMan.xPul		:= hard.Beck[1].DIN[20];
+Mc._09_CPUMP.p455_P_DownVel.xPul		:= hard.Beck[1].DIN[21]; 
+Mc._09_CPUMP.p454_P_UpVel.xPul			:= hard.Beck[1].DIN[22];	
+Mc._15_WINCH.W[1].p01_Run.xPul			:= hard.Beck[1].DIN[23];
+Mc._15_WINCH.W[1].p02_Rev.xPul			:= hard.Beck[1].DIN[24];
+Mc._15_WINCH.W[1].P03_AutoMan.xPul		:= hard.Beck[1].DIN[25];
+Mc._15_WINCH.W[1].p06_DwnVel.xPul		:= hard.Beck[1].DIN[26];
+Mc._15_WINCH.W[1].p05_UpVel.xPul		:= hard.Beck[1].DIN[27];
+Mc._15_WINCH.W[1].s11_FindSeam.xPul		:= hard.Beck[1].DIN[28];
+Mc._15_WINCH.W[1].s10_ControlSeam.xPul	:= hard.Beck[1].DIN[29];
+Mc._15_WINCH.W[2].s10_ControlSeam.xPul	:= hard.Beck[1].DIN[30]; 
+Mc._15_WINCH.W[2].s11_FindSeam.xPul		:= hard.Beck[1].DIN[31];
+Mc._15_WINCH.W[2].p01_Run.xPul			:= hard.Beck[1].DIN[32]; 
+
+(*========= MODULO 4 ===================================================*)
+
+Mc._12_INTRO.b056_Intro_Pump.xInCons	:= hard.Beck[1].DIN[33];	
+Mc._10_TK1.p150_OKprod.xPul				:= hard.Beck[1].DIN[34];
+Mc._10_TK1.p151_P_Fill.xPul				:= hard.Beck[1].DIN[35];
+Mc._10_TK1.P153_P_RetMc.xPul			:= hard.Beck[1].DIN[36];
+Mc._10_TK1.p152_P_Drain.xPul			:= hard.Beck[1].DIN[37]; 
+Mc._10_TK1.p154_P_IntroFast.xPul		:= hard.Beck[1].DIN[38];	
+Mc._03_PRESS.s072_Chargr.xPul			:= hard.Beck[1].DIN[39];
+Mc._03_PRESS.s073_Discharge.xPul		:= hard.Beck[1].DIN[40];
+//		:= hard.Beck[1].DIN[41];
+//		:= hard.Beck[1].DIN[42];
+//		:= hard.Beck[1].DIN[43];
+//		:= hard.Beck[1].DIN[44];
+//		:= hard.Beck[1].DIN[45];
+//		:= hard.Beck[1].DIN[46]; 
+//		:= hard.Beck[1].DIN[47];
+Mc._11_TK2.p250_OKprod.xPul				:= hard.Beck[1].DIN[48];
+(*======================================================================*)
+(*			DIGITAL OUTPUTS												*)
+(*======================================================================*)
+(*========= MODULO 5 ===================================================*)
+
+hard.Beck[1].DOUT[1] := 			MC._00_GENERAL.p400_PMAn.xPil;
+hard.Beck[1].DOUT[2] := 			MC._00_GENERAL.p401_PAuto.xPil;
+hard.Beck[1].DOUT[3] := 			MC._00_GENERAL.p404_Alarm.xPil;
+hard.Beck[1].DOUT[4] := 			MC._00_GENERAL.p405_Horn.xPil;
+hard.Beck[1].DOUT[5] := 			MC._03_PRESS.v070_Vent.xOpen;
+hard.Beck[1].DOUT[6] := 			MC._04_FILL.v002_Hot.xOpen;
+hard.Beck[1].DOUT[7] := 			MC._04_FILL.v001_Cool.xOpen;
+hard.Beck[1].DOUT[8] := 			MC._04_FILL.v003_Hard.xOpen;
+hard.Beck[1].DOUT[9] := 			MC._05_DRAIN.v015_Grv.xOpen;
+hard.Beck[1].DOUT[10] := 			MC._07_OVERFLOW.v025_Valv.xOpen;
+hard.Beck[1].DOUT[11] := 			MC._02_TEMP.v061_Steam.xOpen;
+hard.Beck[1].DOUT[12] := 			MC._02_TEMP.v062_Cool.xOpen;
+hard.Beck[1].DOUT[13] := 			MC._02_TEMP.v063_RetCon.xOpen;
+hard.Beck[1].DOUT[14] := 			MC._02_TEMP.v064_RecW.xOpen;
+//hard.Beck[1].DOUT[15] := 			;
+hard.Beck[1].DOUT[16] := 			MC._04_FILL.v006_InterMc.xOpen;
+
+(*========= MODULO 6 ===================================================*)
+
+hard.Beck[1].DOUT[17] := 			MC._09_CPUMP.b450_CircPump.xRUN;
+hard.Beck[1].DOUT[18] := 			MC._15_WINCH.W[1].p00_Winch.xRUN;
+//hard.Beck[1].DOUT[19] := 			MC._15_WINCH.W[1].p00_Winch.;
+hard.Beck[1].DOUT[20] := 			MC._15_WINCH.W[1].p08_PilTangle.xPil;
+hard.Beck[1].DOUT[21] := 			MC._15_WINCH.W[2].p00_Winch.xRUN;
+//hard.Beck[1].DOUT[22] := 			MC._10_TK1.v103_IntercTK.xOpen;
+hard.Beck[1].DOUT[23] := 			MC._15_WINCH.W[2].p08_PilTangle.xPil;
+hard.Beck[1].DOUT[24] := 			MC._12_INTRO.b056_Intro_Pump.xRUN;
+hard.Beck[1].DOUT[25] := 			MC._10_TK1.p150_OKprod.xPil;
+hard.Beck[1].DOUT[26] := 			MC._10_TK1.v101_Fill.xOpen;
+hard.Beck[1].DOUT[27] := 			MC._10_TK1.v102_RetMc.xOpen;
+hard.Beck[1].DOUT[28] := 			MC._10_TK1.v106_Drain_grav.xOpen;
+hard.Beck[1].DOUT[29] := 			MC._12_INTRO.v050_Fast.xOpen;
+hard.Beck[1].DOUT[30] := 			MC._12_INTRO.v051_Slow.xOpen;
+hard.Beck[1].DOUT[31] := 			MC._10_TK1.v109_Mixer.xOpen;
+hard.Beck[1].DOUT[32] := 			MC._10_TK1.v107_Warm.xOpen;
+
+(*========= MODULO 7 ===================================================*)
+
+hard.Beck[1].DOUT[33] := 			MC._03_PRESS.v071_Load.xOpen;
+hard.Beck[1].DOUT[34] := 			MC._03_PRESS.v074_Unload.xOpen;
+hard.Beck[1].DOUT[35] := 			MC._07_OVERFLOW.v004_WaterInlet.xOpen;
+hard.Beck[1].DOUT[36] := 			MC._08_CIRC.v044_Spray.xOpen;
+hard.Beck[1].DOUT[37] := 			MC._05_DRAIN.v017_Pump.xOpen;
+hard.Beck[1].DOUT[38] := 			MC._02_TEMP.v068_Purge.xOpen;
+hard.Beck[1].DOUT[39] := 			MC._08_CIRC.v041_InPump.xOpen;
+hard.Beck[1].DOUT[40] := 			MC._10_TK1.v103_IntercTK.xOpen;
+hard.Beck[1].DOUT[41] := 			MC._11_TK2.p250_OKprod.xPil;
+hard.Beck[1].DOUT[42] := 			MC._11_TK2.v201_Fill.xOpen;
+hard.Beck[1].DOUT[43] := 			MC._11_TK2.v202_RetMc.xOpen;
+hard.Beck[1].DOUT[44] := 			MC._11_TK2.v206_Drain_grav.xOpen;	
+hard.Beck[1].DOUT[45] := 			MC._11_TK2.v203_IntercTK.xOpen;
+hard.Beck[1].DOUT[46] := 			MC._11_TK2.v209_Mixer.xOpen;
+hard.Beck[1].DOUT[47] := 			MC._11_TK2.v207_Warm.xOpen;;	
+hard.Beck[1].DOUT[48] := 			MC._11_TK2.b204_Intro.XRun;
+
+(*========= MODULO 8 ===================================================*)
+MC._02_TEMP.s065_Reg.iAnalog		:=  hard.Beck[1].AIN[1];
+//									:=  hard.Beck[1].AIN[2];		
+	
+(*========= MODULO 9 ===================================================*)
+MC._06_LEVEL.s032_Perc.iAnalog		:=	hard.Beck[1].AIN[3];				
+MC._10_TK1.s113_Level.iAnalog		:=  hard.Beck[1].AIN[4]; 	
+MC._11_TK2.s213_Level.iAnalog		:=MANUAL;//:=	hard.Beck[1].AIN[5];	
+Mc._03_PRESS.s075_Sensor.iAnalog	:=	hard.Beck[1].AIN[6];
+
+(*========= MODULO 13 ==================================================*)
+hard.Beck[1].AOUT[1]:=				REAL_TO_INT (Z_TEMP.rOutRegTemp);
+hard.Beck[1].AOUT[2]:=				REAL_TO_INT (Z_CP.rOutAnalogVelPump);
+//hard.Beck[1].AOUT[3]:=				REAL_TO_INT (_15_WINCH.W[1].rSpeedUF);
+//hard.Beck[1].AOUT[4]:=				REAL_TO_INT (_15_WINCH.W[2].rSpeedUF);				]]></ST>
+    </Implementation>
+    <LineIds Name="pIO">
+      <LineId Id="3" Count="46" />
+      <LineId Id="234" Count="16" />
+      <LineId Id="63" Count="55" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="202" Count="1" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="131" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

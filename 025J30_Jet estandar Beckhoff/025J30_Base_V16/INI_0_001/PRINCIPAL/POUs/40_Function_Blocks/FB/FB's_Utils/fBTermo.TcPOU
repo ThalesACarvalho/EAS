@@ -1,0 +1,501 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fBTermo" Id="{dd6689a7-e149-49bb-a931-52de48a67312}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fBTermo
+VAR_INPUT
+	///
+	///		Activa el calcul del gradient
+	TermoActv: BOOL;
+	///
+	///		Lectura de la temperatura 
+	TemperaturaReal: REAL;
+	///
+	///		Temperatura final que es vol obtenir  
+	TemperaturaFinal: REAL;
+	///
+	///		Expresat en decimes de grau 
+	Gradient: REAL;
+	///
+	///		Temps de maneniment en minuts 
+	t_Manteniment: REAL;
+	///
+	///		Entrada que s'utilitza com a rellotge (1seg per regular per temps) 
+	Pols: BOOL;
+	///
+	///		Aquesta entrada produeix una pausa en el calcul 
+	PausaExterior: BOOL;
+	///
+	///		Diferencia de temperatura necesaria per parar la consigna per 
+	///		esperar a la temperatura real. Definit en  graus, per defecte =2  
+	GrausPerIntegracio: REAL := 2;
+	///
+	///		Diferencia de graus amb les que es forzara calentar encara que la
+	///		temperatura sigui superior i la consigna pasarà a ser directament 
+	///		la temperatura final .definit en graus i real. per defecte =4  
+	GrausForzarCal: REAL := 4;
+	///
+	///		Recomença la termoregulacio agafant la temperaturaimposada 
+	///		com a inicial.  S'utilitza per poder modificar el gradient en una 
+	///		introducció ( fa un reset a la durada i agafa el gradient actual). 
+	ReIniciarTermo: BOOL;
+	///
+	///		Temps seguretat per a cambiar de calentar a refredar o al reves
+	///		 per defecte =30
+	TmoSegConmutacion: DWORD := 30;
+	///
+	///		diferencia de teperatura per realitzar la conmutació durant 
+	///		el manteniment  per defecte =5
+	ConmutacioEnManteniment: REAL := 5;
+	BandaProporcional: REAL;
+	PartIntergral: REAL;
+	PartDerivada: REAL;
+	T_periode: REAL;
+	SeguretatOK: BOOL;
+	ObrirPurgaenRepos: BOOL;
+	t_Purga: DWORD;
+	///Paralel: Temperatura per iniciar el calcul de la termorregulacio 
+	TemperaturaPerInici: REAL;
+	NO_Reset: BOOL;
+END_VAR
+VAR_OUTPUT
+	///
+	///		Indica que la termorregulacio esta pausada per integracio
+	EnIntegracio: BOOL;
+	///
+	///		Indicacio de la temperatura imposada
+	TemperaturaImposada: REAL;
+	///
+	///		Termoregulació per calentar, Es la ordre al regulador
+	Vapor: BOOL;
+	Apertura_Vapor: REAL;
+	///
+	///		Termoregulació per refredar, , Es la ordre al regulador 
+	AiguaRefredament: BOOL;
+	Apertura_Refreda: REAL;
+	///
+	///		Indicacio que la temperatura a arribat a la temperatura final 
+	EnManteniment: BOOL;
+	Actv_RetornAigua: BOOL;
+	Actv_RetornVapor: BOOL;
+	Actv_BuidatSerpenti: BOOL;
+	DuradaTermo: DWORD;
+	///solo informacion
+	refredar: BOOL;
+	///solo informacion
+	calentar: BOOL;
+END_VAR
+VAR
+	TemperaturaInicial: REAL;
+	TemporIniciar: TON;
+	IniciarTermo: BOOL;
+	TempsEnMarxa: BOOL;
+	DiferencialImposada: REAL;
+	DiferenciaTemp: REAL;
+	ActvManteniment: BOOL;
+	TempoManteniment: TON;
+	errorPID: BOOL;
+	ResetPID: BOOL;
+	EsperaSortida: BOOL;
+	OKCalentar: TMP_P;
+	OKRefredar: TMP_P;
+	TemperaturaMaxima: REAL;
+	TemperaturaMinima: REAL;
+	TempsTempAlta: TON;
+	PasarARefredar: BOOL;
+	TempsTempBaixa: TON;
+	PasarACalentar: BOOL;
+	Part_Proporcional: REAL;
+	PI: REAL;
+	Y_min: REAL;
+	Y_max: REAL;
+	PID_CALENTAR: PID_fixcycle;
+	polsResetMant: R_TRIG;
+	ResetGrad0: BOOL;
+	SortidaPID: REAL;
+	tempsPurga: TMP_P;
+	TR: REAL;
+	TI: REAL;
+	Actv_Vapor: BOOL;
+	Actv_AiguaRefredament: BOOL;
+	PI_reg: REAL;
+	xMan: BOOL := FALSE;
+	xLim: BOOL;
+	xOver: BOOL;
+	IN: INT;
+	DE: TMP_P;
+	D: TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*iniciar TermoRegulación*)
+TemporIniciar
+	(IN:= TermoActv ,
+	 PT:= T#1s ,
+	 Q=> IniciarTermo ,
+	 ET=> );
+
+(*Guardar valor temperatura inicial*)
+IF NOT(IniciarTermo)
+	THEN
+		IF TemperaturaPerInici=0
+			THEN
+			TemperaturaInicial:=TemperaturaReal;
+			DuradaTermo:=0;
+			ELSE
+			TemperaturaInicial:=TemperaturaPerInici;
+			DuradaTermo:=0;
+		END_IF
+END_IF
+
+
+(*Reiniciar el calcul de la consigna de la termorregulacio*)
+IF ReIniciarTermo
+	THEN
+		TemperaturaInicial:=TemperaturaImposada;
+		DuradaTermo:=0;
+END_IF
+
+
+(*Termoregulacio  en integració*)
+IF Calentar
+	THEN
+		DiferenciaTemp:=TemperaturaImposada - TemperaturaReal;
+END_IF
+IF Refredar
+	THEN
+		DiferenciaTemp:=TemperaturaReal-TemperaturaImposada;
+END_IF
+IF (DiferenciaTemp>GrausPerIntegracio) AND TermoActv
+	THEN
+		EnIntegracio:=TRUE;
+	ELSE
+		EnIntegracio:=FALSE;
+END_IF
+
+(*Calcul del  Temps de termoregulacio*)
+TempsEnMarxa:= (IniciarTermo) AND NOT(PausaExterior) AND NOT(EnManteniment) AND NOT(EnIntegracio);
+IF (TempsEnMarxa) AND (Pols)
+	THEN
+		DuradaTermo:=DuradaTermo+1;
+END_IF
+
+(* Mirar si calenta o refreda *)
+IF TermoActv
+	THEN
+		IF ((TemperaturaFinal+GrausForzarCal) >= (TemperaturaInicial))
+			THEN
+				Calentar:= TRUE;
+				Refredar:= FALSE;
+		END_IF
+		IF ((TemperaturaFinal+GrausForzarCal) < (TemperaturaInicial))
+			THEN
+				Calentar:= FALSE;
+				Refredar:= TRUE;
+		END_IF
+	ELSE
+		Calentar:= FALSE;
+		Refredar:= FALSE;
+END_IF
+
+(*Calcul Tamperatura*)
+IF Gradient<>0
+	THEN
+		DiferencialImposada:= ((Gradient * DWORD_TO_REAL(DuradaTermo)) / 600.0) ;
+		IF calentar
+			THEN
+				TemperaturaImposada:= TemperaturaInicial+DiferencialImposada;
+				IF TemperaturaImposada > TemperaturaFinal
+				THEN
+					TemperaturaImposada := TemperaturaFinal;
+				END_IF
+			ELSE
+				IF refredar
+					THEN
+						TemperaturaImposada:= TemperaturaInicial - DiferencialImposada;
+					ELSE
+						TemperaturaImposada := TemperaturaReal;
+				END_IF
+		END_IF
+	ELSE
+		TemperaturaImposada := TemperaturaFinal;
+END_IF
+IF NOT(TermoActv)
+	THEN
+		TemperaturaImposada := TemperaturaReal;
+END_IF
+
+
+(*Calcular Si esta en manteniment*)
+IF gradient<>0
+	THEN
+		IF ((TemperaturaImposada >= TemperaturaFinal AND Calentar) OR 
+			(TemperaturaImposada <= TemperaturaFinal AND Refredar))
+			THEN
+				ActvManteniment:=TRUE;
+				TemperaturaImposada:=TemperaturaFinal;
+		END_IF
+	ELSE
+		IF ((TemperaturaReal >= (TemperaturaFinal-(GrausPerIntegracio) ) AND Calentar) OR (TemperaturaReal <= (TemperaturaFinal + (GrausPerIntegracio)) AND Refredar))
+			THEN 
+				ActvManteniment:=TRUE;
+		END_IF
+END_IF
+
+IF NOT(TermoActv)
+	THEN
+		ActvManteniment:=FALSE;
+END_IF
+
+TempoManteniment(IN:= ActvManteniment, PT:= T#5S, Q=> , ET=> );
+
+EnManteniment:=Tempomanteniment.Q;
+
+(*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*)
+
+
+(*Si no calenta ni refreda es fa un reset del pid*)
+(*Reset al entrar en manteniment*)
+ResetGrad0:=((TemperaturaReal >= (TemperaturaFinal-(BandaProporcional/10.0) ) AND Calentar) OR (TemperaturaReal <= (TemperaturaFinal + (BandaProporcional/10.0)) AND Refredar));
+polsResetMant(CLK:= ((gradient<>0 AND EnManteniment AND NOT(no_reset)) OR (gradient=0 AND ResetGrad0))); 			(*24/05/2013 modificat*)
+IF (NOT(Calentar) AND NOT(Refredar)) OR (errorPID)  OR  (polsResetMant.Q) OR pasaraCalentar OR PasaraRefredar
+	THEN
+		ResetPID:=TRUE;
+	ELSE
+		ResetPID:=FALSE;
+END_IF
+
+(*Seguretat per activar el calentament*)
+
+OKCalentar(
+		xIN:= NOT(Refredar), 
+		xPausa:= FALSE, 
+		dwSegons:= TmoSegConmutacion , 
+		xQ=> , 
+		dwTsegons=> , 
+		rTsegons=> );
+
+OKRefredar(
+		xIN:= NOT(Calentar), 
+		xPausa:= FALSE, 
+		dwSegons:= TmoSegConmutacion , 
+		xQ=> , 
+		dwTsegons=> , 
+		rTsegons=> );
+
+(*Activar Calentar o Refredar  tenint en compte el mantnment*)
+(*Manteniment NO actiu*)
+EsperaSortida:= (EnManteniment AND ((calentar AND okcalentar.xQ) OR (refredar AND okrefredar.xQ)));
+IF NOT(EnManteniment) OR NOT EsperaSortida
+	THEN
+		Actv_Vapor :=Calentar AND okcalentar.xQ;
+		Actv_AiguaRefredament :=Refredar AND okrefredar.xQ ;
+END_IF
+(*Manteniment SI actiu*)
+(* Temperatures per fer les conmutacions *)
+TemperaturaMaxima := TemperaturaImposada + (ConmutacioEnManteniment);
+TemperaturaMinima := TemperaturaImposada - (ConmutacioEnManteniment);
+(*Pasar  de calentar a refredar*)
+
+TempsTempAlta(IN:= ((Actv_Vapor)AND(TemperaturaMaxima<TemperaturaReal)AND(EnManteniment)), 	
+					PT:=T#5S , 
+					Q=> PasarARefredar, ET=> );
+
+IF PasarARefredar
+	THEN
+		Actv_Vapor:=FALSE;
+		Actv_AiguaRefredament:=TRUE;
+END_IF
+(*Pasar  de refredar a calentar*)
+
+TempsTempBaixa(IN:= ((Actv_AiguaRefredament)AND(TemperaturaMinima>TemperaturaReal)AND(EnManteniment)), 
+					PT:= T#5S, 
+					Q=> PasarACalentar, 
+					ET=> );
+
+IF PasarACalentar
+	THEN
+		Actv_Vapor:=TRUE;
+		Actv_AiguaRefredament:=FALSE;
+END_IF
+
+(*Preparar valors del PID*)
+(* BandaProporcional *)
+IF BandaProporcional=0
+	THEN
+		BandaProporcional:=10.0;
+END_IF
+(*Calcul Part Proorcional*)
+Part_Proporcional:=(1000.0/BandaProporcional);
+(* Part integral*)
+IF Gradient=0 AND NOT(enmanteniment)
+THEN
+PI:=0;
+ELSE
+PI:=PartIntergral;
+END_IF
+(*Maxim i minim *)
+		Y_min:=0;
+		Y_max:=100;
+(*Temperatures PID*)
+IF Actv_Vapor
+	THEN
+		TR:=TemperaturaReal;
+		TI:=TemperaturaImposada;
+END_IF
+IF Actv_AiguaRefredament
+	THEN
+		TR:=300-TemperaturaReal;
+		TI:=300-TemperaturaImposada;
+END_IF
+
+IF PI<=0 THEN
+	PI_reg:=1E+36;
+	ELSE
+	PI_reg:=PI;	
+	END_IF
+
+PID_CALENTAR(
+	ACTUAL:= 	TR, 
+	SET_POINT:= TI, 
+	KP:= 		Part_Proporcional, 
+	TN:=		PI_reg , 
+	TV:= 		PartDerivada, 
+	Y_MANUAL:= 	0, 
+	Y_OFFSET:= 	0, 
+	Y_MIN:= 	Y_min, 
+	Y_MAX:= 	Y_max, 
+	MANUAL:= 	xMan, 
+	RESET:= 	ResetPID , //OR xOver, 
+	CYCLE:= 	0.01, 
+	Y=> 		SortidaPID, 
+	LIMITS_ACTIVE=> xLim, 
+	OVERFLOW=> 		xOver);
+	
+	
+	
+	
+	
+	
+(*	
+PID_CALENTAR(
+	ActValue:=TR ,
+	SetPoint:= TI,
+	Kp:= Part_Proporcional,
+	Tn:= PI,
+	Tv:=PartDerivada ,
+	Ymin:=Y_min ,
+	Ymax:=Y_max ,
+	T:= T_periode,
+	Normed:=1.0 ,
+	Hold:=ResetPID ,
+	Yman:=0 ,
+	Yout=> SortidaPID);
+
+*)
+IF Actv_Vapor
+	THEN
+		Apertura_Refreda:=0;
+		Apertura_Vapor:=SortidaPID;
+END_IF
+IF Actv_AiguaRefredament
+	THEN
+		Apertura_Refreda :=(SortidaPID);
+		Apertura_Vapor:=0;
+END_IF
+(*Si no hi ha calentar o refredar parar-ho tot*)
+(*Esposa al final per evitar que s'activin el les sortides per error*)
+IF (Actv_Vapor=FALSE)AND(Actv_AiguaRefredament=FALSE)
+	THEN
+		Apertura_Vapor:=0.0;
+		Apertura_Refreda:=0.0;
+END_IF
+(*================================================	*)
+(*					SEGURETATS								*)
+(*================================================	*)
+IF NOT(SeguretatOK)
+	THEN
+		Vapor:=FALSE;
+//		AiguaRefredament:=FALSE;
+		Apertura_Vapor:=0.0;
+//		Apertura_Refreda:=0.0;
+ELSE
+		Vapor:=Actv_Vapor;
+
+END_IF
+		AiguaRefredament:=Actv_AiguaRefredament;
+
+(*================================================	*)
+(*			retorno condensadors								*)
+(*================================================	*)
+(* Refredament *)
+IF Actv_AiguaRefredament
+	THEN
+		Actv_RetornAigua:=TRUE;
+		Actv_RetornVapor:=FALSE;
+		Actv_BuidatSerpenti:=FALSE;
+END_IF
+(*calentament*)
+tempsPurga(
+		xIN:= Actv_Vapor, 
+		xPausa:= FALSE, 
+		dwSegons:= t_Purga, 
+		xQ=> , 
+		dwTsegons=> , 
+		rTsegons=> );
+
+IF Actv_Vapor AND NOT(tempsPurga.XQ)
+THEN
+		Actv_RetornAigua:=FALSE;
+		Actv_RetornVapor:=FALSE;
+		Actv_BuidatSerpenti:=TRUE;
+END_IF
+IF Actv_Vapor AND (tempsPurga.xQ)
+THEN
+		Actv_RetornAigua:=FALSE;
+		Actv_RetornVapor:=TRUE;
+		Actv_BuidatSerpenti:=FALSE;
+END_IF
+(*Repo*)
+IF NOT(Actv_Vapor) AND NOT(Actv_AiguaRefredament) AND NOT(Actv_BuidatSerpenti)
+THEN
+		Actv_RetornAigua:=FALSE;
+		Actv_RetornVapor:=FALSE;
+		Actv_BuidatSerpenti:=FALSE;
+END_IF
+IF NOT(Actv_Vapor) AND NOT(Actv_AiguaRefredament) AND (Actv_BuidatSerpenti)
+THEN
+		Actv_RetornAigua:=FALSE;
+		Actv_RetornVapor:=FALSE;
+		Actv_BuidatSerpenti:=TRUE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="fBTermo">
+      <LineId Id="3" Count="117" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="123" Count="16" />
+      <LineId Id="588" Count="0" />
+      <LineId Id="592" Count="5" />
+      <LineId Id="589" Count="1" />
+      <LineId Id="598" Count="5" />
+      <LineId Id="587" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="143" Count="12" />
+      <LineId Id="607" Count="0" />
+      <LineId Id="605" Count="0" />
+      <LineId Id="609" Count="0" />
+      <LineId Id="608" Count="0" />
+      <LineId Id="160" Count="6" />
+      <LineId Id="611" Count="0" />
+      <LineId Id="610" Count="0" />
+      <LineId Id="614" Count="2" />
+      <LineId Id="171" Count="123" />
+      <LineId Id="581" Count="5" />
+      <LineId Id="573" Count="0" />
+      <LineId Id="572" Count="0" />
+      <LineId Id="296" Count="23" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

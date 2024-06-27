@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_00_Config_PE" Id="{9c8d6a03-d7cf-4feb-b8fd-783f401e343c}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _00_Config_PE
+VAR
+	A: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[A:=A+1;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*_00_General*)
+Mc._00_GENERAL.iPFTempAlta		:= WORD_TO_INT(PF[2]);		(*Temperatura para marcar temperatua alta*)
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*_01_seg*)
+Mc._01_SEG.iPFPresMin := 0 ;    (*FALTA DEFINIR*)
+Mc._01_SEG.iPFMcMaxiTemper		:= WORD_TO_INT(PF[1]);		(*PF Maxima Temperatura Maquina*)
+Mc._01_SEG.iPFTempCloseVent 	:= WORD_TO_INT(PF[3]);		(*PF Temperatura Cierra Respiradero*)
+Mc._01_SEG.iPFTempBloqValv  	:= WORD_TO_INT(PF[2]);		(*PF Temperatura Bloqueo Valvulas*)
+		
+(*-------------------------------------------------------------------------------------------------------*)
+(*_02_TEMP*)
+Mc._02_TEMP.iPFDefauldGrad		:= WORD_TO_INT(PF[81]);
+Mc._02_TEMP.iPFTimeOfPumpToRun	:= WORD_TO_INT(PF[82]);
+Mc._02_TEMP.iPFGradIntegra		:= WORD_TO_INT(PF[83]);
+Mc._02_TEMP.iPFGradForzCal		:= WORD_TO_INT(PF[84]);
+Mc._02_TEMP.iPFTmpComutac		:= WORD_TO_INT(PF[85]);
+Mc._02_TEMP.iPFGradComutac		:= WORD_TO_INT(PF[86]);
+Mc._02_TEMP.iPFPID_P			:= WORD_TO_INT(PF[87]);
+Mc._02_TEMP.iPFPID_I			:= WORD_TO_INT(PF[88]);
+Mc._02_TEMP.iPFPID_D			:= WORD_TO_INT(PF[89]);
+Mc._02_TEMP.iPFTempMinCool		:= WORD_TO_INT(PF[90]);
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*_03_PRESS*)
+Mc._03_PRESS.IPF_FS_Press 		:= WORD_TO_INT(PF[36]);
+Mc._03_PRESS.iPFPresLoad 		:= WORD_TO_INT(PF[37]);
+Mc._03_PRESS.IPFPresUnload 	 	:= WORD_TO_INT(PF[38]);
+Mc._03_PRESS.IPFPresSeg  		:= WORD_TO_INT(PF[39]);
+Mc._03_PRESS.IPFTimeOKPresSeg	:= WORD_TO_INT(PF[40]);
+Mc._03_PRESS.IPFTimeDelayVent	:= WORD_TO_INT(PF[41]);
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*_04_FILL*)
+Mc._04_FILL.iPFFrec			  	:= WORD_TO_INT(PF[19]);		(*PF Frecuencia maxima caudalimetro*)
+Mc._04_FILL.iPFFlowMax		  	:= WORD_TO_INT(PF[20]);		(*PF Caudal a la freq maxima*)
+Mc._04_FILL.iPFTmClcFlow	  	:= WORD_TO_TIME(1000*PF[21]); (*PF Tiempo para el calculo de lcaudal*)
+Mc._04_FILL.IPFMaxFillTime		:= PF[23];
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*_05_DRAIN*)
+Mc._05_DRAIN.iPFMaxTimeDrain	:= WORD_TO_INT(PF[27]) ;    //Maximo tiempo para Vaciado en seg.
+Mc._05_DRAIN.iPFTimeDrenado		:= WORD_TO_INT(PF[28]) ;    //Tiempo de drenado maq. en seg.
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*_06_LEVEL*)
+Mc._06_LEVEL.iPFAna_min			:= WORD_TO_INT(PF[10]);		(*Ajuste minimo nivel analogico*)	
+Mc._06_LEVEL.iPFAna_max			:= WORD_TO_INT(PF[11]);		(*Ajuste maximo nivel analogico*)	
+
+Mc._06_LEVEL.iPFLvl_1			:= WORD_TO_INT(PF[14]);		(*Porcentaje del nivel para bLvl_1*)
+Mc._06_LEVEL.iPFLvl_2			:= WORD_TO_INT(PF[15]);		(*Porcentaje del nivel para bLvl_2*)
+Mc._06_LEVEL.iPFLvl_3			:= WORD_TO_INT(PF[16]);		(*Porcentaje del nivel para bLvl_3*)
+Mc._06_LEVEL.iPFLvl_min			:= WORD_TO_INT(PF[17]);		(*Porcentaje del nivel para bLvl_min*)
+Mc._06_LEVEL.iPFLvl_max			:= WORD_TO_INT(PF[18]);		(*Porcentaje del nivel para bLvl_max*)
+
+Mc._06_LEVEL.iPFLvl_Wh			:= WORD_TO_INT(PF[12]);		(*Porcentaje del nivel bajo del lavado continuo*)
+Mc._06_LEVEL.iPFLvl_Wl			:= WORD_TO_INT(PF[13]);		(*Porcentaje del nivel alto del lavado continuo*)
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*_07_OVERFLOW*)
+MC._07_OVERFLOW.iPFTimeFillAuxT			:= WORD_TO_INT(PF[30]);		(*Tiempo llena tank auxiliar*)	
+MC._07_OVERFLOW.iPFTimeCloseAuzT		:= WORD_TO_INT(PF[31]);		(*Tiempo Fin Llenado tank auxiliar*)	
+MC._07_OVERFLOW.iPFTimeDepAuxT			:= WORD_TO_INT(PF[32]);		(*Tiempo despressuriza tank aux*)	 
+MC._07_OVERFLOW.iPFTimeDrainAuxT		:= WORD_TO_INT(PF[33]);		(*Tiempo Vaciado tank aux*)	
+MC._07_OVERFLOW.iPFTimeCloseDrainAuxT	:= WORD_TO_INT(PF[34]);		(*Tiempo fin vaciado tank aux*)	
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*_10_TK1*)
+Mc._10_TK1.iPFLvlAnaMin 		:= WORD_TO_INT(PF[50]) ;
+Mc._10_TK1.iPFLvlAnaMax 		:= WORD_TO_INT(PF[51]) ;
+Mc._10_TK1.iPFLvlMin			:= WORD_TO_INT(PF[52]) ;
+Mc._10_TK1.iPFLvlMax			:= WORD_TO_INT(PF[53]) ;
+Mc._10_TK1.iPFDescSonda			:= WORD_TO_INT(PF[54]) ;
+Mc._10_TK1.iPFDreno				:= WORD_TO_INT(PF[55]) ;
+Mc._10_TK1.iPF1rLav				:= WORD_TO_INT(PF[56]) ;
+Mc._10_TK1.iPF2nLav				:= WORD_TO_INT(PF[57]) ;
+Mc._10_TK1.iPF3rLav				:= WORD_TO_INT(PF[58]) ;
+Mc._10_TK1.iPFDifAlarma			:= WORD_TO_INT(PF[59]) ;
+Mc._10_TK1.iPFRetarBomba		:= WORD_TO_INT(PF[60]) ;
+Mc._10_TK1.iPFLowCirc			:= WORD_TO_INT(PF[61]) ;
+Mc._10_TK1.iPFHighCirc			:= WORD_TO_INT(PF[62]) ;
+Mc._10_TK1.iPFLvl_1				:= WORD_TO_INT(PF[63]) ;
+Mc._10_TK1.iPFLvl_2				:= WORD_TO_INT(PF[64]) ;
+Mc._10_TK1.iPFLvl_3				:= WORD_TO_INT(PF[65]) ;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*_11_TK2*)
+Mc._11_TK2.iPFLvlAnaMin 		:= WORD_TO_INT(PF[70]) ;
+Mc._11_TK2.iPFLvlAnaMax 		:= WORD_TO_INT(PF[71]) ;
+Mc._11_TK2.iPFLvlMin			:= WORD_TO_INT(PF[72]) ;
+Mc._11_TK2.iPFLvlMax			:= WORD_TO_INT(PF[73]) ;
+Mc._11_TK2.iPFDescSonda			:= WORD_TO_INT(PF[74]) ;
+Mc._11_TK2.iPFDreno				:= WORD_TO_INT(PF[75]) ;
+Mc._11_TK2.iPF1rLav				:= WORD_TO_INT(PF[76]) ;
+Mc._11_TK2.iPF2nLav				:= WORD_TO_INT(PF[77]) ;
+Mc._11_TK2.iPF3rLav				:= WORD_TO_INT(PF[78]) ;
+Mc._11_TK2.iPFDifAlarma			:= WORD_TO_INT(PF[79]) ;
+Mc._11_TK2.iPFRetarBomba		:= WORD_TO_INT(PF[80]) ;
+Mc._11_TK2.iPFLowCirc			:= WORD_TO_INT(PF[95]) ;
+Mc._11_TK2.iPFHighCirc			:= WORD_TO_INT(PF[96]) ;
+Mc._11_TK2.iPFLvl_1				:= WORD_TO_INT(PF[97]) ;
+Mc._11_TK2.iPFLvl_2				:= WORD_TO_INT(PF[98]) ;
+Mc._11_TK2.iPFLvl_3				:= WORD_TO_INT(PF[99]) ;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*_15_WINCH*)
+Mc._15_WINCH.iPFWinchToStop		:= WORD_TO_INT(PF[31]); //Torniquete a parar en muestra (0= el primero que pase/ X= toniquete X)
+
+
+Mc._15_WINCH.iPFNumSeam			:= WORD_TO_INT(PF[32]);//Numero de cuerdas
+	IF Mc._15_WINCH.iPFNumSeam=0 
+	THEN
+	Mc._15_WINCH.iPFNumSeam:=1;
+END_IF
+
+Mc._15_WINCH.iPFNumWinch		:= WORD_TO_INT(PF[33]);//Numero de torniquetes
+	IF Mc._15_WINCH.iPFNumWinch=0 
+	THEN
+	Mc._15_WINCH.iPFNumWinch:=1;
+END_IF
+
+Mc._15_WINCH.iPFDelayRunWinch	:= WORD_TO_INT(PF[34]);//Retraso arranque Torniquete
+Mc._15_WINCH.iPFPercentWinch	:= WORD_TO_INT(PF[35]);//Porcentaje para Alarna de cuerda Parada
+Mc._15_WINCH.iPFWinchMaxSpeed	:= WORD_TO_INT(PF[30]);//Velocidad Maxima torniquete
+Mc._15_WINCH.iPFFactPulTor		:= WORD_TO_INT(Pf[29]);//Factor pulsadores
+Mc._15_WINCH.iPFTimeMaxRope		:= WORD_TO_INT(Pf[42]);//Tiempo Maximo paso cuerda
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="_00_Config_PE">
+      <LineId Id="169" Count="1" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="4" />
+      <LineId Id="15" Count="11" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="44" Count="7" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="55" Count="3" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="66" Count="2" />
+      <LineId Id="70" Count="9" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="81" Count="4" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="89" Count="16" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="107" Count="1" />
+      <LineId Id="111" Count="15" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="131" Count="4" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="136" Count="2" />
+      <LineId Id="140" Count="1" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="142" Count="1" />
+      <LineId Id="145" Count="1" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="158" Count="3" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="106" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

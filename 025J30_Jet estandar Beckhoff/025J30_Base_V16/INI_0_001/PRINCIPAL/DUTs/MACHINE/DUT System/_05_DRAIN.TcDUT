@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="_05_DRAIN" Id="{8308b1c5-7cb1-47ed-89df-748daeb8f299}">
+    <Declaration><![CDATA[TYPE _05_DRAIN :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	v015_Grv: dutValve;
+	v016_Grv2: dutValve;
+	v017_Pump: dutValve;
+	s018_LvlHT: dutPul;
+	s019_TempHT: dutAIn;
+	v020_HT: dutValve;
+	v021_WaterHT: dutValve;
+	///+++++++++++++++++++++++++++++++++++++++
+	///READINGS
+	///+++++++++++++++++++++++++++++++++++++++
+	iTempHT: INT;
+	xLvlHT: BOOL;
+	///+++++++++++++++++++++++++++++++++++++++
+	///PF - CONFIG
+	///+++++++++++++++++++++++++++++++++++++++
+	iPFMaxTimeDrain: INT;
+	iPFTimeDrenado: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

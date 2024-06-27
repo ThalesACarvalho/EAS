@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Canvi_Escala" Id="{4ad203f6-dc25-44cf-9cab-d0bb17b74fdf}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Canvi_Escala : REAL
+VAR_INPUT
+	In:REAL;
+	In_Min:REAL:=0;
+	In_Max:REAL:=100;
+	Out_Min:REAL:=0;
+	Out_Max:REAL:=100;
+END_VAR
+VAR
+	Din: REAL;
+	Dout: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF in<in_Min
+	THEN
+		in:=in_min;
+END_IF
+IF in>in_Max
+	THEN
+		in:=in_max;
+END_IF
+
+
+
+Din:=In_Max-In_Min;
+
+IF Din=0
+	THEN
+		Canvi_Escala :=0;
+	ELSE
+		Dout:=Out_Max-Out_Min;
+		Canvi_Escala:=(((In-In_Min)/Din)*Dout)+Out_Min;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="Canvi_Escala">
+      <LineId Id="13" Count="9" />
+      <LineId Id="24" Count="8" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

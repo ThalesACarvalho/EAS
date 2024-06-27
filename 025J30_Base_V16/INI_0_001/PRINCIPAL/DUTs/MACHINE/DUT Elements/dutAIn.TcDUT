@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="dutAIn" Id="{ea4282b8-e62c-449b-9434-28ee14d43b91}">
+    <Declaration><![CDATA[TYPE dutAIn :
+STRUCT
+iAnalog:INT;	           //Lectura directa analógica
+
+rAna_min: REAL := 0;       //Valor mínimo entrada analógica
+rAna_max: REAL := 32767;   //Valor máximo entrada analógica
+rUf_min: REAL :=0;		   //Valor mínimo conversión
+rUf_max: REAL:=100;        //Valor máximo conversión
+
+rValue: REAL;			   //Out análogica en UF
+
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

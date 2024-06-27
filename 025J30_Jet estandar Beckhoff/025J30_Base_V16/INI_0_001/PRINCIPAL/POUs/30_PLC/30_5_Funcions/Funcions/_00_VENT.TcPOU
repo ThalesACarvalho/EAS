@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_00_VENT" Id="{47f14227-2a59-4cc2-a02d-f7ea2c636138}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _00_VENT
+VAR
+	xVentFunc: BOOL;
+	xPresuriza: BOOL;
+	Z_xDescarga: BOOL;
+	tPresuriza: Ton;
+	tDelayDescarga: TIME := TIME#2s0ms;
+	tDelayRespira: TIME := TIME#2s0ms;
+	tRespira: Ton;
+	z_xRespiradero: BOOL;
+	z_xCargaPres: BOOL;
+	xDespresuriz: BOOL;
+	xDescargaHighPress: BOOL;
+	xDescargaPorResp: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Activar Respiradero por Funcion
+xVentFunc:= F_LLENADO.z_xActvVent OR
+			F_LAVADO_CONT.z_xActvVent OR	
+			F_VACIADO.z_xActvVent      
+			;								
+
+//Conddiciones que presurizan pero que las funciones pueden saltarselo
+tPresuriza(	IN:= Mc._01_SEG.xTempeCloseVent OR
+				F_PRESURIZAR.z_xPresuriza,
+			PT:=tDelayDescarga ,
+			 );
+
+xPresuriza:= tPresuriza.Q ;
+
+
+
+// Carga presion			
+
+z_xCargaPres:= 	(xPresuriza OR		//Condiciones de presurizacion
+				Mc._01_SEG.xBloqValv) AND	//temperatura bloq Valvules
+				NOT(Mc._03_PRESS.xPrsLoad);
+
+xDescargaHighPress:= (xPresuriza OR		//Condiciones de presurizacion
+					Mc._01_SEG.xBloqValv) AND	//temperatura bloq Valvules
+					Mc._03_PRESS.xPrsUnload;
+
+		
+//Abrir Descarga			
+xDespresuriz := (NOT(xPresuriza) OR		//no hay condicion de presurizar activa
+				xVentFunc) AND			//Hay funcion que fuerza el despresurizado
+				NOT(Mc._01_SEG.xBloqValv); 	//El bloq de valvulas impide la abertura respiradero
+
+Z_xDescarga:= 	xDespresuriz OR
+				xDescargaHighPress;
+			
+
+//Abrir Respiradero
+tRespira(IN:= xDespresuriz, PT:=tDelayRespira );
+
+//Descargar presion por el respiradero si no hay valvula de descarga.
+xDescargaPorResp:= (*(Mc.PRESS.s073_Discharge.idDI.T*)(0=0) AND		//No existe valvula desgarga
+					xDescargaHighPress;								//Descargar por alta pres
+
+z_xRespiradero:= tRespira.Q;
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="_00_VENT">
+      <LineId Id="3" Count="3" />
+      <LineId Id="8" Count="40" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <DUT Name="ATL" Id="{e28fcb8f-75d7-40a4-b8fa-830db39a8ef1}">
+    <Declaration><![CDATA[TYPE ATL :
+STRUCT
+(*------OBLIGATORIO-------------------*)
+(*Sistema PE Com*)
+PE_COM:PE_COM;
+
+(*Sistema PE *)
+PE:PE;
+(*-----------------------------------*)
+
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

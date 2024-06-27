@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="Z_INTRO" Id="{85262cb9-f554-487b-9ab9-930e9a314746}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Z_INTRO
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+(*v050  Introducción Rápida*)
+Mc._12_INTRO.v050_Fast.xOpen:= F_INTRO_TK2.z_IntroFast OR
+								F_RECIRCULA_TK2.z_TransferTK;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v051  Introducción Lenta*)
+Mc._12_INTRO.v051_Slow.xOpen:= F_INTRO_TK2.z_IntroSlow;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v055  Modulanta Introducción*)]]></ST>
+    </Implementation>
+    <LineIds Name="Z_INTRO">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="9" Count="2" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

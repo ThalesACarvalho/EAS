@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <fileHeader companyName="Beckhoff Automation GmbH" productName="TwinCAT PLC Control" productVersion="3.5.13.21" creationDateTime="2022-11-03T11:03:07.8325215" />
+  <contentHeader name="PRINCIPAL" modificationDateTime="2022-11-03T11:03:07.8345215">
+    <coordinateInfo>
+      <fbd>
+        <scaling x="1" y="1" />
+      </fbd>
+      <ld>
+        <scaling x="1" y="1" />
+      </ld>
+      <sfc>
+        <scaling x="1" y="1" />
+      </sfc>
+    </coordinateInfo>
+    <addData>
+      <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
+        <ProjectInformation />
+      </data>
+    </addData>
+  </contentHeader>
+  <types>
+    <dataTypes />
+    <pous>
+      <pou name="pConfig_Control" pouType="program">
+        <interface>
+          <localVars>
+            <variable name="ActvHorn">
+              <type>
+                <derived name="fHorn" />
+              </type>
+            </variable>
+            <variable name="TestSirena">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml">(*-------------------------------------------------------------------------------------------------------*)
+(*-------------------------------------------------------------------------------------------------------*)
+(*CARGA PF*)
+Mc.CONTROL.iPFTempAlta:= WORD_TO_INT(PF[2]);			(*Temperatura para marcar temperatua alta*)
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*Pulsadores auto man*)
+ATL.PE.xPulAuto := Mc.CONTROL.p401_PAuto.bPul;
+ATL.PE.xPulMan := Mc.CONTROL.p400_PMAn.bPul;
+Mc.CONTROL.p400_PMAn.bPilot:= aTL.PE.xMan;
+MC.CONTROL.p401_PAuto.bPilot:= ATL.PE.xAuto; 
+ 
+(*-------------------------------------------------------------------------------------------------------*)
+(*Gestion Alarmes*)
+ActvHorn(
+	axAlarm:= ATL.PE.axAlarm, 
+	axHorn:= ATL.PE.axHorn, 
+	xStopHorn:= ATL.PE_COM.xStopAlarm OR Mc.CONTROL.p402_StopAlarm.bPul, 
+	);
+
+Mc.CONTROL.xAlarmActv:= ActvHorn.xAlarmActv;
+TestSirena := ActvHorn.xHornActv;
+
+(*Maquina Caliente*)
+IF Mc.CONTROL.iPFTempAlta&gt;0
+	THEN
+	Mc.CONTROL.xMcHot:= (Mc.TEMP.rMacTemperature&gt;Mc.CONTROL.iPFTempAlta);
+	ELSE
+	Mc.CONTROL.xMcHot:= Mc.SEG.xMaxPresTemp;
+END_IF
+
+
+(*Maquina Pausada*)
+Mc.control.xMcPaused:= Mc.CONTROL.p407_Pause.bPul;
+
+
+
+</xhtml>
+          </ST>
+        </body>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+            <InterfaceAsPlainText>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM pConfig_Control
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	ActvHorn: fHorn;
+	TestSirena: BOOL;
+END_VAR</xhtml>
+            </InterfaceAsPlainText>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>6ebd8c09-9b4d-41ef-834f-77685b604f6a</ObjectId>
+          </data>
+        </addData>
+      </pou>
+    </pous>
+  </types>
+  <instances>
+    <configurations />
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/projectstructure" handleUnknown="discard">
+      <ProjectStructure>
+        <Object Name="pConfig_Control" ObjectId="6ebd8c09-9b4d-41ef-834f-77685b604f6a" />
+      </ProjectStructure>
+    </data>
+  </addData>
+</project>

@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fBPumpC" Id="{929a0efa-6188-47b2-a7ba-83356ac99b9d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fBPumpC
+VAR_INPUT
+	///Pulsador de marcha
+	fP_Run: BOOL;
+	///Pulsador de paro
+	fP_Stop: BOOL;
+	///Pulsador de continua programa
+	xP_ContProg: BOOL;
+	///Nivel Seguridad Bomba
+	xLvlSeg: BOOL;
+	///Condiciones Seguridad arranque Bomba
+	xSeg: BOOL;
+	///Condiciones arrancar Bomba
+	xConditionRun: BOOL;
+	/// Condiciones paran bomba
+	xConditionStop: BOOL;
+	///1:manual  2: auto
+	iAutoMan: INT;
+END_VAR
+VAR_OUTPUT
+	Run: BOOL;
+END_VAR
+VAR
+	xExistePulParo: BOOL;
+	RT_PasoAuto: R_trig;
+	xRunForPul: BOOL;
+	RT_Run: R_trig;
+	RT_Stop: R_trig;
+	xStopForPul: BOOL;
+	xArrancar: BOOL;
+	xRunContProg: BOOL;
+	tContProg: Ton;
+	xParar: BOOL;
+	RS_PUMP: Rs;
+	a: INT;
+	FTParoPorNoMarcha: F_TRIG;
+	
+	xParoPorNoMarcha: BOOL;
+	TON_MarchaBomba: TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[a:=a+1;
+
+(*-------------------------------------------*)
+(****** Condiciones de Inicio******)
+//Con pulsación de 1 segundo funciona como pulsador de marcha
+//Con pulsación de más de 1 segundo funciona como barra (selector)*) 
+
+(*-----Gestion Pulsadores-----*)
+
+(*Pulso Run*)
+RT_Run(CLK:=fP_run );
+
+(*Pulso Stop*)
+RT_Stop(CLK:=fP_Stop );
+
+(*Pulso Paro por no marcha*)
+TON_MarchaBomba(IN:= fP_run, PT:= T#1S, Q=> , ET=> );
+FTParoPorNoMarcha(CLK:=TON_MarchaBomba.Q , );
+
+xParoPorNoMarcha:= FTParoPorNoMarcha.Q;
+
+(*Pul Cont Prog,*)
+tContProg(IN:=xP_ContProg , PT:=T#5S);
+
+
+(*-----Paso a Auto------*)
+RT_PasoAuto(CLK:= iAutoMan=2 );
+
+
+(*------------------------------------*)
+(*     Marcha       *) 
+(*------------------------------------*)
+xArrancar:= RT_Run.Q OR  			(*Arranc pulsadors*)
+			tContProg.Q OR  		(*Arranc Cont Prog*)	
+			RT_PasoAuto.Q OR
+			xConditionRun;
+			
+			
+(*------------------------------------*)
+(*     Paro       *) 
+(*------------------------------------*)
+xParar:= 	RT_Stop.Q OR 			(*Paro  por pulsadores*)
+			xConditionStop OR		(*Condiciones de paro*)
+			NOT(xLvlSeg) OR			(*Falta nivel de seguridad*)
+			NOT(xSeg)OR
+			xParoPorNoMarcha;    (*Paro cuando salimos de marcha con barra*)
+			
+(*------------------------------------*)
+(*     Arranque       *) 
+(*------------------------------------*)
+			
+RS_PUMP(SET:=xArrancar , RESET1:= xParar );
+
+Run:= 	RS_pump.Q1;
+]]></ST>
+    </Implementation>
+    <LineIds Name="fBPumpC">
+      <LineId Id="3" Count="3" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="14" Count="4" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="47" Count="20" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="68" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

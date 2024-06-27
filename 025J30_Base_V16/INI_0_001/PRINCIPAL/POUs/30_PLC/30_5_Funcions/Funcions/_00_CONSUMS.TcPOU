@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_00_CONSUMS" Id="{f0ea4b45-71d9-400b-9e70-bf6d7bfee5cb}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _00_CONSUMS
+VAR
+	CONSUM: CONSUMP_00;
+	a: USINT;
+	inicio_barcada: BOOL;
+	t_cicle: WORD;
+	Barcada_Actual: STRING(10);
+	FactorPulsos: REAL;
+	Contaje_lit: DINT;
+	Calentando: BOOL;
+	Manteniendo: BOOL;
+	TempSP: REAL;
+	TempMaq: REAL;
+	BombaenMar: BOOL;
+	T_BombaRun: WORD;
+	LitMaq: REAL;
+	Vpp: WORD;
+	Corrent: REAL;
+	TOTAL_CO2: REAL;
+	TOTAL_CO2_BF: REAL;
+	TOTAL_TEP: REAL;
+	TOTAL_TEP_BF: REAL;
+	Isim: REAL;
+	Pulso: BOOL;
+	t_Pulso: TON;
+	Pulsos: BOOL;
+	R_inici: R_TRIG;
+END_VAR
+VAR PERSISTENT
+	KGMaq: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[a:=a+1;
+
+(* Inicio Barcada *)
+
+R_inici(CLK:= ATL.PE.xStartBatch);
+inicio_barcada:=R_inici.Q;
+
+(* T_cicle *)
+t_cicle			:= 300;
+
+(* Barcada *)
+Barcada_Actual 	:= XC20;
+
+(*Litros Entrada contaje*)
+//Calculo litros
+Mc._04_FILL.fCaudalimetro(
+	iCnt:=			mC._04_FILL.iCnt , 
+	xReset:= 		ATL.PE.xEndBatch, 
+	iPFFrec:= 		Mc._04_FILL.iPFFrec, 
+	iPFFlowMax:= 	Mc._04_FILL.iPFFlowMax, 
+	iPFTmClcFlow:= 	Mc._04_FILL.iPFTmClcFlow, 
+	 );
+Mc._14_CONSUM.rLit_Batch  :=Mc._04_FILL.fCaudalimetro.rLit;
+
+
+Contaje_lit		:=REAL_TO_DINT(Mc._14_CONSUM.rLit_Batch);
+FactorPulsos	:=1;
+(***********************
+(*Variavles Vapor*)
+Calentando		:=(F_TERMOREG.Termo.calentar) AND NOT(F_TERMOREG.Termo.EnManteniment)  ;
+Manteniendo		:= F_TERMOREG.Termo.EnManteniment;
+TempSP			:= Mc.TEMP.rTempImp;
+TempMaq			:= Mc.TEMP.rTempImp;
+BombaenMar		:= Mc.CP.b450_CircPump.xOK;
+T_BombaRun		:= 3;
+LitMaq			:= Mc._04_FILL.rLitMc;
+
+(*Variables Consumo electrico*)
+
+Vpp:=  PF_consum[1];
+
+Corrent := Mc._14_CONSUM.rAmp;
+
+************)
+
+(*Crida bloc consums*)
+
+
+CONSUM(
+	InicioBarcada	:= inicio_barcada ,
+	T_Cicle			:= t_cicle,
+	Barcada			:= Barcada_Actual,
+	H2O_CounterInput:= Contaje_lit,
+	H2O_FactorLts	:= FactorPulsos,
+
+	KgV_Heat		:= Calentando,
+	KgV_Keep		:= Manteniendo,
+	KgV_T_sp		:= TempSP,
+	KgV_T_act		:= TempMaq,
+	KgV_PumpRun		:= BombaenMar,
+	KgV_PF_TmPRun	:= T_BombaRun,
+	KgV_Lit			:= LitMaq,
+	KgV_Kg_f		:= KgMaq,
+
+	Kwh_I_amp		:=  Corrent,
+	Kwh_Vpp			:=  Vpp,
+
+	PF_grCo2_kw		:= PF_consum[3],
+	PF_grCo2_KgV	:= PF_consum[4],
+	PF_grCo2_H2O	:= PF_consum[5],
+	PF_kWh_to_tep	:= PF_consum[6],
+	PF_kgV_tep		:= PF_consum[7],
+	PF_Agua_tep		:= PF_consum[8],
+
+	H2O_Lt=> 		aCONSUM[1],
+	H2O_KgCo=> 		aCONSUM[2],
+	H2O_LtxKg=>		aCONSUM[3],
+
+	H2O_Lt_bf=> 	aCONSUM[4],
+	H2O_KgCo_bf=> 	aCONSUM[5],
+	H2O_LtxKg_bf=> 	aCONSUM[6],
+
+	KgV=> 			aCONSUM[7],
+	KgV_KgCo=> 		aCONSUM[8],
+	KgVxKg=> 		aCONSUM[9],
+
+	KgV_bf=> 		aCONSUM[10],
+	KgV_KgCo_bf=> 	aCONSUM[11],
+	KgVxKg_bf=> 	aCONSUM[12],
+
+	Kwh=> 			aCONSUM[13],
+	Kwh_KgCo=> 		aCONSUM[14],
+	KwhxKg=> 		aCONSUM[15],
+
+	Kwh_bf=> 		aCONSUM[16],
+	Kwh_KgCo_bf=> 	aCONSUM[17],
+	KwhxKg_bf=> 	aCONSUM[18],
+
+
+	TOTAL_KGCO2=> 	aCONSUM[20],
+	TOTAL_KGCO2_kg=> aCONSUM[21],
+	TOTAL_KGCO2_bf=> aCONSUM[23],
+	TOTAL_KGCO2_kg_bf=> aCONSUM[24],
+
+
+	Ult_Barcada=>  ,
+	Ult_Kg=> aCONSUM[22]
+	);
+
+
+
+(*CArgar kilos (realizar al final para asegurar que se cargan los anteriores bien)*)
+aCONSUM[19]:= KgMaq;
+
+IF inicio_barcada THEN
+		KGMaq	:= DWORD_TO_REAL(XC27);
+END_IF
+
+
+
+
+
+
+
+	Mc._14_CONSUM.rLit_Batch :=  (aCONSUM[1]);		(* Litros consumidos en una barcada *)
+	Mc._14_CONSUM.rKgStm_Batch  :=  (aCONSUM[7]);		(* Vapor consumidos en una barcada   *)
+	Mc._14_CONSUM.rKw_Batch  :=  (aCONSUM[13]);		(* Kw consumidos en una barcada   *)
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="_00_CONSUMS">
+      <LineId Id="3" Count="128" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

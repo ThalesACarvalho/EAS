@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fCnt" Id="{ed3495eb-2095-47cc-ac62-b769e279df5e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fCnt
+VAR_INPUT
+	///Valor contador
+	iCnt: UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*Entrada tipo 1008 BECHOFF CNT*)
+]]></ST>
+    </Implementation>
+    <LineIds Name="fCnt">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

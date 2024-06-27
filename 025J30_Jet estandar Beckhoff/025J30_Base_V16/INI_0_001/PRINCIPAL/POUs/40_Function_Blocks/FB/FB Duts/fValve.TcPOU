@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="fValve" Id="{de76ec87-4c68-4a40-bf4d-7a95fb3a12ac}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fValve
+
+VAR_IN_OUT
+	valv:dutValve;
+END_VAR
+
+VAR
+	a: INT;
+	tonFailFCOp: Ton;
+	tonFailFCCl: Ton;
+	bFailFCop:BOOL;	(*Fail FC*)
+	bFailFCcl:BOOL;	(*Fail FC*)
+	test: BOOL;
+	tToFail: TIME := T#5S;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[a:=a+1;
+
+valv.xFailFC:=FALSE;
+valv.xFailFCc:=FALSE;
+valv.xFailFCo:=FALSE;
+		
+(*=========================================================================================================*)
+(*Salida  BECHOFF DO*)
+				
+(*FC valve open*)
+tonFailFCOp(IN:= (valv.xOpen)AND NOT(valv.xFailFCo) , PT:=tToFail );
+valv.xFailFCo:= tonFailFCOp.Q;
+
+(*FC valve close*)
+tonFailFCCl(IN:= NOT(valv.xOpen)AND NOT(valv.xFailFCc) , PT:=tToFail  );
+valv.xFailFCc:= tonFailFCCl.Q;
+
+(*FC Valve*)		
+valv.xFailFC:= valv.xFailFCo OR valv.xFailFCc;
+
+(*=========================================================================================================*)]]></ST>
+    </Implementation>
+    <LineIds Name="fValve">
+      <LineId Id="9" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="97" Count="2" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="48" Count="1" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="71" Count="1" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="54" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

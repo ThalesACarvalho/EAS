@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="_16_WINCH_X" Id="{416bd459-4817-4326-b1d5-361daf048d35}">
+    <Declaration><![CDATA[TYPE _16_WINCH_X :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	p00_Winch: DutPump;
+	p01_Run: dutpul;
+	p02_Rev: dutpul;
+	P03_AutoMan: dutpul;
+	p04_InVel: dutAin;
+	p05_UpVel: dutpul;
+	p06_DwnVel: dutpul;
+	s07_Tangle: dutpul;
+	p08_PilTangle: dutpul;
+	s09_Seam: dutpul;
+	s10_ControlSeam: dutpul;
+	s11_FindSeam: dutpul;
+	///Enrredo
+	xTangle: BOOL;
+	///Buscar costura
+	xLookingSeam: BOOL;
+	///Paro por costura
+	xSeamStops: BOOL;
+	///Velocidad torniquete em unidades fisicas
+	rSpeedUF: REAL;
+	///+++++++++++++++++++++++++++++++++++++++
+	///CONFIG
+	///+++++++++++++++++++++++++++++++++++++++
+	iPFMaxVel: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Versions ver="2.2">
+  <Device>
+    <Name>CM211</Name>
+    <DefaultFWVersion>1.96</DefaultFWVersion>
+    <EEPROM>1</EEPROM>
+    <CF>1</CF>
+    <CE>1</CE>
+    <GlobalDPSize>0x20000</GlobalDPSize>
+    <CoDeSysBitAddr>2</CoDeSysBitAddr> 
+    <Drivers>
+      <Driver>FRED_CE</Driver>
+    </Drivers>
+    <Connections>
+      <Connection>Ethernet</Connection>
+    </Connections>
+    <Interfaces>
+      <Interface>PLC_ETH</Interface>
+      <Interface>PLC_ETHR</Interface>
+      <Interface>PLC_RS</Interface>
+      <Interface>MB_ETH</Interface>
+      <Interface>MB_RS232</Interface>
+      <Interface>MB_RS485</Interface>
+    </Interfaces>
+    <Servers>
+      <Server>PLC_ETHR</Server>
+      <Server>MB_ETH</Server>
+      <Server>MB_RS232</Server>
+      <Server>MB_RS485</Server>
+    </Servers>
+    <Terminals>
+      <Paths>
+        <Path>Remote</Path>
+		<Path>RemotePTE</Path>
+		<Path>RemotePC2xx</Path>
+      </Paths>
+    </Terminals>
+    <Slaves>
+      <Paths>
+        <Path>SlaveComboCM211</Path>
+      </Paths>
+    </Slaves>
+    <Extensions>
+      <Paths>
+        <Path>ExtensionCM211</Path>
+      </Paths>
+    </Extensions>    
+    <Programming>
+      <CoDeSys>
+        <TargetID>17427</TargetID>      
+        <BitAddr>2</BitAddr> 
+        <GlobalDPSize>0x20000</GlobalDPSize>
+        <EthernetDeviceName>Tcp/Ip (Level 2 Route)</EthernetDeviceName>
+        <EthernetDeviceParameterAddress>%p3</EthernetDeviceParameterAddress>
+        <EthernetDeviceParameterPort>1200</EthernetDeviceParameterPort>
+        <EthernetDeviceParameterMotorola_byteorder>No</EthernetDeviceParameterMotorola_byteorder>		
+      </CoDeSys>
+    </Programming>	
+    <Visualisation>
+      <ElaDesign />
+    </Visualisation>
+    <Tools>
+      <Tool ID="Internet Browser" />
+      <Tool ID="FTP Browser" />
+      <Tool ID="Telnet" />
+      <Tool ID="Event Logger" />
+    </Tools>
+    <COMPort>0</COMPort>
+    <IOs>
+      <DI>16</DI>
+      <DO>16</DO>
+      <II>8</II>
+      <CI>8</CI>
+      <AI>4</AI>
+      <AO>4</AO>
+    </IOs>
+  </Device>
+  <Device ver="2.20">
+    <Programming>
+      <CoDeSys>
+        <TargetID>17427</TargetID>      
+        <BitAddr>2</BitAddr> 
+      </CoDeSys>
+    </Programming>
+  </Device> 
+  <Device ver="2.30">
+  </Device>  
+</Versions>

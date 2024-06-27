@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <GVL Name="contants" Id="{1e5b84fd-5bc0-451d-8654-8feb1c957bb5}">
+    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
+
+(*=======================================	*)
+(*			Carregar Constants						*)
+(*=======================================	*)
+	max_Funcions:WORD:=64;
+	max_ParamFunc:WORD:=9;
+	max_FinFunc:WORD:=5;
+	max_PasCicle:WORD:=256;
+	Max_Compatibles:WORD:=32;
+	Max_Func_Pas:WORD:=12;
+	Max_Alarmes:WORD:=128;
+	Max_ParamFixes:WORD:=150;
+	Max_DBFiFuncio: WORD:=320 ;				(* Es calcula com    (Max_Funcions*Max_FinFunc)   *)
+	Max_ElementsCicle: WORD:=2816 ;		(* Es calcula com    (Max_PasCicle*(Max_ParamFunc+2))  *)
+	Max_DBIncompatibles: WORD:=64;			(* Es calcula com    (Max_Compatibles*2)  *)
+	Max_Inputs: WORD:=128;
+	Max_Outputs: WORD:=128;
+	Max_Analog: WORD:=32;
+	Num_Prod_Dos:WORD:=10;         					(* Numero maximo de productos en una dosificación*)
+	Max_Prod_Dos:WORD:=128;							(* Productos en una dosificadora*)
+	Max_Valv_Dos:WORD:=128;							(* Valvulas en una do*)
+	Max_Tanks:WORD:=4;
+	
+	
+(*=======================================	*)
+(*			Hardware Beckhoff				*)
+(*=======================================	*)
+	Max_island_beck	:WORD:=5;
+	Max_DI_Beck		:WORD:=256;
+	Max_DO_Beck		:WORD:=256;
+	Max_AI_Beck		:WORD:=32;
+	Max_AO_Beck		:WORD:=32;
+	Max_CNT_Beck	:WORD:=16;
+	
+	     
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

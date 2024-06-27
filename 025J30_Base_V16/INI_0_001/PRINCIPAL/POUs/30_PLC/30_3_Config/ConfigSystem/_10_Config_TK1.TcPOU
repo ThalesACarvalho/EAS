@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_10_Config_TK1" Id="{88345f36-3453-4b86-89fb-794ba1315e80}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _10_Config_TK1
+VAR
+	tonLvlMin: Tof;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+//Mc._10_TK1.s113_Level();
+	
+(*-------------------------------------------------------------------------------------------------------*)
+(*Nivel analogico*)
+Mc._10_TK1.s113_Level.rAna_min		:=  Mc._10_TK1.iPFLvlAnaMin ;
+Mc._10_TK1.s113_Level.rAna_max		:=  Mc._10_TK1.iPFLvlAnaMax ;
+// Nível 0-100%
+Mc._10_TK1.rLvl := Mc._10_TK1.s113_Level.rValue;
+
+(*Nivel minimo*)
+tonLvlMin(IN:=(Mc._10_TK1.rLvl>Mc._10_TK1.iPFLvlMin) , PT:= INT_TO_TIME(Mc._10_TK1.iPFDescSonda*1000) );
+Mc._10_TK1.xLvl_min := tonLvlMin.Q ;
+
+
+(*Nivel Maximo*)
+Mc._10_TK1.xLvl_max := (Mc._10_TK1.rLvl>=Mc._10_TK1.iPFLvlMax) ;
+
+(*Nivel Alto Recirculacion*)
+Mc._10_TK1.xLvlHighCirc := (Mc._10_TK1.rLvl>=Mc._10_TK1.iPFHighCirc) ;
+
+(*Nivel Bajo Recirculacion*)
+Mc._10_TK1.xLvlLowCirc := (Mc._10_TK1.rLvl>=Mc._10_TK1.iPFLowCirc) ;
+
+(*Nivel 1 *)
+Mc._10_TK1.xLvl_1 := (Mc._10_TK1.rLvl>=Mc._10_TK1.iPFLvl_1) ;
+
+(*Nivel 2 *)
+Mc._10_TK1.xLvl_2 := (Mc._10_TK1.rLvl>=Mc._10_TK1.iPFLvl_2) ;
+
+(*Nivel 3 *)
+Mc._10_TK1.xLvl_3 := (Mc._10_TK1.rLvl>=Mc._10_TK1.iPFLvl_3) ;
+
+(*-------------------------------------------------------------------------------------------------------*)
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="_10_Config_TK1">
+      <LineId Id="62" Count="0" />
+      <LineId Id="23" Count="34" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

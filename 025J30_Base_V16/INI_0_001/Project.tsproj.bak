@@ -1,0 +1,2807 @@
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.17">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{864017A3-EDAC-7725-7256-7DF24D4DDBE8}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..256] OF BOOL</Name>
+			<BitSize>2048</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>256</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{12136D81-4849-9FCF-6C84-9A0446B0B0FF}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..32] OF INT</Name>
+			<BitSize>512</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000006}">INT</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>32</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{B11B09EE-7C20-6814-AFEA-F5578BC918AF}" Namespace="Util" AutoDeleteType="true">POINT</Name>
+			<BitSize>64</BitSize>
+			<SubItem>
+				<Name>X</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Y</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{ECFD702A-51D7-C1F3-47CD-938F49B55F43}" Namespace="EAS" AutoDeleteType="true">TipusCurva</Name>
+			<BitSize>704</BitSize>
+			<SubItem>
+				<Name>Table</Name>
+				<Type GUID="{B11B09EE-7C20-6814-AFEA-F5578BC918AF}" Namespace="Util">POINT</Type>
+				<ArrayInfo>
+					<LBound>0</LBound>
+					<Elements>11</Elements>
+				</ArrayInfo>
+				<BitSize>704</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{C1BBDDFE-0C3C-B136-CFA7-0FCF85E705BC}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..19] OF EAS.TipusCurva</Name>
+			<Comment><![CDATA[=======================================	
+		Curvas								
+=======================================	]]></Comment>
+			<BitSize>14080</BitSize>
+			<BaseType GUID="{ECFD702A-51D7-C1F3-47CD-938F49B55F43}" Namespace="EAS">TipusCurva</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>20</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{9363DE00-A898-5791-3FD2-72A9E7468D3E}" Namespace="EAS_SCADA" AutoDeleteType="true">T_Compat</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>Funcio1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[Codi de la primera funcio]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Funcio2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[Codi de la segona funcio]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{9977AA14-E0D1-C85E-5356-E8ADA1F63DC7}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..32] OF EAS_SCADA.T_Compat</Name>
+			<Comment><![CDATA[=======================================	
+					Estat del PE4							
+=======================================	
+Estat de PE4]]></Comment>
+			<BitSize>1024</BitSize>
+			<BaseType GUID="{9363DE00-A898-5791-3FD2-72A9E7468D3E}" Namespace="EAS_SCADA">T_Compat</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>32</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{E04B089E-B615-4C65-DA3B-A1CDA63DE20A}" Namespace="EAS_SCADA" AutoDeleteType="true">E_Funcio</Name>
+			<BitSize>176</BitSize>
+			<SubItem>
+				<Name>Cd_Funcio</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Actv_Funcio</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ParamFunc</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>9</Elements>
+				</ArrayInfo>
+				<BitSize>144</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{DB239FE9-4710-2AB1-226F-797020BF261B}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..64] OF EAS_SCADA.E_Funcio</Name>
+			<Comment><![CDATA[Estat actual de les funcions]]></Comment>
+			<BitSize>11264</BitSize>
+			<BaseType GUID="{E04B089E-B615-4C65-DA3B-A1CDA63DE20A}" Namespace="EAS_SCADA">E_Funcio</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>64</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{DB2BC600-E8E0-D43F-1726-D025B4C59375}" Namespace="EAS_SCADA" AutoDeleteType="true">T_funcio</Name>
+			<BitSize>240</BitSize>
+			<SubItem>
+				<Name>Cd_funcio</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[Codi de la funció]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>DesFuncio</Name>
+				<Type GUID="{18071995-0000-0000-0000-000100000010}">STRING(16)</Type>
+				<Comment><![CDATA[Descripció de la funció]]></Comment>
+				<BitSize>136</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Background</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[Indicació per si la funció es en backgraund o no]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>152</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>FinFunc</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>5</Elements>
+				</ArrayInfo>
+				<Comment><![CDATA[Funcions que s'han d'acabar al començar aquesta]]></Comment>
+				<BitSize>80</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{E0435177-19E5-B2EB-EF72-089832475764}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..64] OF EAS_SCADA.T_funcio</Name>
+			<Comment><![CDATA[Configuració de les funcios ]]></Comment>
+			<BitSize>15360</BitSize>
+			<BaseType GUID="{DB2BC600-E8E0-D43F-1726-D025B4C59375}" Namespace="EAS_SCADA">T_funcio</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>64</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{58E3EB62-AFCD-C7A9-97A7-05B9028BDDD9}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..12] OF WORD</Name>
+			<BitSize>192</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>12</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{0E867CAC-498D-5581-96D6-7FFCE8223E92}" Namespace="EAS_SCADA" AutoDeleteType="true">PasCicle</Name>
+			<BitSize>192</BitSize>
+			<SubItem>
+				<Name>Pas</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Funcio</Name>
+				<Type GUID="{E04B089E-B615-4C65-DA3B-A1CDA63DE20A}" Namespace="EAS_SCADA">E_Funcio</Type>
+				<BitSize>176</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{90C1729A-A421-22A4-E480-020EA56FE54A}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..256] OF EAS_SCADA.PasCicle</Name>
+			<Comment><![CDATA[Cicle Actual de treball]]></Comment>
+			<BitSize>49152</BitSize>
+			<BaseType GUID="{0E867CAC-498D-5581-96D6-7FFCE8223E92}" Namespace="EAS_SCADA">PasCicle</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>256</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{D5E96B25-A263-741D-2099-FBB6B0108C6C}" Namespace="Tc2_Standard" AutoDeleteType="true">TON</Name>
+			<BitSize>224</BitSize>
+			<SubItem>
+				<Name>IN</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[ starts timer with rising edge, resets timer with falling edge ]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>PT</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<Comment><![CDATA[ time to pass, before Q is set ]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>Q</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[ gets TRUE, delay time (PT) after a rising edge at IN ]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>96</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>ET</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<Comment><![CDATA[ elapsed time ]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>M</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>StartTime</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{4308E13B-8990-7348-8E21-55C50232F2F1}" AutoDeleteType="true">TMP</Name>
+			<BitSize>448</BitSize>
+			<SubItem>
+				<Name>IN</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>Segons</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>Q</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>96</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>Tsegons</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>TEmporitz</Name>
+				<Type GUID="{D5E96B25-A263-741D-2099-FBB6B0108C6C}" Namespace="Tc2_Standard">TON</Type>
+				<BitSize>224</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Temps</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>384</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TempsTrans</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000D}">REAL</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>416</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{CEE7274D-F320-BD36-9033-B2DD74EA94CB}" Namespace="EAS_SCADA" AutoDeleteType="true">Parar_Func_FiFuncio</Name>
+			<BitSize>352</BitSize>
+			<SubItem>
+				<Name>Tipus_Funcio</Name>
+				<Type GUID="{DB2BC600-E8E0-D43F-1726-D025B4C59375}" Namespace="EAS_SCADA">T_funcio</Type>
+				<BitSize>240</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>Estat_F</Name>
+				<Type GUID="{E04B089E-B615-4C65-DA3B-A1CDA63DE20A}" Namespace="EAS_SCADA">E_Funcio</Type>
+				<ArrayInfo ReferenceTo="true">
+					<LBound>1</LBound>
+					<Elements>64</Elements>
+				</ArrayInfo>
+				<BitSize>32</BitSize>
+				<BitOffs>288</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>InOut</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>PunterFiFunc</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>320</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>FuncioIncompat</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>336</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{3C6F80D7-0D77-9810-3858-979D3F5668D4}" Namespace="EAS_SCADA" AutoDeleteType="true">Parar_Func_Incomp</Name>
+			<BitSize>160</BitSize>
+			<SubItem>
+				<Name>Funcio</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[Funcio que s'ha de parar]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>DB_Comp</Name>
+				<Type GUID="{9363DE00-A898-5791-3FD2-72A9E7468D3E}" Namespace="EAS_SCADA">T_Compat</Type>
+				<ArrayInfo ReferenceTo="true">
+					<LBound>1</LBound>
+					<Elements>32</Elements>
+				</ArrayInfo>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>InOut</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>Estat_F</Name>
+				<Type GUID="{E04B089E-B615-4C65-DA3B-A1CDA63DE20A}" Namespace="EAS_SCADA">E_Funcio</Type>
+				<ArrayInfo ReferenceTo="true">
+					<LBound>1</LBound>
+					<Elements>64</Elements>
+				</ArrayInfo>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>InOut</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>PunterEstat</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PunterComp</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>144</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{BDDB41B8-E613-FB29-2DE1-D002DABFE878}" Namespace="EAS_SCADA" AutoDeleteType="true">Salt</Name>
+			<BitSize>12160</BitSize>
+			<SubItem>
+				<Name>PasInicial</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>PasFinal</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>FIFuncio</Name>
+				<Type GUID="{CEE7274D-F320-BD36-9033-B2DD74EA94CB}" Namespace="EAS_SCADA">Parar_Func_FiFuncio</Type>
+				<BitSize>352</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Incompatibles</Name>
+				<Type GUID="{3C6F80D7-0D77-9810-3858-979D3F5668D4}" Namespace="EAS_SCADA">Parar_Func_Incomp</Type>
+				<BitSize>160</BitSize>
+				<BitOffs>448</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PunterCicle</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[ Aquest valor marca la popsició del db de cicle on estem independent del pas de cicle ]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>608</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>T_Func_Act</Name>
+				<Type GUID="{DB2BC600-E8E0-D43F-1726-D025B4C59375}" Namespace="EAS_SCADA">T_funcio</Type>
+				<Comment><![CDATA[ Funcio que indica el punterCicle ]]></Comment>
+				<BitSize>240</BitSize>
+				<BitOffs>624</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>codi</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>864</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Est_Func_0</Name>
+				<Type GUID="{E04B089E-B615-4C65-DA3B-A1CDA63DE20A}" Namespace="EAS_SCADA">E_Funcio</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>64</Elements>
+				</ArrayInfo>
+				<Comment><![CDATA[Estat de les funcions a cero per reiniciar l'estat]]></Comment>
+				<BitSize>11264</BitSize>
+				<BitOffs>880</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{F4FFB7A9-61FD-1B83-0B53-CF0B2478163D}" Namespace="EAS_SCADA" AutoDeleteType="true">SaltDePasEnUnCicle</Name>
+			<BitSize>12160</BitSize>
+			<SubItem>
+				<Name>PasInicial</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>PasFinal</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>FIFuncio</Name>
+				<Type GUID="{CEE7274D-F320-BD36-9033-B2DD74EA94CB}" Namespace="EAS_SCADA">Parar_Func_FiFuncio</Type>
+				<BitSize>352</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Incompatibles</Name>
+				<Type GUID="{3C6F80D7-0D77-9810-3858-979D3F5668D4}" Namespace="EAS_SCADA">Parar_Func_Incomp</Type>
+				<BitSize>160</BitSize>
+				<BitOffs>448</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PunterCicle</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[ Aquest valor marca la popsició del db de cicle on estem independent del pas de cicle ]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>608</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>T_Func_Act</Name>
+				<Type GUID="{DB2BC600-E8E0-D43F-1726-D025B4C59375}" Namespace="EAS_SCADA">T_funcio</Type>
+				<Comment><![CDATA[ Funcio que indica el punterCicle ]]></Comment>
+				<BitSize>240</BitSize>
+				<BitOffs>624</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>codi</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>864</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Est_Func_0</Name>
+				<Type GUID="{E04B089E-B615-4C65-DA3B-A1CDA63DE20A}" Namespace="EAS_SCADA">E_Funcio</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>64</Elements>
+				</ArrayInfo>
+				<Comment><![CDATA[Estat de les funcions a cero per reiniciar l'estat]]></Comment>
+				<BitSize>11264</BitSize>
+				<BitOffs>880</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{8BE73BCE-7378-A200-81D6-5EFEFC454E7E}" Namespace="EAS_SCADA" AutoDeleteType="true">PararTotesLesFuncions</Name>
+			<BitSize>96</BitSize>
+			<SubItem>
+				<Name>Estat_F</Name>
+				<Type GUID="{E04B089E-B615-4C65-DA3B-A1CDA63DE20A}" Namespace="EAS_SCADA">E_Funcio</Type>
+				<ArrayInfo ReferenceTo="true">
+					<LBound>1</LBound>
+					<Elements>64</Elements>
+				</ArrayInfo>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>InOut</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>Punter</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{5B9B2A8B-1024-934A-28C0-9BEF0CADC487}" Namespace="EAS_SCADA" AutoDeleteType="true">ComprobarFuncionsPas</Name>
+			<BitSize>27136</BitSize>
+			<SubItem>
+				<Name>Estat_F</Name>
+				<Type GUID="{E04B089E-B615-4C65-DA3B-A1CDA63DE20A}" Namespace="EAS_SCADA">E_Funcio</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>64</Elements>
+				</ArrayInfo>
+				<BitSize>11264</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>Tipus_F</Name>
+				<Type GUID="{DB2BC600-E8E0-D43F-1726-D025B4C59375}" Namespace="EAS_SCADA">T_funcio</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>64</Elements>
+				</ArrayInfo>
+				<BitSize>15360</BitSize>
+				<BitOffs>11296</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>FuncionsActives</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>12</Elements>
+				</ArrayInfo>
+				<BitSize>192</BitSize>
+				<BitOffs>26656</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>AumentaPas</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>26848</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>Punter</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>26864</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Aumenta</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>26880</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TempoPAS</Name>
+				<Type GUID="{D5E96B25-A263-741D-2099-FBB6B0108C6C}" Namespace="Tc2_Standard">TON</Type>
+				<BitSize>224</BitSize>
+				<BitOffs>26912</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{587BDF62-5EA3-C5DA-83A0-AEDDE62CF101}" Namespace="EAS_SCADA" AutoDeleteType="true">Inic_Func_Actv</Name>
+			<BitSize>96</BitSize>
+			<SubItem>
+				<Name>Func_Actv</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<ArrayInfo ReferenceTo="true">
+					<LBound>1</LBound>
+					<Elements>12</Elements>
+				</ArrayInfo>
+				<Comment><![CDATA[ DB que indica en automaatic les funcions que estan en marcha en automatic]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>InOut</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>Punter</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{19819C29-5A27-7E5A-060A-5AA78A42234C}" Namespace="EAS_SCADA" AutoDeleteType="true">CarregarFuncionsActivesAlDB</Name>
+			<BitSize>11648</BitSize>
+			<SubItem>
+				<Name>EstatFuncions</Name>
+				<Type GUID="{E04B089E-B615-4C65-DA3B-A1CDA63DE20A}" Namespace="EAS_SCADA">E_Funcio</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>64</Elements>
+				</ArrayInfo>
+				<BitSize>11264</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>FuncionsActives</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>12</Elements>
+				</ArrayInfo>
+				<BitSize>192</BitSize>
+				<BitOffs>11296</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>Punter</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>11488</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PunterDB</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>11504</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>inicialitzaDB</Name>
+				<Type GUID="{587BDF62-5EA3-C5DA-83A0-AEDDE62CF101}" Namespace="EAS_SCADA">Inic_Func_Actv</Type>
+				<BitSize>96</BitSize>
+				<BitOffs>11520</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>DB_ple</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>11616</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{C60E3C05-7B45-5393-02D2-8E79FB1DE71A}" AutoDeleteType="true">id</Name>
+			<BitSize>48</BitSize>
+			<SubItem>
+				<Name>T</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[Type]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>N</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[Node]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Sn</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[Subnode]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{FD0C7376-09F8-BBC1-29BD-A47C16493A1E}" AutoDeleteType="true">fValveM</Name>
+			<BitSize>128</BitSize>
+			<SubItem>
+				<Name>rValue</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000D}">REAL</Type>
+				<Comment><![CDATA[Open valve 0..100%]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>idV</Name>
+				<Type GUID="{C60E3C05-7B45-5393-02D2-8E79FB1DE71A}">id</Type>
+				<Comment><![CDATA[Position valve]]></Comment>
+				<BitSize>48</BitSize>
+				<BitOffs>64</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{47667CAC-940B-4733-913B-70F3DF710D4C}" AutoDeleteType="true">fValve</Name>
+			<BitSize>768</BitSize>
+			<SubItem>
+				<Name>bE</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[Estate valve]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>idV</Name>
+				<Type GUID="{C60E3C05-7B45-5393-02D2-8E79FB1DE71A}">id</Type>
+				<Comment><![CDATA[Position valve]]></Comment>
+				<BitSize>48</BitSize>
+				<BitOffs>48</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>idFC_op</Name>
+				<Type GUID="{C60E3C05-7B45-5393-02D2-8E79FB1DE71A}">id</Type>
+				<Comment><![CDATA[Position  FC open]]></Comment>
+				<BitSize>48</BitSize>
+				<BitOffs>96</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>idFC_cl</Name>
+				<Type GUID="{C60E3C05-7B45-5393-02D2-8E79FB1DE71A}">id</Type>
+				<Comment><![CDATA[Position  FC close]]></Comment>
+				<BitSize>48</BitSize>
+				<BitOffs>144</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>tToFail</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<Comment><![CDATA[Time to fail]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>192</BitOffs>
+				<Default>
+					<DateTime>T#2S</DateTime>
+				</Default>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>bFailFC</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[Fail FC]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>224</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>bFailCC</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[fail Corto Circuit]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>232</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>bFailOC</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[Fail Open Circuit]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>240</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>a</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000006}">INT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>256</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>tonFailFCOp</Name>
+				<Type GUID="{D5E96B25-A263-741D-2099-FBB6B0108C6C}" Namespace="Tc2_Standard">TON</Type>
+				<BitSize>224</BitSize>
+				<BitOffs>288</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>tonFailFCCl</Name>
+				<Type GUID="{D5E96B25-A263-741D-2099-FBB6B0108C6C}" Namespace="Tc2_Standard">TON</Type>
+				<BitSize>224</BitSize>
+				<BitOffs>512</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>bFailFCop</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[Fail FC]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>736</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>bFailFCcl</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[Fail FC]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>744</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{EFBCBA4E-2766-679E-9BD5-392420906DAB}" AutoDeleteType="true">fPump</Name>
+			<BitSize>992</BitSize>
+			<SubItem>
+				<Name>xRun</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[Estate Punp]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>32</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>xRev</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[Reverse Pump]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>40</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>rVel</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000D}">REAL</Type>
+				<Comment><![CDATA[Speed ]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>idRun</Name>
+				<Type GUID="{C60E3C05-7B45-5393-02D2-8E79FB1DE71A}">id</Type>
+				<Comment><![CDATA[id Run Punp]]></Comment>
+				<BitSize>48</BitSize>
+				<BitOffs>96</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>IdRev</Name>
+				<Type GUID="{C60E3C05-7B45-5393-02D2-8E79FB1DE71A}">id</Type>
+				<Comment><![CDATA[id Rev Punp]]></Comment>
+				<BitSize>48</BitSize>
+				<BitOffs>144</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>idVel</Name>
+				<Type GUID="{C60E3C05-7B45-5393-02D2-8E79FB1DE71A}">id</Type>
+				<BitSize>48</BitSize>
+				<BitOffs>192</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>idCons</Name>
+				<Type GUID="{C60E3C05-7B45-5393-02D2-8E79FB1DE71A}">id</Type>
+				<Comment><![CDATA[id input OK Punp]]></Comment>
+				<BitSize>48</BitSize>
+				<BitOffs>240</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>idFail</Name>
+				<Type GUID="{C60E3C05-7B45-5393-02D2-8E79FB1DE71A}">id</Type>
+				<Comment><![CDATA[id input Fail]]></Comment>
+				<BitSize>48</BitSize>
+				<BitOffs>288</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Input</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>xOK</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[Punp Run OK]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>336</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>xFail</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[Fail Pump]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>344</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>xNo_Ok</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<Comment><![CDATA[Falta consenso]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>352</BitOffs>
+				<Properties>
+					<Property>
+						<Name>ItemType</Name>
+						<Value>Output</Value>
+					</Property>
+				</Properties>
+			</SubItem>
+			<SubItem>
+				<Name>rVel_010</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000D}">REAL</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>384</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>xCons</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>416</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>tonOKCons</Name>
+				<Type GUID="{D5E96B25-A263-741D-2099-FBB6B0108C6C}" Namespace="Tc2_Standard">TON</Type>
+				<BitSize>224</BitSize>
+				<BitOffs>448</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>xOKCons</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>672</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>tTmpOK</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>704</BitOffs>
+				<Default>
+					<DateTime>T#2S</DateTime>
+				</Default>
+			</SubItem>
+			<SubItem>
+				<Name>tTmpFail</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>736</BitOffs>
+				<Default>
+					<DateTime>T#500MS</DateTime>
+				</Default>
+			</SubItem>
+			<SubItem>
+				<Name>tonFail</Name>
+				<Type GUID="{D5E96B25-A263-741D-2099-FBB6B0108C6C}" Namespace="Tc2_Standard">TON</Type>
+				<BitSize>224</BitSize>
+				<BitOffs>768</BitOffs>
+			</SubItem>
+			<Method>
+				<Name>__GetInterfacePointer</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Method>
+				<Name>__GetInterfaceReference</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+				<ReturnBitSize>8</ReturnBitSize>
+				<Parameter>
+					<Name>nInterfaceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>pRef</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000007}" PointerTo="2">DWORD</Type>
+					<BitSize>32</BitSize>
+				</Parameter>
+			</Method>
+			<Properties>
+				<Property>
+					<Name>PouType</Name>
+					<Value>FunctionBlock</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000007}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..6] OF BIT</Name>
+			<BitSize>7</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>7</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
+			<BitSize>1</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>1</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000006}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..5] OF BIT</Name>
+			<BitSize>6</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>6</Elements>
+			</ArrayInfo>
+		</DataType>
+	</DataTypes>
+	<ImageDatas>
+		<ImageData Id="1000">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ff808080808080808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1001">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000120b0000120b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1002">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1003">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1004">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
+	</ImageDatas>
+	<Project ProjectGUID="{45D739B9-BEB5-41B8-A224-701676E3FE53}" TargetNetId="5.100.32.14.1.1" ShowHideConfigurations="#x3c7">
+		<System>
+			<Licenses>
+				<Target>
+					<ManualSelect>{6952449D-F68C-49A2-ADE4-8639D85B33A4}</ManualSelect>
+				</Target>
+			</Licenses>
+			<Tasks>
+				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
+					<Name>PlcTask</Name>
+				</Task>
+			</Tasks>
+		</System>
+		<Plc>
+			<Project GUID="{9083617F-C0B1-4981-AF0B-D930E50482EE}" Name="PRINCIPAL" PrjFilePath="PRINCIPAL\PRINCIPAL.plcproj" TmcFilePath="PRINCIPAL\PRINCIPAL.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PRINCIPAL\PRINCIPAL.tmc">
+					<Name>PRINCIPAL Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>pHard.DI_Device</Name>
+							<Type GUID="{864017A3-EDAC-7725-7256-7DF24D4DDBE8}">ARRAY [1..256] OF BOOL</Type>
+						</Var>
+						<Var>
+							<Name>pHard.AI_Device</Name>
+							<Type GUID="{12136D81-4849-9FCF-6C84-9A0446B0B0FF}">ARRAY [1..32] OF INT</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>pHard.DO_Device</Name>
+							<Type GUID="{864017A3-EDAC-7725-7256-7DF24D4DDBE8}">ARRAY [1..256] OF BOOL</Type>
+						</Var>
+						<Var>
+							<Name>pHard.AO_Device</Name>
+							<Type GUID="{12136D81-4849-9FCF-6C84-9A0446B0B0FF}">ARRAY [1..32] OF INT</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="8" AreaNo="4">
+						<Name>PlcTask Retains</Name>
+						<Var>
+							<Name>GVL.CurvePerCent</Name>
+							<Comment><![CDATA[=======================================	
+		Curvas								
+=======================================	]]></Comment>
+							<Type GUID="{C1BBDDFE-0C3C-B136-CFA7-0FCF85E705BC}">ARRAY [0..19] OF EAS.TipusCurva</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Batch.Func_Comp</Name>
+							<Comment><![CDATA[=======================================	
+					Estat del PE4							
+=======================================	
+Estat de PE4]]></Comment>
+							<Type GUID="{9977AA14-E0D1-C85E-5356-E8ADA1F63DC7}">ARRAY [1..32] OF EAS_SCADA.T_Compat</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Batch.Est_Func</Name>
+							<Comment><![CDATA[Estat actual de les funcions]]></Comment>
+							<Type GUID="{DB239FE9-4710-2AB1-226F-797020BF261B}">ARRAY [1..64] OF EAS_SCADA.E_Funcio</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Batch.Est_F_PE4</Name>
+							<Comment><![CDATA[Estat de les funcions per les comunicacions del PE4]]></Comment>
+							<Type GUID="{DB239FE9-4710-2AB1-226F-797020BF261B}">ARRAY [1..64] OF EAS_SCADA.E_Funcio</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Batch.Est_F_PE4_Ant</Name>
+							<Comment><![CDATA[Estat de les funcions per les comunicacions del PE4]]></Comment>
+							<Type GUID="{DB239FE9-4710-2AB1-226F-797020BF261B}">ARRAY [1..64] OF EAS_SCADA.E_Funcio</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Batch.Config_Func</Name>
+							<Comment><![CDATA[Configuració de les funcios ]]></Comment>
+							<Type GUID="{E0435177-19E5-B2EB-EF72-089832475764}">ARRAY [1..64] OF EAS_SCADA.T_funcio</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Batch.Func_Actives</Name>
+							<Comment><![CDATA[ DB que indica en automaatic les funcions que estan en marcha en automatic]]></Comment>
+							<Type GUID="{58E3EB62-AFCD-C7A9-97A7-05B9028BDDD9}">ARRAY [1..12] OF WORD</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Batch.Cicle0</Name>
+							<Comment><![CDATA[Cicle Actual de treball]]></Comment>
+							<Type GUID="{90C1729A-A421-22A4-E480-020EA56FE54A}">ARRAY [1..256] OF EAS_SCADA.PasCicle</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Batch.CicleRebut</Name>
+							<Comment><![CDATA[Cicle Rebut]]></Comment>
+							<Type GUID="{90C1729A-A421-22A4-E480-020EA56FE54A}">ARRAY [1..256] OF EAS_SCADA.PasCicle</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Batch.PulsadorManual</Name>
+							<Comment><![CDATA[=======================================	
+			Botons Auto/Man								
+=======================================	]]></Comment>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Batch.PulsadorAutomatic</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Batch.InicioCiclo</Name>
+							<Comment><![CDATA[=======================================	
+			Marcas Internes								
+=======================================	]]></Comment>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.Punter</Name>
+							<Type>WORD</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.Punter2</Name>
+							<Type>WORD</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.Punter3</Name>
+							<Type>WORD</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.Punter4</Name>
+							<Type>WORD</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.tempo</Name>
+							<Type GUID="{4308E13B-8990-7348-8E21-55C50232F2F1}">TMP</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.CargaNouCicle</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.RetardCarga</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.EsperaArrancar</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.RetardArranc</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.tempo2</Name>
+							<Type GUID="{4308E13B-8990-7348-8E21-55C50232F2F1}">TMP</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.salto</Name>
+							<Type>WORD</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.FIRetardArranc</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.RetardCicleMod</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.tempo3</Name>
+							<Type GUID="{4308E13B-8990-7348-8E21-55C50232F2F1}">TMP</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.NouPas</Name>
+							<Type GUID="{4308E13B-8990-7348-8E21-55C50232F2F1}">TMP</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.tempo4</Name>
+							<Type GUID="{4308E13B-8990-7348-8E21-55C50232F2F1}">TMP</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.RetardAutomatic</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pComPE.RetardPasarAutomatic</Name>
+							<Type GUID="{4308E13B-8990-7348-8E21-55C50232F2F1}">TMP</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.SaltarProximPas</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.ferSalt</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.Anar1</Name>
+							<Type GUID="{BDDB41B8-E613-FB29-2DE1-D002DABFE878}" Namespace="EAS_SCADA">Salt</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.Anar2</Name>
+							<Type GUID="{BDDB41B8-E613-FB29-2DE1-D002DABFE878}" Namespace="EAS_SCADA">Salt</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.Anar3</Name>
+							<Type GUID="{BDDB41B8-E613-FB29-2DE1-D002DABFE878}" Namespace="EAS_SCADA">Salt</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.Anar4</Name>
+							<Type GUID="{F4FFB7A9-61FD-1B83-0B53-CF0B2478163D}" Namespace="EAS_SCADA">SaltDePasEnUnCicle</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.Anar5</Name>
+							<Type GUID="{F4FFB7A9-61FD-1B83-0B53-CF0B2478163D}" Namespace="EAS_SCADA">SaltDePasEnUnCicle</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.Parar</Name>
+							<Type GUID="{8BE73BCE-7378-A200-81D6-5EFEFC454E7E}" Namespace="EAS_SCADA">PararTotesLesFuncions</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.PararInici</Name>
+							<Type GUID="{8BE73BCE-7378-A200-81D6-5EFEFC454E7E}" Namespace="EAS_SCADA">PararTotesLesFuncions</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.ComprobarSalt</Name>
+							<Type GUID="{5B9B2A8B-1024-934A-28C0-9BEF0CADC487}" Namespace="EAS_SCADA">ComprobarFuncionsPas</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.EsperaSalt</Name>
+							<Type GUID="{D5E96B25-A263-741D-2099-FBB6B0108C6C}" Namespace="Tc2_Standard">TON</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.AcualitzaDB</Name>
+							<Type GUID="{19819C29-5A27-7E5A-060A-5AA78A42234C}" Namespace="EAS_SCADA">CarregarFuncionsActivesAlDB</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.AcualitzaDB2</Name>
+							<Type GUID="{19819C29-5A27-7E5A-060A-5AA78A42234C}" Namespace="EAS_SCADA">CarregarFuncionsActivesAlDB</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.PunterCicle0</Name>
+							<Type>WORD</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.FerSaltParalel</Name>
+							<Comment><![CDATA[ordre de salt]]></Comment>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.SaltarPar</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.EsperaSaltar</Name>
+							<Type GUID="{D5E96B25-A263-741D-2099-FBB6B0108C6C}" Namespace="Tc2_Standard">TON</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.PararTot</Name>
+							<Type GUID="{8BE73BCE-7378-A200-81D6-5EFEFC454E7E}" Namespace="EAS_SCADA">PararTotesLesFuncions</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.TempoPolsOn</Name>
+							<Type GUID="{4308E13B-8990-7348-8E21-55C50232F2F1}">TMP</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.TempoPolsOff</Name>
+							<Type GUID="{4308E13B-8990-7348-8E21-55C50232F2F1}">TMP</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.Punt_Func</Name>
+							<Comment><![CDATA[=========================================================
+========  GESTIÓ MANUAL  ================================]]></Comment>
+							<Type>WORD</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.T_Func_Act</Name>
+							<Comment><![CDATA[ Funcio que indica el punterCicle ]]></Comment>
+							<Type GUID="{DB2BC600-E8E0-D43F-1726-D025B4C59375}" Namespace="EAS_SCADA">T_funcio</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.FiFuncio</Name>
+							<Type GUID="{CEE7274D-F320-BD36-9033-B2DD74EA94CB}" Namespace="EAS_SCADA">Parar_Func_FiFuncio</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.Incompatibles</Name>
+							<Type GUID="{3C6F80D7-0D77-9810-3858-979D3F5668D4}" Namespace="EAS_SCADA">Parar_Func_Incomp</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.a</Name>
+							<Type>WORD</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>pPE.AcualitzaDB3</Name>
+							<Type GUID="{19819C29-5A27-7E5A-060A-5AA78A42234C}" Namespace="EAS_SCADA">CarregarFuncionsActivesAlDB</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Mc.Mc.CIRC.v40_Jet</Name>
+							<Comment><![CDATA[+++++++++++++++++++++++++++++++++++++++
+HARD
++++++++++++++++++++++++++++++++++++++++]]></Comment>
+							<Type GUID="{FD0C7376-09F8-BBC1-29BD-A47C16493A1E}">fValveM</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Mc.Mc.CIRC.v041_InPump</Name>
+							<Type GUID="{47667CAC-940B-4733-913B-70F3DF710D4C}">fValve</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Mc.Mc.CIRC.v042_OutPump</Name>
+							<Type GUID="{47667CAC-940B-4733-913B-70F3DF710D4C}">fValve</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Mc.Mc.CIRC.v043_inJet</Name>
+							<Type GUID="{47667CAC-940B-4733-913B-70F3DF710D4C}">fValve</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Mc.Mc.CIRC.v044_Spray</Name>
+							<Type GUID="{47667CAC-940B-4733-913B-70F3DF710D4C}">fValve</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>Mc.Mc.CIRC.v046_P_Recirc</Name>
+							<Type GUID="{EFBCBA4E-2766-679E-9BD5-392420906DAB}">fPump</Type>
+							<InOut>7</InOut>
+						</Var>
+					</Vars>
+					<Contexts>
+						<Context>
+							<Id NeedCalleeCall="true">0</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010030</OTCID>
+							</ManualConfig>
+							<Priority>20</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+					</Contexts>
+					<TaskPouOids>
+						<TaskPouOid Prio="20" OTCID="#x08502001"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
+		</Plc>
+		<Io>
+			<Device Id="1" DevType="124" DevFlags="#x0004">
+				<Name>Device 1 (Beckhoff CCAT)</Name>
+				<ImageId>230</ImageId>
+				<AddressInfo>
+					<Pci>
+						<Address>-1073741824</Address>
+						<Size>0</Size>
+						<BusNo>65535</BusNo>
+						<SlotNo>0</SlotNo>
+					</Pci>
+				</AddressInfo>
+				<CCat>
+					<Slot Id="#x03010011">
+						<Name>Slot 1 (MAC-DMA)</Name>
+						<ImageId>231</ImageId>
+						<CCatSlot SlotType="15000000030200000000010000400000" SlotData="00000000000000000001055b0a890000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" SlotName="Slot 1 (MAC-DMA)" Ports="2" MacOids="1200010313000103140001030000000000000000000000000000000000000000" SlotNo="1"/>
+					</Slot>
+					<Slot Id="#x03010015">
+						<Name>Slot 2 (Switch)</Name>
+						<ImageId>231</ImageId>
+						<CCatSlot SlotType="05000600030000000000030000200000" SlotName="Slot 2 (Switch)" SlotNo="2"/>
+					</Slot>
+					<Slot Id="#x03010016">
+						<Name>Slot 5 (GPIO)</Name>
+						<ImageId>231</ImageId>
+						<CCatSlot SlotType="0d0000000a0000000003000020000000" SlotName="Slot 5 (GPIO)" SlotNo="5"/>
+					</Slot>
+					<Slot Id="#x03010017">
+						<Name>Slot 6 (System Time)</Name>
+						<ImageId>231</ImageId>
+						<CCatSlot SlotType="10000000000000000004000080000000" SlotName="Slot 6 (System Time)" MacOids="1800010300000000000000000000000000000000000000000000000000000000" SlotNo="6"/>
+					</Slot>
+					<Slot Id="#x03010019">
+						<Name>Slot 11 (EEPROM)</Name>
+						<ImageId>231</ImageId>
+						<CCatSlot SlotType="12000000000000000002000040000000" SlotName="Slot 11 (EEPROM)" SlotNo="11"/>
+					</Slot>
+					<Slot Id="#x0301001a">
+						<Name>Slot 13 (SRAM)</Name>
+						<ImageId>231</ImageId>
+						<CCatSlot SlotType="16000000000000000000100000001000" SlotName="Slot 13 (SRAM)" SlotNo="13"/>
+					</Slot>
+				</CCat>
+			</Device>
+			<Device Id="2" DevType="111" DevFlags="#x0003" AmsPort="28674" AmsNetId="5.100.32.14.3.1" RemoteName="Device 2 (EtherCAT)" InfoImageId="2">
+				<Name>Device 2 (EtherCAT)</Name>
+				<AddressInfo>
+					<Ccat>
+						<Address>-1073741824</Address>
+						<Offset>131072</Offset>
+						<Size>65536</Size>
+						<BaseAddr>0</BaseAddr>
+						<BusNo>65535</BusNo>
+						<SlotNo>0</SlotNo>
+						<Dma>
+							<Address>0</Address>
+							<Offset>4096</Offset>
+							<Size>256</Size>
+							<BaseAddr>2</BaseAddr>
+							<RxChn>0</RxChn>
+							<TxChn>1</TxChn>
+						</Dma>
+						<SwitchSize>8192</SwitchSize>
+						<SwitchOffs>196608</SwitchOffs>
+						<TimeSize>128</TimeSize>
+						<TimeOffs>1024</TimeOffs>
+						<GpioSize>32</GpioSize>
+						<GpioOffs>768</GpioOffs>
+						<EepromSize>64</EepromSize>
+						<EepromOffs>512</EepromOffs>
+						<IntCtrlSize>16</IntCtrlSize>
+						<IntCtrlOffs>640</IntCtrlOffs>
+					</Ccat>
+				</AddressInfo>
+				<Image Id="1" AddrType="9" ImageType="3">
+					<Name>Image</Name>
+				</Image>
+				<Box Id="1" BoxType="9099">
+					<Name>Term 1 (EK1200)</Name>
+					<ImageId>1000</ImageId>
+					<EtherCAT PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04b02c52" RevisionNo="#x00001388" InfoDataState="false" PortPhys="49" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1200-5000 EtherCAT Power supply (2A E-Bus)" Desc="EK1200" PortABoxInfo="#x00ffffff"/>
+					<Box Id="2" BoxType="9099">
+						<Name>Term 2 (EL1809)</Name>
+						<ImageId>7</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07113052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1809 16Ch. Dig. Input 24V, 3ms" Desc="EL1809" PortABoxInfo="#x01000001">
+							<SyncMan>001002000000010004000000000000000200001000010000</SyncMan>
+							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1a01" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1a02" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1a03" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1a04" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1a05" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1a06" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1a07" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1a08" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1a09" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x1a0a" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x1a0b" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x1a0c" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x1a0d" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x1a0e" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x1a0f" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box Id="3" BoxType="9099">
+						<Name>Term 3 (EL1809)</Name>
+						<ImageId>7</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07113052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1809 16Ch. Dig. Input 24V, 3ms" Desc="EL1809" PortABoxInfo="#x01000002">
+							<SyncMan>001002000000010004000000000000000200001000010000</SyncMan>
+							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1a01" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1a02" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1a03" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1a04" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1a05" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1a06" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1a07" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1a08" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1a09" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x1a0a" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x1a0b" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x1a0c" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x1a0d" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x1a0e" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x1a0f" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box Id="4" BoxType="9099">
+						<Name>Term 4 (EL2809)</Name>
+						<ImageId>1001</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x0af93052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2809 16Ch. Dig. Output 24V, 0.5A" Desc="EL2809" PortABoxInfo="#x01000003">
+							<SyncMan>000f01004400010003000000000000000100000f44090000</SyncMan>
+							<SyncMan>010f01004400010003000000000000000100010f44090000</SyncMan>
+							<Fmmu>0000000000000000000f00020100000001000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1601" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1604" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1605" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1606" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1607" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1608" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x7080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1609" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x7090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x160a" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x160b" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x160c" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x160d" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x160e" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x160f" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box Id="5" BoxType="9099">
+						<Name>Term 5 (EL2809)</Name>
+						<ImageId>1001</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x0af93052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2809 16Ch. Dig. Output 24V, 0.5A" Desc="EL2809" PortABoxInfo="#x01000004">
+							<SyncMan>000f01004400010003000000000000000100000f44090000</SyncMan>
+							<SyncMan>010f01004400010003000000000000000100010f44090000</SyncMan>
+							<Fmmu>0000000000000000000f00020100000001000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1601" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1604" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1605" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1606" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1607" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1608" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x7080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1609" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x7090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x160a" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x160b" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x160c" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x160d" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x160e" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x160f" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box Id="6" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 6 (EL3202)</Name>
+						<ImageId>1002</ImageId>
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x0c823052" RevisionNo="#x00160000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3202 2Ch. Ana. Input PT100 (RTD)" Desc="EL3202" PortABoxInfo="#x01000005">
+							<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+							<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+							<SyncMan>001100000400000003000000000000000000001104000000</SyncMan>
+							<SyncMan>801108002000010004000000000000000800801120010000</SyncMan>
+							<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
+							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+							<BootStrapData>0010f400f410f400</BootStrapData>
+							<Pdo Name="RTD Inputs Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="3">
+								<Entry Name="Status__Underrange" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Overrange" Index="#x6000" Sub="#x02">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Limit 1" Index="#x6000" Sub="#x03">
+									<Type>BIT2</Type>
+								</Entry>
+								<Entry Name="Status__Limit 2" Index="#x6000" Sub="#x05">
+									<Type>BIT2</Type>
+								</Entry>
+								<Entry Name="Status__Error" Index="#x6000" Sub="#x07">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-002000000007}">ARRAY [0..6] OF BIT</Type>
+								</Entry>
+								<Entry Name="Status__TxPDO State" Index="#x1800" Sub="#x07">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__TxPDO Toggle" Index="#x1800" Sub="#x09">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Value" Index="#x6000" Sub="#x11" Flags="#x00050000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="RTD Inputs Channel 2" Index="#x1a01" Flags="#x0011" SyncMan="3">
+								<Entry Name="Status__Underrange" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Overrange" Index="#x6010" Sub="#x02">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Limit 1" Index="#x6010" Sub="#x03">
+									<Type>BIT2</Type>
+								</Entry>
+								<Entry Name="Status__Limit 2" Index="#x6010" Sub="#x05">
+									<Type>BIT2</Type>
+								</Entry>
+								<Entry Name="Status__Error" Index="#x6010" Sub="#x07">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-002000000007}">ARRAY [0..6] OF BIT</Type>
+								</Entry>
+								<Entry Name="Status__TxPDO State" Index="#x1801" Sub="#x07">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__TxPDO Toggle" Index="#x1801" Sub="#x09">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Value" Index="#x6010" Sub="#x11" Flags="#x00050000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<CoeProfile ProfileNo="20976521"/>
+							<CoeProfile ProfileNo="20976521"/>
+						</EtherCAT>
+					</Box>
+					<Box Id="7" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 7 (EL3062)</Name>
+						<ImageId>1002</ImageId>
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x0bf63052" RevisionNo="#x00140000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3062 2Ch. Ana. Input 0-10V" Desc="EL3062" PortABoxInfo="#x01000006">
+							<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+							<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+							<SyncMan>001100000400000003000000000000000000001104000000</SyncMan>
+							<SyncMan>801108002000010004000000000000000800801120010000</SyncMan>
+							<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
+							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+							<BootStrapData>0010f400f410f400</BootStrapData>
+							<Pdo Name="AI Standard Channel 1" Index="#x1a00" Flags="#x0010" SyncMan="3">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<Entry Name="Status__Underrange" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Underrange event active]]></Comment>
+								</Entry>
+								<Entry Name="Status__Overrange" Index="#x6000" Sub="#x02">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Overrange event active]]></Comment>
+								</Entry>
+								<Entry Name="Status__Limit 1" Index="#x6000" Sub="#x03">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[Bit0: Value smaller/equal Limit1
+Bit1: Value bigger/equal Limit1]]></Comment>
+								</Entry>
+								<Entry Name="Status__Limit 2" Index="#x6000" Sub="#x05">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[Bit0: Value smaller/equal Limit2
+Bit1: Value bigger/equal Limit2]]></Comment>
+								</Entry>
+								<Entry Name="Status__Error" Index="#x6000" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit set when Over- or Underrange]]></Comment>
+								</Entry>
+								<Entry Name="Status__">
+									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+								</Entry>
+								<Entry Name="Status__">
+									<Type GUID="{18071995-0000-0000-0000-002000000006}">ARRAY [0..5] OF BIT</Type>
+								</Entry>
+								<Entry Name="Status__TxPDO State" Index="#x6000" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[TRUE when this TxPDO is not valid]]></Comment>
+								</Entry>
+								<Entry Name="Status__TxPDO Toggle" Index="#x6000" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
+								</Entry>
+								<Entry Name="Value" Index="#x6000" Sub="#x11" Flags="#x00020000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="AI Compact Channel 1" Index="#x1a01" Flags="#x0010">
+								<ExcludePdo>#x1a00</ExcludePdo>
+								<Entry Name="Value" Index="#x6000" Sub="#x11" Flags="#x00020000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="AI Standard Channel 2" Index="#x1a02" Flags="#x0010" SyncMan="3">
+								<ExcludePdo>#x1a03</ExcludePdo>
+								<Entry Name="Status__Underrange" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Underrange event active]]></Comment>
+								</Entry>
+								<Entry Name="Status__Overrange" Index="#x6010" Sub="#x02">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Overrange event active]]></Comment>
+								</Entry>
+								<Entry Name="Status__Limit 1" Index="#x6010" Sub="#x03">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[Bit0: Value smaller/equal Limit1
+Bit1: Value bigger/equal Limit1]]></Comment>
+								</Entry>
+								<Entry Name="Status__Limit 2" Index="#x6010" Sub="#x05">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[Bit0: Value smaller/equal Limit2
+Bit1: Value bigger/equal Limit2]]></Comment>
+								</Entry>
+								<Entry Name="Status__Error" Index="#x6010" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit set when Over- or Underrange]]></Comment>
+								</Entry>
+								<Entry Name="Status__">
+									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+								</Entry>
+								<Entry Name="Status__">
+									<Type GUID="{18071995-0000-0000-0000-002000000006}">ARRAY [0..5] OF BIT</Type>
+								</Entry>
+								<Entry Name="Status__TxPDO State" Index="#x6010" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[TRUE when this TxPDO is not valid]]></Comment>
+								</Entry>
+								<Entry Name="Status__TxPDO Toggle" Index="#x6010" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
+								</Entry>
+								<Entry Name="Value" Index="#x6010" Sub="#x11" Flags="#x00020000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="AI Compact Channel 2" Index="#x1a03" Flags="#x0010">
+								<ExcludePdo>#x1a02</ExcludePdo>
+								<Entry Name="Value" Index="#x6010" Sub="#x11" Flags="#x00020000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<CoeProfile ProfileNo="19665801"/>
+							<CoeProfile ProfileNo="19665801"/>
+						</EtherCAT>
+					</Box>
+					<Box Id="8" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 8 (EL4028)</Name>
+						<ImageId>1003</ImageId>
+						<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x0fbc3052" RevisionNo="#x00150000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL4028 8Ch. Ana. Output 4-20mA, 12bit" Desc="EL4028" PortABoxInfo="#x01000007">
+							<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+							<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+							<SyncMan>001110002400010003000000000000001000001124010000</SyncMan>
+							<SyncMan>801100000000000004000000000000000000801100000000</SyncMan>
+							<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+							<BootStrapData>0010f400f410f400</BootStrapData>
+							<DcMode>53796e6368726f6e0000000000000000534d2d53796e6368726f6e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<DcMode>4443000000000000000000000000000044432d53796e6368726f6e0000000000000000000000000000000000000000000000000000000000a0860100000000070100000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<Pdo Name="AO Outputs Channel 1" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="2">
+								<Entry Name="Analog output" Index="#x7000" Sub="#x11" Flags="#x00040000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="AO Outputs Channel 2" Index="#x1601" InOut="1" Flags="#x0011" SyncMan="2">
+								<Entry Name="Analog output" Index="#x7010" Sub="#x11" Flags="#x00040000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="AO Outputs Channel 3" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="2">
+								<Entry Name="Analog output" Index="#x7020" Sub="#x11" Flags="#x00040000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="AO Outputs Channel 4" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="2">
+								<Entry Name="Analog output" Index="#x7030" Sub="#x11" Flags="#x00040000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="AO Outputs Channel 5" Index="#x1604" InOut="1" Flags="#x0011" SyncMan="2">
+								<Entry Name="Analog output" Index="#x7040" Sub="#x11" Flags="#x00040000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="AO Outputs Channel 6" Index="#x1605" InOut="1" Flags="#x0011" SyncMan="2">
+								<Entry Name="Analog output" Index="#x7050" Sub="#x11" Flags="#x00040000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="AO Outputs Channel 7" Index="#x1606" InOut="1" Flags="#x0011" SyncMan="2">
+								<Entry Name="Analog output" Index="#x7060" Sub="#x11" Flags="#x00040000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="AO Outputs Channel 8" Index="#x1607" InOut="1" Flags="#x0011" SyncMan="2">
+								<Entry Name="Analog output" Index="#x7070" Sub="#x11" Flags="#x00040000">
+									<Type>INT</Type>
+								</Entry>
+							</Pdo>
+							<CoeProfile ProfileNo="26219401"/>
+							<CoeProfile ProfileNo="26219401"/>
+							<CoeProfile ProfileNo="26219401"/>
+							<CoeProfile ProfileNo="26219401"/>
+							<CoeProfile ProfileNo="26219401"/>
+							<CoeProfile ProfileNo="26219401"/>
+							<CoeProfile ProfileNo="26219401"/>
+							<CoeProfile ProfileNo="26219401"/>
+						</EtherCAT>
+					</Box>
+					<Box Id="9" BoxType="9099">
+						<Name>Term 9 (EL9011)</Name>
+						<ImageId>1004</ImageId>
+						<EtherCAT CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x23333050" InfoDataState="false" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9011 End Terminal" Desc="EL9011" PortABoxInfo="#x01000008"/>
+					</Box>
+				</Box>
+				<EtherCAT/>
+			</Device>
+		</Io>
+	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030010"/>
+		<OwnerA Name="TIPC^PRINCIPAL^PRINCIPAL Instance">
+			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 2 (EL1809)">
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[10]" VarB="Channel 10^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[11]" VarB="Channel 11^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[12]" VarB="Channel 12^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[13]" VarB="Channel 13^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[14]" VarB="Channel 14^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[15]" VarB="Channel 15^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[16]" VarB="Channel 16^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[1]" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[2]" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[3]" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[4]" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[5]" VarB="Channel 5^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[6]" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[7]" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[8]" VarB="Channel 8^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[9]" VarB="Channel 9^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL1809)">
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[17]" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[18]" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[19]" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[20]" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[21]" VarB="Channel 5^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[22]" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[23]" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[24]" VarB="Channel 8^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[25]" VarB="Channel 9^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[26]" VarB="Channel 10^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[27]" VarB="Channel 11^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[28]" VarB="Channel 12^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[29]" VarB="Channel 13^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[30]" VarB="Channel 14^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[31]" VarB="Channel 15^Input"/>
+				<Link VarA="PlcTask Inputs^pHard.DI_Device[32]" VarB="Channel 16^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 4 (EL2809)">
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[10]" VarB="Channel 10^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[11]" VarB="Channel 11^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[12]" VarB="Channel 12^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[13]" VarB="Channel 13^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[14]" VarB="Channel 14^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[15]" VarB="Channel 15^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[16]" VarB="Channel 16^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[1]" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[2]" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[3]" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[4]" VarB="Channel 4^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[5]" VarB="Channel 5^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[6]" VarB="Channel 6^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[7]" VarB="Channel 7^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[8]" VarB="Channel 8^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[9]" VarB="Channel 9^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 5 (EL2809)">
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[17]" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[18]" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[19]" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[20]" VarB="Channel 4^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[21]" VarB="Channel 5^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[22]" VarB="Channel 6^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[23]" VarB="Channel 7^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[24]" VarB="Channel 8^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[25]" VarB="Channel 9^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[26]" VarB="Channel 10^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[27]" VarB="Channel 11^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[28]" VarB="Channel 12^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[29]" VarB="Channel 13^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[30]" VarB="Channel 14^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[31]" VarB="Channel 15^Output"/>
+				<Link VarA="PlcTask Outputs^pHard.DO_Device[32]" VarB="Channel 16^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 6 (EL3202)">
+				<Link VarA="PlcTask Inputs^pHard.AI_Device[1]" VarB="RTD Inputs Channel 1^Value"/>
+				<Link VarA="PlcTask Inputs^pHard.AI_Device[2]" VarB="RTD Inputs Channel 2^Value"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 7 (EL3062)">
+				<Link VarA="PlcTask Inputs^pHard.AI_Device[3]" VarB="AI Standard Channel 1^Value"/>
+				<Link VarA="PlcTask Inputs^pHard.AI_Device[4]" VarB="AI Standard Channel 2^Value"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 8 (EL4028)">
+				<Link VarA="PlcTask Outputs^pHard.AO_Device[1]" VarB="AO Outputs Channel 1^Analog output"/>
+				<Link VarA="PlcTask Outputs^pHard.AO_Device[2]" VarB="AO Outputs Channel 2^Analog output"/>
+				<Link VarA="PlcTask Outputs^pHard.AO_Device[3]" VarB="AO Outputs Channel 3^Analog output"/>
+				<Link VarA="PlcTask Outputs^pHard.AO_Device[4]" VarB="AO Outputs Channel 4^Analog output"/>
+				<Link VarA="PlcTask Outputs^pHard.AO_Device[5]" VarB="AO Outputs Channel 5^Analog output"/>
+				<Link VarA="PlcTask Outputs^pHard.AO_Device[6]" VarB="AO Outputs Channel 6^Analog output"/>
+				<Link VarA="PlcTask Outputs^pHard.AO_Device[7]" VarB="AO Outputs Channel 7^Analog output"/>
+				<Link VarA="PlcTask Outputs^pHard.AO_Device[8]" VarB="AO Outputs Channel 8^Analog output"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmProject>

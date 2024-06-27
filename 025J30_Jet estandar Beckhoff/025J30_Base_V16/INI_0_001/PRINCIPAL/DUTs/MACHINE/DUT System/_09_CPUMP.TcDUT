@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="_09_CPUMP" Id="{62040468-6e83-43f0-a2cf-3f84b656e10a}">
+    <Declaration><![CDATA[TYPE _09_CPUMP :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	b450_CircPump: dutPump;
+	p451_P_Run: dutPul;
+	p452_P_Stop: dutPul;
+	p453_P_AutoMan: dutPul;
+	p454_P_UpVel: dutPul;
+	p455_P_DownVel: dutPul;
+	s456_Pote: dutAIn;
+	p457_SelRun: dutPul;
+	///+++++++++++++++++++++++++++++++++++++++
+	///READINGS
+	///+++++++++++++++++++++++++++++++++++++++
+	rSP_Auto: REAL;
+	rSP_Man: REAL;
+	rSpeedUF: REAL;
+	///+++++++++++++++++++++++++++++++++++++++
+	///CONFIG
+	///+++++++++++++++++++++++++++++++++++++++
+	///++++PF+++
+	iPF_AnaMax_UF: INT;
+	iPF_AnaMin_UF: INT;
+	iPF_AnaMax_perc: INT;
+	iPF_AnaMin_perc: INT;
+	iPF_SpeedMax_UF: INT;
+	iPF_SpeedMin_UF: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

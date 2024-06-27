@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_ISOTERMA" Id="{298716b8-4258-47d6-ae7a-826cc56ce5ab}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_ISOTERMA
+VAR_INPUT
+	Func: E_funcio;
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	///Parametros
+	wP_TempFinal: WORD;
+	
+	xIniciaTermo: BOOL;
+	tDelayinicio: Ton;
+	rUltimaTermp: REAL;
+	iTiempoPaso: INT;
+	rTempFinal: REAL;
+	iMant: INT;
+	rGrad: REAL;
+	xPasajes: BOOL;
+	xPulseReg: BOOL;
+	Cont: ctu;
+	manrs: BOOL;
+	wcanttt: WORD;
+	rGradProg: REAL;
+	tDelayPumpOK: Ton;
+	xPumpRuns: BOOL;
+	xGrad0: BOOL;
+	xSegOk: BOOL;
+	xStopSP: BOOL;
+	x: INT;
+	Termo: fBTermo;
+	xPauseMant: BOOL;
+	tTmpMant: TMPpausa;
+	xNoMant: BOOL;
+	iTmpMant: INT;
+	tFinSinMant: Ton;
+	tTiempoIgualacion: TIME := TIME#15s0ms;
+	xFiT_NoMant: BOOL;
+	tFinConMant: Ton;
+	Z_xVapor: BOOL;
+	z_xEnfria: BOOL;
+	z_rApertVapor: REAL;
+	z_rApertEnfria: REAL;
+	z_xRetonoCond: BOOL;
+	rI_PID: LREAL;
+	dwTempsMsnt: DINT;
+	xTempMinima: BOOL;
+	xFiFunc: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+//carga valores funcion
+xActv:= func.Actv_Funcio;
+
+rTempFinal:=	WORD_TO_REAL(func.ParamFunc[1]);
+iMant:=			0;
+rGrad:=			0;
+xPasajes:= 		FALSE;	
+ 
+
+//Inicia Termo
+tDelayinicio(IN:= 	xActv AND 					//Funcion activa
+				 	NOT(ATL.PE_COM.xResetFunc) , 	//No hay reset de tiempo funcion
+				PT:= T#1S);
+xIniciaTermo:= 	tDelayinicio.Q ;
+
+//MEMORIZAR DATOS
+//Memorizar Tiempo de paso
+//IF xActv AND NOT(xIniciaTermo) THEN
+//	iTiempoPaso:=_00_Winch.TempsAnt1[1];
+//END_IF
+
+//Calculo Gradiente
+IF rGrad=0
+	THEN
+	rGradProg := Mc._02_TEMP.iPFDefauldGrad;
+	xGrad0:=TRUE;
+	ELSIF   xPasajes>0
+		THEN
+		xGrad0:=FALSE;
+		//Calcular Gradiente por pasajes
+		//Si el tiempo de paso es cero se carga 60seg	
+		IF iTiempoPaso=0 THEN		
+			iTiempoPaso:=60;
+		END_IF	
+		rGradProg:= (rGrad*60.0)/INT_TO_REAL(iTiempoPaso);					
+		ELSE
+		xGrad0:=FALSE;
+		rGradProg:=rGrad;	
+END_IF
+
+
+//Tiempo de Bomba en marcha para iniciar Termo
+tDelayPumpOK(IN:=Mc._09_CPUMP.b450_CircPump.xOK , PT:= INT_TO_TIME(Mc._02_TEMP.iPFTimeOfPumpToRun*1000) );
+xPumpRuns:=tDelayPumpOK.Q;
+
+//Seguridades Para Termo	
+xSegOk:=	Mc._06_LEVEL.xLvl_min AND 			//Nivel minimo
+			NOT(Mc._01_SEG.xMcOpen) AND 		//Maquina Oberta
+			NOT(Mc._01_SEG.xMaxPresTemp) AND	//No hi ha ni max temp ni max Press
+			Mc._09_CPUMP.b450_CircPump.xOK	AND		//Bomba girando
+			xPumpRuns AND					//Bomba esta en marcha por un tiempo determinado
+			NOT(Mc._02_temp.xPT100Failure)  ;	//Fallo PT-100
+			//FALTA DIF >5ºC
+
+//parar la consigna
+xStopSP:= 	NOT(xSegOK) AND 
+			NOT(xPumpRuns);				 
+			//Falta maquina pausada
+
+//------------------------------------------------------------------------
+
+Termo(
+	TermoActv:= 			xIniciaTermo, 
+	TemperaturaReal:= 		Mc._02_TEMP.rMacTemperature, 
+	TemperaturaFinal:=		rTempFinal, 
+	Gradient:= 				rGradProg, 
+	t_Manteniment:= 		iMant, 
+	Pols:= 					_00_GENERALES.Pulso_1s.xFlanco, 
+	PausaExterior:= 		xStopSP, 
+	GrausPerIntegracio:= 	Mc._02_TEMP.iPFGradIntegra, 
+	GrausForzarCal:= 		Mc._02_TEMP.iPFGradForzCal, 
+	ReIniciarTermo:= 		FALSE, 
+	TmoSegConmutacion:= 	INT_TO_DWORD(Mc._02_TEMP.iPFTmpComutac), 
+	ConmutacioEnManteniment:= Mc._02_TEMP.iPFGradComutac, 
+	BandaProporcional:= 	Mc._02_TEMP.iPFPID_P, 
+	PartIntergral:= 		Mc._02_TEMP.iPFPID_I, 
+	PartDerivada:= 			Mc._02_TEMP.iPFPID_D, 
+	T_periode:= 			0.01, 
+	SeguretatOK:= 			xSegOk, 
+	ObrirPurgaenRepos:= 	FALSE, 
+	t_Purga:= 				0, 
+	TemperaturaPerInici:= 	Mc._02_TEMP.rMacTemperature, 
+	NO_Reset:= 				FALSE, 
+	
+	 );
+
+Mc._02_TEMP.rTempImp:= F_TERMOREG.Termo.TemperaturaImposada;
+//Control MAnteniment-------------------------------------------
+//Pausa¡ Manteniment
+xPauseMant:=	NOT(Mc._09_CPUMP.b450_CircPump.xOK) OR
+				Mc._00_GENERAL.xMcPaused;
+//Calculo Tiempo Mantenimiento por pasaje
+
+IF iMant=0
+	THEN
+	xNoMant:=TRUE;
+	ELSIF xPasajes
+		THEN
+		xNoMant:=FALSE;
+		iTmpMant:= iMant*iTiempoPaso;
+		ELSE
+		xNoMant:=FALSE;
+		iTmpMant:= iMant;		
+END_IF
+
+				
+//Tiempo Mantenimiento
+tTmpMant(
+	xIN:= 		Termo.EnManteniment, 
+	xPausa:= 	xPauseMant, 
+	dwSegons:= 	INT_TO_DWORD(iTmpMant)*60, 
+	 );
+dwTempsMsnt:= (iMant*60)-DWORD_TO_INT(tTmpMant.dwTsegons);
+
+
+
+
+
+//FinFuncion --------------------------------------
+//Sin Mantenimiento tiempo de igualar temperatura
+tFinSinMant(	IN:= Termo.EnManteniment, 
+				PT:=tTiempoIgualacion  );
+xFiT_NoMant:= tFinSinMant.Q AND xNoMant;
+//Con mantenimiento
+tFinConMant(IN:=tTmpMant.xQ , 
+			PT:= T#5S );
+//Enfriar a temperartura baja			
+xTempMinima:= termo.AiguaRefredament AND ( rTempFinal< Mc._02_TEMP.iPFTempMinCool);
+
+
+			
+//Finalizar
+xFiFunc:=	F_TERMOREG.xActv OR
+				F_VACIADO.xActv OR 
+				F_LAVADO_CONT.xActv OR 
+				F_FIN_CICLO.xA_FIN_CICLO;
+
+
+
+
+//=========================================================================================================
+// Activar salidas
+//=========================================================================================================
+
+Z_xVapor:= 		Termo.Vapor;
+z_xEnfria:= 	Termo.AiguaRefredament;
+z_rApertVapor:=	Termo.Apertura_Vapor;
+z_rApertEnfria:=Termo.Apertura_Refreda;
+
+//Retorn condensados
+z_xRetonoCond:= z_xVapor AND Mc._02_TEMP.xRetCond ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_ISOTERMA">
+      <LineId Id="249" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="5" Count="17" />
+      <LineId Id="28" Count="164" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

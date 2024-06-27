@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fBUp_Down" Id="{ccbe9a36-d98a-43cf-8119-c3f06a7e74ac}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fBUp_Down
+VAR_INPUT
+	///Pulsador Subir 
+	xUP: BOOL;
+	///Pulsador Bajar 
+	xDOWN: BOOL;
+	///Velocidad para subir o bajar velocidad =100
+	iFactor: INT := 100;
+	rLimInf: REAL := 0;
+	rLimSup: REAL := 100;
+END_VAR
+VAR_IN_OUT
+	///Variable 
+	SP: REAL;
+END_VAR
+VAR
+	b_BaseTime: Blink;
+	p_BaseTime: R_trig;
+	xPulPulsado: BOOL;
+	t2seg: Ton;
+	t5seg: Ton;
+	rFact: REAL;
+	temps1: TIME := TIME#2s0ms;
+	temps2: TIME := TIME#5s0ms;
+	rFact1: REAL := 2.0;
+	rFact2: REAL := 4;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*Generar Base de tiempo par las subidad o bajadas*)
+b_BaseTime(ENABLE:=TRUE , TIMELOW:=T#100MS , TIMEHIGH:=T#100MS , OUT=> );
+p_BaseTime(CLK:=b_BaseTime.OUT );
+
+(*Calcular Constante de subir o bajar *)
+xPulPulsado:= xUP OR xDown;
+t2seg(IN:=xPulPulsado , PT:=temps1  );
+t5seg(IN:=xPulPulsado , PT:=temps2  );
+
+IF NOT(t2seg.Q)
+	THEN
+	rFact:=INT_TO_REAL(iFactor)/100.0;
+	ELSIF t2seg.Q AND NOT(t5seg.Q)
+		THEN
+		rFact:=INT_TO_REAL(iFactor)*rFact1/100.0;
+		ELSIF t5seg.Q
+			THEN
+				rFact:=INT_TO_REAL(iFactor)*rFact2/100.0;
+END_IF
+
+
+(*Subir consigna*)
+IF xUP AND p_BaseTime.Q
+	THEN
+	SP:=SP+rFact;
+END_IF
+
+(*Bajar consigna*)
+IF xDOWN AND p_BaseTime.Q
+	THEN
+	SP:=SP-rFact;
+END_IF
+
+(*Limite Superior*)
+IF SP>rLimSup THEN
+	SP:=rLimSup;
+END_IF
+
+(*Limite Inferior*)
+IF SP<rLimInf THEN
+	SP:=rLimInf;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="fBUp_Down">
+      <LineId Id="3" Count="41" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

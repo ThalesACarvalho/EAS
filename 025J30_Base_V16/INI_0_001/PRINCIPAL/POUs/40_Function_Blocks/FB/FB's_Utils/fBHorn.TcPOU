@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fBHorn" Id="{f7ed0f9d-3dd0-47d4-9e06-d788b7672244}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fBHorn
+VAR_INPUT
+	axAlarm: ARRAY[1..Max_Alarmes] OF BOOL;
+	axHorn: ARRAY[1..Max_Alarmes] OF BOOL;
+	xStopHorn: BOOL;
+END_VAR
+VAR_OUTPUT
+	xAlarmActv: BOOL;
+	xHornActv: BOOL;
+END_VAR
+VAR
+	iPunt: INT;
+	afPulseAlarm: ARRAY[1..max_Alarmes] OF R_TRIG;
+	xActvHorn: BOOL;
+	fRS_Horn: Rs;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*Comprobar si hay alarma activa*)
+iPunt:=1;
+xAlarmActv:=FALSE;
+WHILE xAlarmActv=FALSE AND iPunt<WORD_TO_INT(Max_Alarmes)
+	DO
+	IF axAlarm[iPunt]=TRUE THEN
+		xAlarmActv:=TRUE;
+	END_IF
+	iPunt:=iPunt+1;
+END_WHILE
+
+
+(*Activa o Reactiva Sirena*)
+
+(*Pulso al Activar Sirena*)
+iPunt:=1;
+xActvHorn:=FALSE;
+WHILE iPunt<WORD_TO_INT(Max_Alarmes) AND xActvHorn=FALSE
+	DO
+	afPulseAlarm[iPunt](CLK:= axHorn[iPunt]);
+	xActvHorn:=afPulseAlarm[iPunt].Q AND xAlarmActv;
+	iPunt:=iPunt+1;
+END_WHILE
+(*Marcha-Paro Sirena*)
+fRS_Horn(SET:= xActvHorn, RESET1:=xStopHorn OR NOT(xAlarmActv));
+xHornActv:=fRS_Horn.Q1;
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="fBHorn">
+      <LineId Id="3" Count="29" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

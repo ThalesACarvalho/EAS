@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_CARGA" Id="{792461e8-3629-4d8d-b518-47343a382f39}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_CARGA
+VAR_INPUT
+	Func:E_funcio;
+END_VAR
+
+VAR
+	///Activa
+	xActv: BOOL;
+	///Fin Funcion
+	xFiFunc: BOOL;
+	pul_FinCarga: R_TRIG;
+	xA_CARGA: BOOL;
+	tempo: Ton;
+	A: BOOL;
+	TON_Fi_Func: TON;
+	aaa: WORD;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+xActv:= Func.Actv_Funcio;
+
+(*Activa funcio *)
+pul_FinCarga(CLK:=mc._00_GENERAL.p403_ContProg.xPul) ;
+
+(*FIN FUNCION*)
+xFiFunc:=xActv AND pul_FinCarga.Q;
+
+(*Alarma*)
+xA_CARGA:= xActv;
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_CARGA">
+      <LineId Id="42" Count="1" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="9" Count="7" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

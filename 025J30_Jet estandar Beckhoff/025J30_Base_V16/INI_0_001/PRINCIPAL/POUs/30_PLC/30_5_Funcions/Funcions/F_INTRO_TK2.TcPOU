@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_INTRO_TK2" Id="{938dc31a-d4da-429c-b9a7-96956824c930}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_INTRO_TK2
+VAR_INPUT
+	Func:E_funcio;
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	///Parametros
+	wP_dwTime: WORD;
+	wP_dwCurve: WORD;
+	wP_Wash: WORD;
+	///Fin Funcion
+	xFiFunc: BOOL;
+	
+	Intro:fB_Intro_TK;
+	Wash:fBWash_TK;
+	z_PumpTK: BOOL;
+	z_DrainTK: BOOL;
+	z_IntroSlow: BOOL;
+	z_IntercepTK: BOOL;
+	z_FillTK: BOOL;
+	xA_TNQ_NO_OK: BOOL;
+	xA_TempBloqValves: BOOL;
+	xA_IntroTooSlow: BOOL;
+	xA_IntroTooFast: BOOL;
+	xA_BombaParadaiNTRO: BOOL;
+	z_IntroFast: BOOL;
+	xIntroFast: BOOL;
+	tmpActivFunc: TMP_P;
+	xPause:bool;
+	rtCargaValores: R_trig;
+	srActivIntro: SR;
+	FinIntro: BOOL;
+	xIntroLentaIntro: BOOL;
+	xIntroRapidaIntro: BOOL;
+	FinLavados: BOOL;
+	xLlenaCubeta: BOOL;
+	xLavadoMaquina: BOOL;
+	xLavadoDreno: BOOL;
+	tpFiFunc: TP;
+	xIntroHT: BOOL;
+	
+	xIntro: BOOL;
+	xDrainTk: BOOL;
+	xIntercTk: BOOL;
+	xPreparrIntro: BOOL;
+	xFillTk: BOOL;
+	xMarchaBomba: BOOL;
+	tmpMarchaBomba: TMP_P;
+	xPumpTk: BOOL;
+	xTankNoOk: BOOL;
+	xAlarmTempBloqValves: BOOL;
+	rLimitInfer: REAL;
+	rLimitSuper: REAL;
+	TonIntroFast: TON;
+	rQr: REAL;
+	rQt: REAL;
+	xIntroTooFast: BOOL;
+	TonIntroSlow: TON;
+	xIntroTooSlow: BOOL;
+	CP: INT;
+	xIntroRun: BOOL;
+	D: TMP_P;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*ACTIVAR FUNCION*)
+xActv:= func.Actv_Funcio;
+
+rtCargaValores(CLK:=xActv AND NOT xFiFunc, Q=> );
+
+IF rtCargaValores.Q 
+	THEN
+	wP_dwCurve:= func.ParamFunc[1];
+	wP_dwTime:= func.ParamFunc[2];
+	wP_Wash:= func.ParamFunc[3];
+END_IF
+
+
+(********** Inicia la funcion *************)
+tmpActivFunc(
+	xIN:= xActv AND NOT xPause AND (F_PREP_TK2.xOK_TK OR ATL.PE.xMan) AND NOT xFiFunc,  
+	xPausa:= , 
+	dwSegons:= 1, 
+	xQ=> , 
+	dwTsegons=> , 
+	rTsegons=> );
+
+srActivIntro(SET1:=tmpActivFunc.XQ AND NOT xFiFunc, RESET:=xFiFunc OR NOT xActv, Q1=>xIntroRun );
+
+(************** Introducion **************)
+Intro(
+	xActvIntro:=xIntroRun , 
+	dwCurve:=wP_dwCurve , 
+	dwTime:=wP_dwTime , 
+	rLevel:=mc._11_TK2.rLvl , 
+	xLevelMin:=mc._11_TK2.xLvl_min , 
+	xIniCond:=TRUE , 
+	xPause:=xPause , 
+	xFiIntro=>FinIntro , 
+	rQTeoric=> , 
+	rQreal=> , 
+	xPrepareIntro=> xPreparrIntro, 
+	xDosIntro=> xIntroLentaIntro, 
+	xTransferIntro=> xIntroRapidaIntro);
+
+
+(************** Lavados **************)
+Wash(
+	xStartWash:=FinIntro , 
+	xMinimLevel:=mc._11_TK2.xLvl_min , 
+	dwDetectLowLevelTime:=	INT_TO_DWORD(Mc._11_TK2.iPFDescSonda) , 
+	dwDrainTime:=			INT_TO_DWORD(Mc._11_TK2.iPFDreno) , 
+	dw1stWashTime:=			INT_TO_DWORD(Mc._11_TK2.iPF1rLav) , 
+	dw2ndWashTime:=			INT_TO_DWORD(Mc._11_TK2.iPF2nLav) , 
+	dw3rdWashTime:=			INT_TO_DWORD(Mc._11_TK2.iPF3rLav) , 
+	DrainType:=wP_Wash , 
+	xFinWash=>FinLavados , 
+	xWash=>xLlenaCubeta , 
+	xToMachine=>xLavadoMaquina , 
+	xToDrain=>xLavadoDreno );
+
+	
+(************** Fin Funcion **************)
+xFiFunc := tpFiFunc.Q ;
+tpFiFunc(IN:=FinIntro AND FinLavados , PT:=T#1S , Q=> , ET=> );
+
+(************** Activar Salidas **************)
+
+(* Ev Intro Rapida *)
+XIntroFast := 	NOT xPause AND (xIntroRapidaIntro AND 
+				(NOT MC._01_SEG.xBloqValv OR xIntroHT)) OR
+				(xLavadoMaquina AND (NOT mc._01_SEG.xBloqValv OR xIntroHT));
+
+(* Ev Intro Lenta *)
+xIntro := 		NOT xPause AND (xIntroLentaIntro AND
+				(NOT MC._01_SEG.xBloqValv  OR xIntroHT)) OR
+				(xIntroLentaIntro AND (NOT MC._01_SEG.xBloqValv  OR xIntroHT));
+
+(* Ev Vaciado Cubeta *)
+xDrainTk := xLavadoDreno;
+
+(* Ev Intercepta Cubeta *)
+xIntercTk := xPreparrIntro OR xLavadoMaquina;	
+	
+(* Ev Llenado Cubeta *)
+xFillTk := FinIntro AND xLlenaCubeta;
+
+(* Bomba Intro *)
+xMarchaBomba := NOT xPause AND (xPreparrIntro OR xLavadoMaquina);
+
+tmpMarchaBomba(
+	xIN:= xMarchaBomba , 
+	xPausa:= , 
+	dwSegons:= INT_TO_DWORD(Mc._11_TK2.iPFRetarBomba), 
+	xQ=> xPumpTk, 
+	dwTsegons=> , 
+	rTsegons=> );
+
+(*ACTIVAR SALIDAS*)
+
+z_PumpTK := xPumpTk AND Mc._11_TK2.xLvl_min;
+
+z_DrainTK := xDrainTk;
+
+z_IntroFast := xIntroFast AND NOT Mc._01_SEG.xBloqValv AND Mc._03_PRESS.xOKVent;
+
+z_IntroSlow := xIntro AND NOT Mc._01_SEG.xBloqValv  AND Mc._03_PRESS.xOKVent;
+
+z_IntercepTK := xIntercTk;
+
+z_FillTK := xFillTk;
+
+
+(* Alarmas *)
+// Tanq NO OK
+xA_TNQ_NO_OK := xTankNoOk;
+
+// Temperatura bloqueio de valvulas
+xA_TempBloqValves := srActivIntro.Q1 AND Mc._01_SEG.xBloqValv;
+
+// Introducion muy lenta
+xA_IntroTooSlow := xIntroTooSlow;
+
+// Introducion muy rapida
+xA_IntroTooFast := xIntroTooFast;
+
+xA_BombaParadaiNTRO:= xActv AND NOT(mC._09_CPUMP.b450_CircPump.xOK);
+xTankNoOk := xActv AND NOT (F_PREP_TK2.xOK_TK OR ATL.PE.xMan);
+
+xAlarmTempBloqValves := mc._01_SEG.xBloqValv AND NOT xIntroHT;
+
+rLimitInfer := (1-INT_TO_REAL(Mc._11_TK2.iPFDifAlarma)/100);
+rLimitSuper := (1+INT_TO_REAL(Mc._11_TK2.iPFDifAlarma)/100);
+
+//Alarmas intro lenta o rapida
+//rapida
+TonIntroFast(IN:=xPreparrIntro AND (rQr < rLimitInfer*rQt) , PT:=T#20S  );
+xIntroTooFast :=TonIntroFast.Q ;
+//lenta
+TonIntroSlow(IN:=xPreparrIntro AND (rQr > rLimitSuper*rQt) , PT:=T#20S  );
+xIntroTooSlow := TonIntroSlow.Q;
+
+
+//SENYALS Qt Qr per grafiques
+
+(* Carga los valores de Intro para las graficas *)
+IF 	xActv THEN 
+	IF NOT(Wash.xStartWash) 
+		THEN
+		rQt := 100.0-Intro.rQTeoric;
+		rQr := 100.0-Intro.rQreal;
+		ELSE
+		rQt := 100.0;
+		rQr := 100.0;	
+	END_IF
+	ELSE
+		rQt := 0;
+		rQr := 0;
+END_IF
+
+
+Mc._11_TK2.rQt:=rQt;
+Mc._11_TK2.rQr:=rQr;
+
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_INTRO_TK2">
+      <LineId Id="3" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="260" Count="0" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="262" Count="1" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="268" Count="1" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="261" Count="0" />
+      <LineId Id="112" Count="1" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="424" Count="0" />
+      <LineId Id="430" Count="0" />
+      <LineId Id="426" Count="3" />
+      <LineId Id="421" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="125" Count="1" />
+      <LineId Id="133" Count="35" />
+      <LineId Id="172" Count="1" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="174" Count="1" />
+      <LineId Id="281" Count="1" />
+      <LineId Id="176" Count="2" />
+      <LineId Id="284" Count="1" />
+      <LineId Id="179" Count="6" />
+      <LineId Id="187" Count="4" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="435" Count="5" />
+      <LineId Id="434" Count="0" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="34" Count="26" />
+      <LineId Id="342" Count="12" />
+      <LineId Id="340" Count="0" />
+      <LineId Id="61" Count="2" />
+      <LineId Id="304" Count="14" />
+      <LineId Id="303" Count="0" />
+      <LineId Id="64" Count="9" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

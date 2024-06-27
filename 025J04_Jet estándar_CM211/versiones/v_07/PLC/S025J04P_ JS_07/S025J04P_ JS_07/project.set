@@ -1,0 +1,13 @@
+[Config]
+Name=S025J04P_ JS_06
+DefaultLanguage=1033
+CoDeSysDP=1
+CoDeSysDPChecksum=0
+CoDeSysDPCreate=1
+CoDeSysDPCreateCOM=1
+CoDeSysDPByteAddr=0
+[Languages/Fonts]
+1033=1
+[Pane1]
+1114000=248,0,1033,81,1,1,80,2,2,1
+21214000=200,0,1033,40,1,1,80,2,2,1

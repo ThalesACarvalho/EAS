@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <DUT Name="Hard" Id="{f0f6e876-4587-4355-b6b4-0750a99ad013}">
+    <Declaration><![CDATA[TYPE Hard :
+STRUCT
+	
+Beck:ARRAY[1..Max_island_beck] OF Island_beck;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_00_GENERALES" Id="{636df509-612b-496d-a682-04a085333454}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _00_GENERALES
+VAR
+	Pulso_1s: fbpulse1s;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//GENERA PULSOS Y FLANCOS CADA SEGUNDO
+
+Pulso_1s ();
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="_00_GENERALES">
+      <LineId Id="3" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="26" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

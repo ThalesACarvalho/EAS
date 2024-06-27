@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_DESCARGA" Id="{daf8eb9b-e332-4e10-9cf8-8314f5354bbb}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_DESCARGA
+VAR_INPUT
+	Func:E_funcio;
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	///Fin Funcion
+	xFiFunc: BOOL;
+	pul_FinDescarga: R_triG;
+	xA_DESCARGA: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+xActv:= Func.Actv_Funcio;
+
+(*Activa funcio *)
+
+pul_FinDescarga(CLK:=mc._00_GENERAL.p403_ContProg.xPul) ;
+
+
+
+(*FIN FUNCION*)
+xFiFunc:=xActv AND(pul_FinDescarga.Q);
+
+(*Alarma*)
+xA_DESCARGA:=xActv;
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_DESCARGA">
+      <LineId Id="32" Count="2" />
+      <LineId Id="3" Count="13" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

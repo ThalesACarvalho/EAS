@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="z_LEVEL" Id="{6a993ddb-2a84-478f-9096-bb4627b596db}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM z_LEVEL
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*-------------------------------------------------------------------------------------------------------*)
+(*v038  Llenado nivel en caso de nivel por presion diferencial*)
+
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v039 valvula vaciado tubo nivel*)
+]]></ST>
+    </Implementation>
+    <LineIds Name="z_LEVEL">
+      <LineId Id="3" Count="2" />
+      <LineId Id="12" Count="4" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

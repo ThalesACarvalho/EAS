@@ -1,0 +1,336 @@
+(* @GLOBAL_VARIABLE_LIST := Data_points *)
+(* @PATH := '' *)
+(* @SYMFILEFLAGS := '0' *)
+
+VAR_GLOBAL
+END_VAR
+
+VAR_GLOBAL CONSTANT
+END_VAR
+
+VAR_GLOBAL RETAIN PERSISTENT
+END_VAR
+
+VAR_GLOBAL RETAIN PERSISTENT
+END_VAR
+
+(* @OBJECT_END := Data_points *)
+FILENAME : ''
+FILETIME : 0
+EXPORT : 0
+NUMOFCONNECTIONS : 0
+
+(* @GLOBAL_VARIABLE_LIST := Input_Output *)
+(* @PATH := '' *)
+(* @SYMFILEFLAGS := '0' *)
+
+VAR_GLOBAL
+   Analog_Input_00_00 AT %ID64 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_00_01 AT %ID65 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_00_02 AT %ID66 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_00_03 AT %ID67 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_01_00 AT %ID96 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_01_01 AT %ID97 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_01_02 AT %ID98 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_01_03 AT %ID99 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_02_00 AT %ID128 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_02_01 AT %ID129 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_02_02 AT %ID130 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_02_03 AT %ID131 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_03_00 AT %ID160 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_03_01 AT %ID161 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_03_02 AT %ID162 : REAL {flag nowrite} := 0.000000;
+   Analog_Input_03_03 AT %ID163 : REAL {flag nowrite} := 0.000000;
+   Analog_Output_00_00 AT %QD64 : REAL := 0.000000;
+   Analog_Output_00_01 AT %QD65 : REAL := 0.000000;
+   Analog_Output_00_02 AT %QD66 : REAL := 0.000000;
+   Analog_Output_00_03 AT %QD67 : REAL := 0.000000;
+   Analog_Output_01_00 AT %QD96 : REAL := 0.000000;
+   Analog_Output_01_01 AT %QD97 : REAL := 0.000000;
+   Analog_Output_01_02 AT %QD98 : REAL := 0.000000;
+   Analog_Output_01_03 AT %QD99 : REAL := 0.000000;
+   Analog_Output_02_00 AT %QD128 : REAL := 0.000000;
+   Analog_Output_02_01 AT %QD129 : REAL := 0.000000;
+   Analog_Output_02_02 AT %QD130 : REAL := 0.000000;
+   Analog_Output_02_03 AT %QD131 : REAL := 0.000000;
+   Analog_Output_03_00 AT %QD160 : REAL := 0.000000;
+   Analog_Output_03_01 AT %QD161 : REAL := 0.000000;
+   Analog_Output_03_02 AT %QD162 : REAL := 0.000000;
+   Analog_Output_03_03 AT %QD163 : REAL := 0.000000;
+   Digital_Input_00_00 AT %IX0.0 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_01 AT %IX0.1 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_02 AT %IX0.2 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_03 AT %IX0.3 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_04 AT %IX0.4 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_05 AT %IX0.5 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_06 AT %IX0.6 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_07 AT %IX0.7 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_08 AT %IX0.8 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_09 AT %IX0.9 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_10 AT %IX0.10 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_11 AT %IX0.11 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_12 AT %IX0.12 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_13 AT %IX0.13 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_14 AT %IX0.14 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_15 AT %IX0.15 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_16 AT %IX1.0 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_17 AT %IX1.1 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_18 AT %IX1.2 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_19 AT %IX1.3 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_20 AT %IX1.4 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_21 AT %IX1.5 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_22 AT %IX1.6 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_23 AT %IX1.7 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_24 AT %IX1.8 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_25 AT %IX1.9 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_26 AT %IX1.10 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_27 AT %IX1.11 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_28 AT %IX1.12 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_29 AT %IX1.13 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_30 AT %IX1.14 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_00_31 AT %IX1.15 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_00 AT %IX2.0 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_01 AT %IX2.1 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_02 AT %IX2.2 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_03 AT %IX2.3 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_04 AT %IX2.4 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_05 AT %IX2.5 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_06 AT %IX2.6 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_07 AT %IX2.7 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_08 AT %IX2.8 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_09 AT %IX2.9 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_10 AT %IX2.10 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_11 AT %IX2.11 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_12 AT %IX2.12 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_13 AT %IX2.13 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_14 AT %IX2.14 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_15 AT %IX2.15 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_16 AT %IX3.0 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_17 AT %IX3.1 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_18 AT %IX3.2 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_19 AT %IX3.3 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_20 AT %IX3.4 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_21 AT %IX3.5 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_22 AT %IX3.6 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_23 AT %IX3.7 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_24 AT %IX3.8 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_25 AT %IX3.9 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_26 AT %IX3.10 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_27 AT %IX3.11 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_28 AT %IX3.12 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_29 AT %IX3.13 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_30 AT %IX3.14 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_01_31 AT %IX3.15 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_00 AT %IX4.0 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_01 AT %IX4.1 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_02 AT %IX4.2 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_03 AT %IX4.3 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_04 AT %IX4.4 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_05 AT %IX4.5 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_06 AT %IX4.6 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_07 AT %IX4.7 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_08 AT %IX4.8 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_09 AT %IX4.9 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_10 AT %IX4.10 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_11 AT %IX4.11 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_12 AT %IX4.12 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_13 AT %IX4.13 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_14 AT %IX4.14 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_15 AT %IX4.15 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_16 AT %IX5.0 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_17 AT %IX5.1 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_18 AT %IX5.2 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_19 AT %IX5.3 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_20 AT %IX5.4 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_21 AT %IX5.5 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_22 AT %IX5.6 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_23 AT %IX5.7 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_24 AT %IX5.8 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_25 AT %IX5.9 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_26 AT %IX5.10 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_27 AT %IX5.11 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_28 AT %IX5.12 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_29 AT %IX5.13 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_30 AT %IX5.14 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_02_31 AT %IX5.15 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_00 AT %IX6.0 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_01 AT %IX6.1 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_02 AT %IX6.2 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_03 AT %IX6.3 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_04 AT %IX6.4 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_05 AT %IX6.5 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_06 AT %IX6.6 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_07 AT %IX6.7 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_08 AT %IX6.8 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_09 AT %IX6.9 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_10 AT %IX6.10 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_11 AT %IX6.11 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_12 AT %IX6.12 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_13 AT %IX6.13 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_14 AT %IX6.14 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_15 AT %IX6.15 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_16 AT %IX7.0 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_17 AT %IX7.1 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_18 AT %IX7.2 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_19 AT %IX7.3 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_20 AT %IX7.4 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_21 AT %IX7.5 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_22 AT %IX7.6 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_23 AT %IX7.7 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_24 AT %IX7.8 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_25 AT %IX7.9 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_26 AT %IX7.10 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_27 AT %IX7.11 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_28 AT %IX7.12 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_29 AT %IX7.13 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_30 AT %IX7.14 : BOOL {flag nowrite} := FALSE;
+   Digital_Input_03_31 AT %IX7.15 : BOOL {flag nowrite} := FALSE;
+   Digital_Output_00_00 AT %QX0.0 : BOOL := FALSE;
+   Digital_Output_00_01 AT %QX0.1 : BOOL := FALSE;
+   Digital_Output_00_02 AT %QX0.2 : BOOL := FALSE;
+   Digital_Output_00_03 AT %QX0.3 : BOOL := FALSE;
+   Digital_Output_00_04 AT %QX0.4 : BOOL := FALSE;
+   Digital_Output_00_05 AT %QX0.5 : BOOL := FALSE;
+   Digital_Output_00_06 AT %QX0.6 : BOOL := FALSE;
+   Digital_Output_00_07 AT %QX0.7 : BOOL := FALSE;
+   Digital_Output_00_08 AT %QX0.8 : BOOL := FALSE;
+   Digital_Output_00_09 AT %QX0.9 : BOOL := FALSE;
+   Digital_Output_00_10 AT %QX0.10 : BOOL := FALSE;
+   Digital_Output_00_11 AT %QX0.11 : BOOL := FALSE;
+   Digital_Output_00_12 AT %QX0.12 : BOOL := FALSE;
+   Digital_Output_00_13 AT %QX0.13 : BOOL := FALSE;
+   Digital_Output_00_14 AT %QX0.14 : BOOL := FALSE;
+   Digital_Output_00_15 AT %QX0.15 : BOOL := FALSE;
+   Digital_Output_00_16 AT %QX1.0 : BOOL := FALSE;
+   Digital_Output_00_17 AT %QX1.1 : BOOL := FALSE;
+   Digital_Output_00_18 AT %QX1.2 : BOOL := FALSE;
+   Digital_Output_00_19 AT %QX1.3 : BOOL := FALSE;
+   Digital_Output_00_20 AT %QX1.4 : BOOL := FALSE;
+   Digital_Output_00_21 AT %QX1.5 : BOOL := FALSE;
+   Digital_Output_00_22 AT %QX1.6 : BOOL := FALSE;
+   Digital_Output_00_23 AT %QX1.7 : BOOL := FALSE;
+   Digital_Output_00_24 AT %QX1.8 : BOOL := FALSE;
+   Digital_Output_00_25 AT %QX1.9 : BOOL := FALSE;
+   Digital_Output_00_26 AT %QX1.10 : BOOL := FALSE;
+   Digital_Output_00_27 AT %QX1.11 : BOOL := FALSE;
+   Digital_Output_00_28 AT %QX1.12 : BOOL := FALSE;
+   Digital_Output_00_29 AT %QX1.13 : BOOL := FALSE;
+   Digital_Output_00_30 AT %QX1.14 : BOOL := FALSE;
+   Digital_Output_00_31 AT %QX1.15 : BOOL := FALSE;
+   Digital_Output_01_00 AT %QX2.0 : BOOL := FALSE;
+   Digital_Output_01_01 AT %QX2.1 : BOOL := FALSE;
+   Digital_Output_01_02 AT %QX2.2 : BOOL := FALSE;
+   Digital_Output_01_03 AT %QX2.3 : BOOL := FALSE;
+   Digital_Output_01_04 AT %QX2.4 : BOOL := FALSE;
+   Digital_Output_01_05 AT %QX2.5 : BOOL := FALSE;
+   Digital_Output_01_06 AT %QX2.6 : BOOL := FALSE;
+   Digital_Output_01_07 AT %QX2.7 : BOOL := FALSE;
+   Digital_Output_01_08 AT %QX2.8 : BOOL := FALSE;
+   Digital_Output_01_09 AT %QX2.9 : BOOL := FALSE;
+   Digital_Output_01_10 AT %QX2.10 : BOOL := FALSE;
+   Digital_Output_01_11 AT %QX2.11 : BOOL := FALSE;
+   Digital_Output_01_12 AT %QX2.12 : BOOL := FALSE;
+   Digital_Output_01_13 AT %QX2.13 : BOOL := FALSE;
+   Digital_Output_01_14 AT %QX2.14 : BOOL := FALSE;
+   Digital_Output_01_15 AT %QX2.15 : BOOL := FALSE;
+   Digital_Output_01_16 AT %QX3.0 : BOOL := FALSE;
+   Digital_Output_01_17 AT %QX3.1 : BOOL := FALSE;
+   Digital_Output_01_18 AT %QX3.2 : BOOL := FALSE;
+   Digital_Output_01_19 AT %QX3.3 : BOOL := FALSE;
+   Digital_Output_01_20 AT %QX3.4 : BOOL := FALSE;
+   Digital_Output_01_21 AT %QX3.5 : BOOL := FALSE;
+   Digital_Output_01_22 AT %QX3.6 : BOOL := FALSE;
+   Digital_Output_01_23 AT %QX3.7 : BOOL := FALSE;
+   Digital_Output_01_24 AT %QX3.8 : BOOL := FALSE;
+   Digital_Output_01_25 AT %QX3.9 : BOOL := FALSE;
+   Digital_Output_01_26 AT %QX3.10 : BOOL := FALSE;
+   Digital_Output_01_27 AT %QX3.11 : BOOL := FALSE;
+   Digital_Output_01_28 AT %QX3.12 : BOOL := FALSE;
+   Digital_Output_01_29 AT %QX3.13 : BOOL := FALSE;
+   Digital_Output_01_30 AT %QX3.14 : BOOL := FALSE;
+   Digital_Output_01_31 AT %QX3.15 : BOOL := FALSE;
+   Digital_Output_02_00 AT %QX4.0 : BOOL := FALSE;
+   Digital_Output_02_01 AT %QX4.1 : BOOL := FALSE;
+   Digital_Output_02_02 AT %QX4.2 : BOOL := FALSE;
+   Digital_Output_02_03 AT %QX4.3 : BOOL := FALSE;
+   Digital_Output_02_04 AT %QX4.4 : BOOL := FALSE;
+   Digital_Output_02_05 AT %QX4.5 : BOOL := FALSE;
+   Digital_Output_02_06 AT %QX4.6 : BOOL := FALSE;
+   Digital_Output_02_07 AT %QX4.7 : BOOL := FALSE;
+   Digital_Output_02_08 AT %QX4.8 : BOOL := FALSE;
+   Digital_Output_02_09 AT %QX4.9 : BOOL := FALSE;
+   Digital_Output_02_10 AT %QX4.10 : BOOL := FALSE;
+   Digital_Output_02_11 AT %QX4.11 : BOOL := FALSE;
+   Digital_Output_02_12 AT %QX4.12 : BOOL := FALSE;
+   Digital_Output_02_13 AT %QX4.13 : BOOL := FALSE;
+   Digital_Output_02_14 AT %QX4.14 : BOOL := FALSE;
+   Digital_Output_02_15 AT %QX4.15 : BOOL := FALSE;
+   Digital_Output_02_16 AT %QX5.0 : BOOL := FALSE;
+   Digital_Output_02_17 AT %QX5.1 : BOOL := FALSE;
+   Digital_Output_02_18 AT %QX5.2 : BOOL := FALSE;
+   Digital_Output_02_19 AT %QX5.3 : BOOL := FALSE;
+   Digital_Output_02_20 AT %QX5.4 : BOOL := FALSE;
+   Digital_Output_02_21 AT %QX5.5 : BOOL := FALSE;
+   Digital_Output_02_22 AT %QX5.6 : BOOL := FALSE;
+   Digital_Output_02_23 AT %QX5.7 : BOOL := FALSE;
+   Digital_Output_02_24 AT %QX5.8 : BOOL := FALSE;
+   Digital_Output_02_25 AT %QX5.9 : BOOL := FALSE;
+   Digital_Output_02_26 AT %QX5.10 : BOOL := FALSE;
+   Digital_Output_02_27 AT %QX5.11 : BOOL := FALSE;
+   Digital_Output_02_28 AT %QX5.12 : BOOL := FALSE;
+   Digital_Output_02_29 AT %QX5.13 : BOOL := FALSE;
+   Digital_Output_02_30 AT %QX5.14 : BOOL := FALSE;
+   Digital_Output_02_31 AT %QX5.15 : BOOL := FALSE;
+   Digital_Output_03_00 AT %QX6.0 : BOOL := FALSE;
+   Digital_Output_03_01 AT %QX6.1 : BOOL := FALSE;
+   Digital_Output_03_02 AT %QX6.2 : BOOL := FALSE;
+   Digital_Output_03_03 AT %QX6.3 : BOOL := FALSE;
+   Digital_Output_03_04 AT %QX6.4 : BOOL := FALSE;
+   Digital_Output_03_05 AT %QX6.5 : BOOL := FALSE;
+   Digital_Output_03_06 AT %QX6.6 : BOOL := FALSE;
+   Digital_Output_03_07 AT %QX6.7 : BOOL := FALSE;
+   Digital_Output_03_08 AT %QX6.8 : BOOL := FALSE;
+   Digital_Output_03_09 AT %QX6.9 : BOOL := FALSE;
+   Digital_Output_03_10 AT %QX6.10 : BOOL := FALSE;
+   Digital_Output_03_11 AT %QX6.11 : BOOL := FALSE;
+   Digital_Output_03_12 AT %QX6.12 : BOOL := FALSE;
+   Digital_Output_03_13 AT %QX6.13 : BOOL := FALSE;
+   Digital_Output_03_14 AT %QX6.14 : BOOL := FALSE;
+   Digital_Output_03_15 AT %QX6.15 : BOOL := FALSE;
+   Digital_Output_03_16 AT %QX7.0 : BOOL := FALSE;
+   Digital_Output_03_17 AT %QX7.1 : BOOL := FALSE;
+   Digital_Output_03_18 AT %QX7.2 : BOOL := FALSE;
+   Digital_Output_03_19 AT %QX7.3 : BOOL := FALSE;
+   Digital_Output_03_20 AT %QX7.4 : BOOL := FALSE;
+   Digital_Output_03_21 AT %QX7.5 : BOOL := FALSE;
+   Digital_Output_03_22 AT %QX7.6 : BOOL := FALSE;
+   Digital_Output_03_23 AT %QX7.7 : BOOL := FALSE;
+   Digital_Output_03_24 AT %QX7.8 : BOOL := FALSE;
+   Digital_Output_03_25 AT %QX7.9 : BOOL := FALSE;
+   Digital_Output_03_26 AT %QX7.10 : BOOL := FALSE;
+   Digital_Output_03_27 AT %QX7.11 : BOOL := FALSE;
+   Digital_Output_03_28 AT %QX7.12 : BOOL := FALSE;
+   Digital_Output_03_29 AT %QX7.13 : BOOL := FALSE;
+   Digital_Output_03_30 AT %QX7.14 : BOOL := FALSE;
+   Digital_Output_03_31 AT %QX7.15 : BOOL := FALSE;
+   Counter_Input_00_00 AT %ID88 : DINT {flag nowrite} := 0;
+   Counter_Input_00_01 AT %ID89 : DINT {flag nowrite} := 0;
+   Counter_Input_00_02 AT %ID90 : DINT {flag nowrite} := 0;
+   Counter_Input_00_03 AT %ID91 : DINT {flag nowrite} := 0;
+   Counter_Input_00_04 AT %ID92 : DINT {flag nowrite} := 0;
+   Counter_Input_00_05 AT %ID93 : DINT {flag nowrite} := 0;
+   Counter_Input_00_06 AT %ID94 : DINT {flag nowrite} := 0;
+   Counter_Input_00_07 AT %ID95 : DINT {flag nowrite} := 0;
+END_VAR
+
+VAR_GLOBAL CONSTANT
+END_VAR
+
+VAR_GLOBAL RETAIN
+END_VAR
+
+(* @OBJECT_END := Input_Output *)
+FILENAME : ''
+FILETIME : 0
+EXPORT : 0
+NUMOFCONNECTIONS : 0

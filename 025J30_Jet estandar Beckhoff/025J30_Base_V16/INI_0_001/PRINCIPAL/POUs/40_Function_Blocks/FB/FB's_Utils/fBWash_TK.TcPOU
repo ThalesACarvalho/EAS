@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fBWash_TK" Id="{2f0e5742-8a2e-4d5d-bdea-88e620caae20}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fBWash_TK
+VAR_INPUT
+	/// Enable function input
+	xStartWash: BOOL;
+	/// Minimum Level Input
+	xMinimLevel: BOOL;
+	/// Delay to detect the low level
+	dwDetectLowLevelTime: DWORD;
+	/// Drain Time
+	dwDrainTime: DWORD;
+	/// 1st Wash Time
+	dw1stWashTime: DWORD;
+	/// 2nd Wash Time
+	dw2ndWashTime: DWORD;
+	/// 3rd Wash Time
+	dw3rdWashTime: DWORD;
+	/// Drain Option (0 - 3)
+	DrainType: DWORD;
+END_VAR
+VAR_OUTPUT
+	/// Function finished			
+	xFinWash: BOOL;
+	/// Fill the add tank output
+	xWash: BOOL;
+	/// Transfer add tank to machine
+	xToMachine: BOOL;
+	/// Drain add tank
+	xToDrain: BOOL;
+END_VAR
+VAR
+	FerTotsElsRentats: BOOL;
+	NomesRentatsAMaquina: BOOL;
+	NoFerRentats: BOOL;
+	FiPrimerRentat: BOOL;
+	PrimerRentat: BOOL;
+	TempoPrimerRentat: TMP_P;
+	FiPrimerBuidat: BOOL;
+	PrimerBuidat: BOOL;
+	FiSegonRentat: BOOL;
+	SegonRentat: BOOL;
+	FiSegonBuidat: BOOL;
+	SegonBuidat: BOOL;
+	TempoPrimerBuidat: TMP_P;
+	TempoSegonRentat: TMP_P;
+	TempoSegonBuidat: TMP_P;
+	TempoTercerRentat: TMP_P;
+	TempoTercerBuidat: TMP_P;
+	FiTercerRentat: BOOL;
+	TercerRentat: BOOL;
+	FiTercerBuidat: BOOL;
+	TercerBuidat: BOOL;
+	TempoBuit: TON;
+	ComencaArentar: BOOL;
+	BuidaDelTot: BOOL;
+	srComencaArentar: SR;
+	srFiPrimerRentat: SR;
+	srFiPrimerBuidat: SR;
+	srFiSegonRentat: SR;
+	srFiSegonBuidat: SR;
+	srFiTercerRentat: SR;
+	srFiTercerBuidat: SR;
+	FiTercer: BOOL;
+	D: TMP_P;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// ********** Define el tipo de lavado ***********
+CASE DrainType OF
+	0 : FerTotsElsRentats := TRUE;
+		NoFerRentats := FALSE;
+		NomesRentatsAMaquina := FALSE;
+	1 : FerTotsElsRentats := FALSE;
+		NoFerRentats := TRUE;
+		NomesRentatsAMaquina := FALSE;
+	2 : FerTotsElsRentats := FALSE;
+		NoFerRentats := FALSE;
+		NomesRentatsAMaquina := TRUE;
+	3 : FerTotsElsRentats := TRUE;
+		NoFerRentats := FALSE;
+		NomesRentatsAMaquina := FALSE;
+END_CASE
+
+// ************** Empeza el lavado **************
+TempoBuit(IN:= xStartWash AND NOT xMinimLevel, PT:=T#2S , Q=> , ET=> );
+
+srComencaArentar(SET1:=TempoBuit.Q , RESET:= NOT xStartWash , Q1=>ComencaArentar );
+
+BuidaDelTot := xStartWash AND NOT ComencaArentar;
+
+// ********** Control Primer Lavado ******************
+PrimerRentat := ComencaArentar AND NOT FiPrimerRentat;
+
+TempoPrimerRentat(
+	xIN:= ComencaArentar, 
+	xPausa:= , 
+	dwSegons:= dw1stWashTime, 
+	xQ=> , 
+	dwTsegons=> , 
+	rTsegons=> );
+
+srFiPrimerRentat(SET1:=TempoPrimerRentat.XQ , RESET:= NOT xStartWash , Q1=>FiPrimerRentat );
+
+PrimerBuidat := FiPrimerRentat AND NOT FiPrimerBuidat;
+
+TempoPrimerBuidat(
+	xIN:= PrimerBuidat AND NOT  xMinimLevel, 
+	xPausa:= , 
+	dwSegons:=dwDetectLowLevelTime , 
+	xQ=> , 
+	dwTsegons=> , 
+	rTsegons=> );
+
+srFiPrimerBuidat(SET1:=TempoPrimerBuidat.XQ , RESET:=NOT xStartWash  , Q1=>FiPrimerBuidat );
+
+
+
+// ********** Control Segun Lavado ***************** 
+SegonRentat := FiPrimerBuidat AND NOT FiSegonRentat;
+
+TempoSegonRentat(
+	xIN:= SegonRentat , 
+	xPausa:= , 
+	dwSegons:= dw2ndWashTime, 
+	xQ=> , 
+	dwTsegons=> , 
+	rTsegons=> );
+
+srFiSegonRentat(SET1:=TempoSegonRentat.XQ , RESET:=NOT xStartWash  , Q1=>FiSegonRentat );
+
+SegonBuidat := FiSegonRentat AND NOT FiSegonBuidat;
+
+TempoSegonBuidat(
+	xIN:= SegonBuidat AND NOT xMinimLevel, 
+	xPausa:= , 
+	dwSegons:= dwDetectLowLevelTime, 
+	xQ=> , 
+	dwTsegons=> , 
+	rTsegons=> );
+
+srFiSegonBuidat(SET1:=TempoSegonBuidat.XQ , RESET:=NOT xStartWash  , Q1=>FiSegonBuidat );
+
+// ********** Control Tercer Lavado ***************** 
+TercerRentat := FiSegonBuidat AND NOT FiTercerRentat;
+
+TempoTercerRentat(
+	xIN:= TercerRentat, 
+	xPausa:= , 
+	dwSegons:= dw3rdWashTime, 
+	xQ=> , 
+	dwTsegons=> , 
+	rTsegons=> );
+
+srFiTercerRentat(SET1:=TempoTercerRentat.XQ , RESET:=NOT xStartWash  , Q1=>FiTercerRentat );
+
+TercerBuidat := FiTercerRentat AND NOT FiTercerBuidat;
+
+TempoTercerBuidat(
+	xIN:= TercerBuidat AND NOT xMinimLevel, 
+	xPausa:= , 
+	dwSegons:= dwDrainTime, 
+	xQ=> , 
+	dwTsegons=> , 
+	rTsegons=> );
+
+srFiTercerBuidat(SET1:=TempoTercerBuidat.XQ , RESET:=NOT xStartWash  , Q1=>FiTercerBuidat);
+
+// ************* Finaliza los lavados ****************
+xFinWash := xStartWash AND ((FerTotsElsRentats AND FiTercerBuidat) OR (NomesRentatsAMaquina AND FiSegonBuidat) OR (NoFerRentats AND FiPrimerBuidat));
+
+IF xFinWash THEN
+	xStartWash := FALSE;
+END_IF
+
+// ************** Activa salidas *************
+xWash	:= xStartWash AND (PrimerRentat OR SegonRentat OR TercerRentat);
+
+xToMachine := NOT xFinWash AND (PrimerBuidat OR SegonBuidat OR BuidaDelTot);
+
+xToDrain := NOT xFinWash AND TercerBuidat;
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="fBWash_TK">
+      <LineId Id="3" Count="16" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="20" Count="7" />
+      <LineId Id="141" Count="5" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="28" Count="3" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="149" Count="5" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="6" />
+      <LineId Id="157" Count="5" />
+      <LineId Id="155" Count="1" />
+      <LineId Id="42" Count="2" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="165" Count="5" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="47" Count="4" />
+      <LineId Id="173" Count="5" />
+      <LineId Id="171" Count="1" />
+      <LineId Id="53" Count="2" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="181" Count="5" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="58" Count="15" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

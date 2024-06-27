@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="_08_CIRC" Id="{2b9d3baa-1163-4109-b4c1-670b4b46024a}">
+    <Declaration><![CDATA[TYPE _08_CIRC :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	v40_Jet: dutValve;
+	v041_InPump: dutValve;
+	v042_OutPump: dutValve;
+	v043_inJet: dutValve;
+	v044_Spray: dutValve;
+	v046_P_Recirc: dutValve;
+	///+++++++++++++++++++++++++++++++++++++++
+	///READINGS
+	///+++++++++++++++++++++++++++++++++++++++
+	rSP_SpeedPumpC: REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

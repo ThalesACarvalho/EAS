@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="z_TEMP" Id="{2c3a6b58-e97e-46d4-9892-884ea7f1ceec}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM z_TEMP
+
+VAR
+	rOutRegTemp: REAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+(*v061  Valvula de vapor*)
+mc._02_TEMP.v061_Steam.xOpen:= F_TERMOREG.Z_xVapor OR
+								F_ISOTERMA.Z_xVapor;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v062  Valvula de enfriamiento*)
+mc._02_TEMP.v062_Cool.xOpen:= F_TERMOREG.z_xEnfria OR
+								F_ISOTERMA.z_xEnfria;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v060  Apertura ValvulaModulante*)
+//calentar temo
+IF Mc._02_TEMP.v061_Steam.xOpen AND F_TERMOREG.xActv THEN
+	Mc._02_TEMP.v060_Aper.rValue:= F_TERMOREG.z_rApertVapor;
+END_IF
+
+//calentar ISOTERMA
+IF Mc._02_TEMP.v061_Steam.xOpen AND F_ISOTERMA.xActv THEN
+	mc._02_TEMP.v060_Aper.rValue:= F_ISOTERMA.z_rApertVapor;
+END_IF
+
+//ENFRIAR TERMO
+IF Mc._02_TEMP.v062_Cool.xOpen AND F_TERMOREG.xActv THEN
+	MC._02_TEMP.v060_Aper.rValue:= F_TERMOREG.z_rApertEnfria;
+END_IF
+
+//ENFRIAR ISOTERMA
+IF
+	MC._02_TEMP.v062_Cool.xOpen AND F_ISOTERMA.xActv THEN
+	MC._02_TEMP.v060_Aper.rValue:= F_ISOTERMA.z_rApertEnfria;
+END_IF
+
+//OUTPUT Regulacion Temperatura
+
+rOutRegTemp:= Canvi_Escala(
+				In:= mc._02_TEMP.v060_Aper.rValue, 
+				In_Min:= 0, 
+				In_Max:= 1, 
+				Out_Min:= 0, 
+				Out_Max:= 32675);
+	
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v063 Retorno condensados*)
+mc._02_TEMP.v063_RetCon.xOpen:= F_TERMOREG.z_xRetonoCond;
+
+(*-------------------------------------------------------------------------------------------------------*)
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="z_TEMP">
+      <LineId Id="3" Count="1" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="7" Count="2" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="12" Count="3" />
+      <LineId Id="68" Count="2" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="83" Count="2" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="71" Count="2" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="75" Count="5" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="45" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,519 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FileVersion>1.0.0.0</FileVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9083617f-c0b1-4981-af0b-d930e50482ee}</ProjectGuid>
+    <SubObjectsSortedByName>True</SubObjectsSortedByName>
+    <DownloadApplicationInfo>true</DownloadApplicationInfo>
+    <WriteProductVersion>true</WriteProductVersion>
+    <GenerateTpy>false</GenerateTpy>
+    <Name>PRINCIPAL</Name>
+    <ProgramVersion>3.1.4023.0</ProgramVersion>
+    <Application>{fbc15b8a-814d-4217-ba9e-80ca8c3e961a}</Application>
+    <TypeSystem>{8c099b48-a51d-43d0-af74-dee850716e4e}</TypeSystem>
+    <Implicit_Task_Info>{664c23b6-de79-49c3-8cdd-944b44ca1aaa}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{de08fb8f-9fa8-47ca-bcaf-803ab24cef9c}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{597c7dcb-3cff-419e-a228-d84476b9cbc3}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{8e928a56-c524-40fb-a898-cb772218b7e8}</LibraryReferences>
+    <Company>Escarre Automatizacion y Servecios sl</Company>
+    <Released>false</Released>
+    <Title>Programa Base 01</Title>
+    <ProjectVersion>00_00</ProjectVersion>
+    <Description />
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="DUTs\20_HARD\Beckhoff\Island_Beck.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\20_HARD\Hard.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT Elements\dutAIn.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT Elements\dutAOut.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT Elements\dutPul.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT Elements\dutPump.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT Elements\dutValve.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_00_GENERAL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_01_SEG.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_02_TEMP.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_03_PRESS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_04_FILL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_05_DRAIN.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_06_LEVEL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_07_OVERFLOW.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_08_CIRC.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_09_CPUMP.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_10_TK1.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_11_TK2.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_12_INTRO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_13_T_PREP.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_14_CONSUM.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_15_WINCH.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\DUT System\_16_WINCH_X.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MACHINE\Machine.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\10_PE\ATL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\10_PE\ELEMENTS\PE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\10_PE\ELEMENTS\PE_COM.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GVLs\contants.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="GVLs\Gloval_Variables.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GVLs\Mc.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="GVLs\_Hard.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="GVLs\_PE.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\00_Tasks\ProgramaPrincipal.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\10_PE\pComPE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\10_PE\pPE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\20_Hardware\pHard.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_1 UPS\UPS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_2 IO\pIO.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_00_Config_PE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_14_Config_Consum.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_09_Config_CPump.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_05_Config_Drain.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_04_Config_Fill.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_06_Config_LEVEL.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_07_Config_Overflow.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_03_Config_PRESS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_01_Config_SEG.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_02_Config_TEMP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_10_Config_TK1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_11_Config_TK2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_15_Config_Winch.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\ConfigSystem\_00_Config_General.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_3_Config\pConfig.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_AVISO.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_CARGA.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_CONTROL_PH.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_DESCARGA.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_DESPRESURIZA.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_DUCHAS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_ESPERA.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_FIN_CICLO.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_FIN_DUCHAS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_INTRO_TK2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_ISOTERMA.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_LAVADO_CONT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_LLENADO.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_LLENADO_TK2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_MUESTRA.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_PREP_TK2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_PRESURIZAR.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_RECIRCULA_TK2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_TERMOREG.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_VACIADO.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_VACIADO_TK2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\F_VELOCIDADES.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\_00_CIRC_PUMP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\_00_CONSUMS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\_00_GENERALES.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\_00_GESTION_PUL.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\_00_PID.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\Funcions\_00_VENT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_5_Funcions\pFuctions.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\Z_CIRC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\z_CONTROL.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\Z_CP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\z_DRAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\z_FILL.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\Z_INTRO.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\z_LEVEL.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\z_OVERFLOW.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\z_PRESS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\z_TEMP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\z_TK1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\Modules\z_TK2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\30_7 ActvOutputs\pActvOutputs.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\30_PLC\ProgramPLC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\40_1_Llibreries_FB\Canvi_Escala.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\40_1_Llibreries_FB\Polsador.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\40_1_Llibreries_FB\PULS_1S.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\40_1_Llibreries_FB\TMP_P.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\Consums\CONSUMP_00.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\Consums\KG_vapor_00.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\Consums\Kwh_00.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\Consums\Lit_H2O_00.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\Consums\Tabla_00.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB Duts\fAI.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB Duts\fAO.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB Duts\fCaudal.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB Duts\fCnt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB Duts\fTemp.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB Duts\fValve.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB%27s_Utils\fBCntLiters.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB%27s_Utils\fBHorn.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB%27s_Utils\fBPulse1s.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB%27s_Utils\fBUp_Down.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB%27s_Utils\fBWash_TK.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB%27s_Utils\fB_Intro_TK.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB%27s_Utils\fBPumpC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB%27s_Utils\fBPumpSpeed.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\40_Function_Blocks\FB\FB%27s_Utils\fBTermo.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Project Information\F_GetCompany.TcPOU">
+      <SubType>Code</SubType>
+      <SystemCall>true</SystemCall>
+    </Compile>
+    <Compile Include="Project Information\F_GetTitle.TcPOU">
+      <SubType>Code</SubType>
+      <SystemCall>true</SystemCall>
+    </Compile>
+    <Compile Include="Project Information\F_GetVersion.TcPOU">
+      <SubType>Code</SubType>
+      <SystemCall>true</SystemCall>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DUTs" />
+    <Folder Include="DUTs\20_HARD" />
+    <Folder Include="DUTs\20_HARD\Beckhoff" />
+    <Folder Include="DUTs\MACHINE" />
+    <Folder Include="DUTs\MACHINE\DUT System" />
+    <Folder Include="DUTs\10_PE" />
+    <Folder Include="DUTs\10_PE\ELEMENTS" />
+    <Folder Include="DUTs\MACHINE\DUT Elements" />
+    <Folder Include="GVLs" />
+    <Folder Include="POUs\10_PE" />
+    <Folder Include="POUs\30_PLC\30_3_Config\ConfigSystem" />
+    <Folder Include="POUs\30_PLC\30_2 IO" />
+    <Folder Include="POUs\30_PLC\30_1 UPS" />
+    <Folder Include="POUs\40_Function_Blocks\40_1_Llibreries_FB" />
+    <Folder Include="POUs\40_Function_Blocks\FB" />
+    <Folder Include="POUs\40_Function_Blocks\FB\Consums" />
+    <Folder Include="POUs\40_Function_Blocks\FB\FB%27s_Utils" />
+    <Folder Include="POUs\20_Hardware" />
+    <Folder Include="POUs\30_PLC" />
+    <Folder Include="POUs\00_Tasks" />
+    <Folder Include="POUs\30_PLC\30_5_Funcions" />
+    <Folder Include="POUs\30_PLC\30_3_Config" />
+    <Folder Include="POUs\30_PLC\30_5_Funcions\Funcions" />
+    <Folder Include="POUs\30_PLC\30_7 ActvOutputs" />
+    <Folder Include="POUs\30_PLC\30_7 ActvOutputs\Modules" />
+    <Folder Include="POUs\40_Function_Blocks" />
+    <Folder Include="POUs\40_Function_Blocks\FB\FB Duts" />
+    <Folder Include="Project Information" />
+    <Folder Include="VISUs" />
+    <Folder Include="POUs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PlaceholderReference Include="EAS">
+      <DefaultResolution>EAS PLC, * (ESCARRE AUTOMATIZACION Y SERVICIOS sl)</DefaultResolution>
+      <Namespace>EAS</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="EAS SCADA">
+      <DefaultResolution>EAS SCADA, * (ESCARRE AUTOMATIZACION Y SERVICIOS sl)</DefaultResolution>
+      <Namespace>EAS_SCADA</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_Standard">
+      <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_Standard</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_SUPS">
+      <DefaultResolution>Tc2_SUPS, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_SUPS</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_System">
+      <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_System</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_Utilities">
+      <DefaultResolution>Tc2_Utilities, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_Utilities</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Module">
+      <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Module</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Util">
+      <DefaultResolution>Util, * (System)</DefaultResolution>
+      <Namespace>Util</Namespace>
+    </PlaceholderReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PRINCIPAL.tmc">
+      <SubType>Content</SubType>
+    </None>
+  </ItemGroup>
+  <ProjectExtensions>
+    <PlcProjectOptions>
+      <XmlArchive>
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
+      <v n="Name">"&lt;ProjectRoot&gt;"</v>
+      <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
+        <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
+        <o>
+          <v n="Name">"{192FAD59-8248-4824-A8DE-9177C94C195A}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" />
+        </o>
+        <v>{8F99A816-E488-41E4-9FA3-846536012284}</v>
+        <o>
+          <v n="Name">"{8F99A816-E488-41E4-9FA3-846536012284}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" />
+        </o>
+        <v>{40450F57-0AA3-4216-96F3-5444ECB29763}</v>
+        <o>
+          <v n="Name">"{40450F57-0AA3-4216-96F3-5444ECB29763}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" ckt="String" cvt="String">
+            <v>ActiveVisuProfile</v>
+            <v>IR0whWr8bwfwBwAAiD2qpQAAAABVAgAA37x72QAAAAABAAAAAAAAAAEaUwB5AHMAdABlAG0ALgBTAHQAcgBpAG4AZwACTHsAZgA5ADUAYgBiADQAMgA2AC0ANQA1ADIANAAtADQAYgA0ADUALQA5ADQAMAAwAC0AZgBiADAAZgAyAGUANwA3AGUANQAxAGIAfQADCE4AYQBtAGUABDBUAHcAaQBuAEMAQQBUACAAMwAuADEAIABCAHUAaQBsAGQAIAA0ADAAMgA0AC4ANwAFFlAAcgBvAGYAaQBsAGUARABhAHQAYQAGTHsAMQA2AGUANQA1AGIANgAwAC0ANwAwADQAMwAtADQAYQA2ADMALQBiADYANQBiAC0ANgAxADQANwAxADMAOAA3ADgAZAA0ADIAfQAHEkwAaQBiAHIAYQByAGkAZQBzAAhMewAzAGIAZgBkADUANAA1ADkALQBiADAANwBmAC0ANABkADYAZQAtAGEAZQAxAGEALQBhADgAMwAzADUANgBhADUANQAxADQAMgB9AAlMewA5AGMAOQA1ADgAOQA2ADgALQAyAGMAOAA1AC0ANAAxAGIAYgAtADgAOAA3ADEALQA4ADkANQBmAGYAMQBmAGUAZABlADEAYQB9AAoOVgBlAHIAcwBpAG8AbgALBmkAbgB0AAwKVQBzAGEAZwBlAA0KVABpAHQAbABlAA4aVgBpAHMAdQBFAGwAZQBtAE0AZQB0AGUAcgAPDkMAbwBtAHAAYQBuAHkAEAxTAHkAcwB0AGUAbQARElYAaQBzAHUARQBsAGUAbQBzABIwVgBpAHMAdQBFAGwAZQBtAHMAUwBwAGUAYwBpAGEAbABDAG8AbgB0AHIAbwBsAHMAEyhWAGkAcwB1AEUAbABlAG0AcwBXAGkAbgBDAG8AbgB0AHIAbwBsAHMAFCRWAGkAcwB1AEUAbABlAG0AVABlAHgAdABFAGQAaQB0AG8AcgAVIlYAaQBzAHUATgBhAHQAaQB2AGUAQwBvAG4AdAByAG8AbAAWFHYAaQBzAHUAaQBuAHAAdQB0AHMAFwxzAHkAcwB0AGUAbQAYGFYAaQBzAHUARQBsAGUAbQBCAGEAcwBlABkmRABlAHYAUABsAGEAYwBlAGgAbwBsAGQAZQByAHMAVQBzAGUAZAAaCGIAbwBvAGwAGyJQAGwAdQBnAGkAbgBDAG8AbgBzAHQAcgBhAGkAbgB0AHMAHEx7ADQAMwBkADUAMgBiAGMAZQAtADkANAAyAGMALQA0ADQAZAA3AC0AOQBlADkANAAtADEAYgBmAGQAZgAzADEAMABlADYAMwBjAH0AHRxBAHQATABlAGEAcwB0AFYAZQByAHMAaQBvAG4AHhRQAGwAdQBnAGkAbgBHAHUAaQBkAB8WUwB5AHMAdABlAG0ALgBHAHUAaQBkACBIYQBmAGMAZAA1ADQANAA2AC0ANAA5ADEANAAtADQAZgBlADcALQBiAGIANwA4AC0AOQBiAGYAZgBlAGIANwAwAGYAZAAxADcAIRRVAHAAZABhAHQAZQBJAG4AZgBvACJMewBiADAAMwAzADYANgBhADgALQBiADUAYwAwAC0ANABiADkAYQAtAGEAMAAwAGUALQBlAGIAOAA2ADAAMQAxADEAMAA0AGMAMwB9ACMOVQBwAGQAYQB0AGUAcwAkTHsAMQA4ADYAOABmAGYAYwA5AC0AZQA0AGYAYwAtADQANQAzADIALQBhAGMAMAA2AC0AMQBlADMAOQBiAGIANQA1ADcAYgA2ADkAfQAlTHsAYQA1AGIAZAA0ADgAYwAzAC0AMABkADEANwAtADQAMQBiADUALQBiADEANgA0AC0ANQBmAGMANgBhAGQAMgBiADkANgBiADcAfQAmFk8AYgBqAGUAYwB0AHMAVAB5AHAAZQAnVFUAcABkAGEAdABlAEwAYQBuAGcAdQBhAGcAZQBNAG8AZABlAGwARgBvAHIAQwBvAG4AdgBlAHIAdABpAGIAbABlAEwAaQBiAHIAYQByAGkAZQBzACgQTABpAGIAVABpAHQAbABlACkUTABpAGIAQwBvAG0AcABhAG4AeQAqHlUAcABkAGEAdABlAFAAcgBvAHYAaQBkAGUAcgBzACs4UwB5AHMAdABlAG0ALgBDAG8AbABsAGUAYwB0AGkAbwBuAHMALgBIAGEAcwBoAHQAYQBiAGwAZQAsEnYAaQBzAHUAZQBsAGUAbQBzAC1INgBjAGIAMQBjAGQAZQAxAC0AZAA1AGQAYwAtADQAYQAzAGIALQA5ADAANQA0AC0AMgAxAGYAYQA3ADUANgBhADMAZgBhADQALihJAG4AdABlAHIAZgBhAGMAZQBWAGUAcgBzAGkAbwBuAEkAbgBmAG8AL0x7AGMANgAxADEAZQA0ADAAMAAtADcAZgBiADkALQA0AGMAMwA1AC0AYgA5AGEAYwAtADQAZQAzADEANABiADUAOQA5ADYANAAzAH0AMBhNAGEAagBvAHIAVgBlAHIAcwBpAG8AbgAxGE0AaQBuAG8AcgBWAGUAcgBzAGkAbwBuADIMTABlAGcAYQBjAHkAMzBMAGEAbgBnAHUAYQBnAGUATQBvAGQAZQBsAFYAZQByAHMAaQBvAG4ASQBuAGYAbwA0MEwAbwBhAGQATABpAGIAcgBhAHIAaQBlAHMASQBuAHQAbwBQAHIAbwBqAGUAYwB0ADUaQwBvAG0AcABhAHQAaQBiAGkAbABpAHQAeQDQAAIaA9ADAS0E0AUGGgfQBwgaAUUHCQjQAAkaBEUKCwQDAAAABQAAAA0AAAAAAAAA0AwLrQIAAADQDQEtDtAPAS0Q0AAJGgRFCgsEAwAAAAUAAAANAAAAKAAAANAMC60BAAAA0A0BLRHQDwEtENAACRoERQoLBAMAAAAFAAAADQAAAAAAAADQDAutAgAAANANAS0S0A8BLRDQAAkaBEUKCwQDAAAABQAAAA0AAAAUAAAA0AwLrQIAAADQDQEtE9APAS0Q0AAJGgRFCgsEAwAAAAUAAAANAAAAAAAAANAMC60CAAAA0A0BLRTQDwEtENAACRoERQoLBAMAAAAFAAAADQAAAAAAAADQDAutAgAAANANAS0V0A8BLRDQAAkaBEUKCwQDAAAABQAAAA0AAAAAAAAA0AwLrQIAAADQDQEtFtAPAS0X0AAJGgRFCgsEAwAAAAUAAAANAAAAKAAAANAMC60EAAAA0A0BLRjQDwEtENAZGq0BRRscAdAAHBoCRR0LBAMAAAAFAAAADQAAAAAAAADQHh8tINAhIhoCRSMkAtAAJRoFRQoLBAMAAAADAAAAAAAAAAoAAADQJgutAAAAANADAS0n0CgBLRHQKQEtENAAJRoFRQoLBAMAAAADAAAAAAAAAAoAAADQJgutAQAAANADAS0n0CgBLRHQKQEtEJoqKwFFAAEC0AABLSzQAAEtF9AAHy0t0C4vGgPQMAutAQAAANAxC60XAAAA0DIarQDQMy8aA9AwC60CAAAA0DELrQMAAADQMhqtANA0Gq0A0DUarQA=</v>
+          </d>
+        </o>
+      </d>
+      <d n="Values" t="Hashtable" />
+    </o>
+        </Data>
+        <TypeList>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
+    </PlcProjectOptions>
+  </ProjectExtensions>
+</Project>

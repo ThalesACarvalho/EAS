@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <GVL Name="Mc" Id="{9bab8bad-8f58-466d-99ee-829cf0e62d22}">
+    <Declaration><![CDATA[VAR_GLOBAL PERSISTENT 
+	
+
+Mc:Machine;
+
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

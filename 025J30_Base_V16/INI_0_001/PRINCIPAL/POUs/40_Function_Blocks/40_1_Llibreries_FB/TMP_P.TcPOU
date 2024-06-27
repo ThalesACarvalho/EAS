@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="TMP_P" Id="{bc194ee1-a831-4115-8861-2abf4459adad}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK TMP_P
+VAR_INPUT
+	/// Enable Input
+	xIN: BOOL;
+	/// Pause Input
+	xPausa: BOOL;
+	/// Setpoint Time in seconds (DWORD)
+	dwSegons: DWORD;
+END_VAR
+VAR_OUTPUT
+	/// Boolean Output
+	xQ: BOOL;
+	/// ET time in seconds(DWORD)
+	dwTsegons: DWORD;
+	
+	rTsegons: REAL;			// ET time in seconds(REAL)
+END_VAR
+VAR
+	TEmporitz: TON;
+	Temps: TIME;
+	TempsTrans: TIME;
+	Pols_fin: F_TRIG;
+	reset: BOOL;
+	Temps_contador: TIME;
+	Temps_pausa: TIME;
+	contgeActual: TIME;
+	a: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+a:= a+1;
+
+
+
+Temps := REAL_TO_TIME (DWORD_TO_REAL (dwSegons)*1000);
+
+Pols_fin(CLK:=xPausa , Q=>reset);
+
+IF	xPausa 
+	THEN
+		contgeActual := TEmporitz.ET;
+END_IF
+
+IF xPausa AND contgeActual > T#0S
+	THEN
+		Temps_pausa:= contgeActual;
+		TempsTrans := Temps_pausa + TempsTrans; 
+END_IF
+
+TEmps_contador := Temps-TempsTrans;
+
+TEmporitz(IN:=xIn AND NOT xPausa AND NOT reset, PT:=TEmps_contador , Q=>xQ , ET=>contgeActual );
+
+IF NOT xIn
+	THEN
+	TEmps_contador := t#0s;
+	TempsTrans := t#0s;
+	Temps_pausa:= t#0s;
+END_IF
+
+dwTsegons := (REAL_TO_DWORD(TIME_TO_REAL((contgeActual)+(TempsTrans)))/1000);
+rTsegons := ((TIME_TO_REAL((contgeActual)+(TempsTrans)))/1000);
+]]></ST>
+    </Implementation>
+    <LineIds Name="TMP_P">
+      <LineId Id="3" Count="29" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

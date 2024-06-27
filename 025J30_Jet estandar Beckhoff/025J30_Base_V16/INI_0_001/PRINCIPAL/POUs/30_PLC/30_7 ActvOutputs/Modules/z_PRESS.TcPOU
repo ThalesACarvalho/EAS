@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="z_PRESS" Id="{b27e6df5-f57f-411e-969d-e10cfe643960}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM z_PRESS
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+(*v070_Vent  Respiradero*)
+Mc._03_PRESS.v070_Vent.xOpen:=_00_vent.z_xRespiradero;
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v071_Load  Carga presion*)
+Mc._03_PRESS.v071_Load.xOpen:=_00_vent.z_xCargaPres;
+
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v074_Unload  Desgarga de presion*)
+Mc._03_PRESS.v074_Unload.xOpen:=_00_vent.Z_xDescarga;
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="z_PRESS">
+      <LineId Id="23" Count="1" />
+      <LineId Id="27" Count="10" />
+      <LineId Id="19" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

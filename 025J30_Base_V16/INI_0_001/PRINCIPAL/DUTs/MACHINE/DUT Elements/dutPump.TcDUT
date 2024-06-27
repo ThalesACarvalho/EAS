@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="dutPump" Id="{f17dcd04-edf9-4de0-86ea-f37f2684cdb5}">
+    <Declaration><![CDATA[TYPE dutPump :
+STRUCT
+	xInRun:BOOL;		//In Forware Pump
+	xInRev:BOOL;		//In Reverse Pump
+	rSPVel:REAL;		//In Speed reference 
+	xInCons:BOOL;		//In OK Pump
+	xInFail:BOOL;		//In Fail Pump
+	
+	xOK:BOOL;			(*Pump Run OK*)
+	xFailOut:BOOL;		(*Fail Pump*)
+	xNo_Ok:BOOL;		(*Falta consenso*)
+	
+	xRUN:BOOL;			(*Run*)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

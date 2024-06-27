@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fBPulse1s" Id="{335d8a60-21d8-409e-bbf0-7fbe0a60ed72}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fBPulse1s
+VAR_OUTPUT
+	xFlanco: BOOL;
+	xOut: BOOL;
+END_VAR
+VAR
+	tTempo: Ton;
+	iSeg: UDINT;
+	pPulse: R_trig;
+	iSeg_Ant: UDINT;
+	PULSO: BLINK;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+tTempo(IN:=NOT(tTempo.Q) , PT:=T#7D );
+iSeg:=TIME_TO_DWORD(tTempo.ET)/1000;
+pPulse(CLK:= (iSeg>iSeg_Ant) );
+iSeg_Ant:=iSeg;
+
+xFlanco:=pPulse.Q;
+
+PULSO(ENABLE:= TRUE, TIMELOW:= T#1S, TIMEHIGH:= T#1S, OUT=> xOut);]]></ST>
+    </Implementation>
+    <LineIds Name="fBPulse1s">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

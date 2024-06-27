@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="Machine" Id="{cef3f33c-c780-46e4-9cc9-23c4ea5e4aa2}">
+    <Declaration><![CDATA[TYPE Machine :
+STRUCT
+	///Sistema de Batch
+	_00_GENERAL: _00_GENERAL;
+	///SEGURIDAD
+	_01_SEG: _01_SEG;
+	///Sistema de calentamiento
+	_02_TEMP: _02_TEMP;
+	///Sistema de PRESURITZACIÓ
+	_03_PRESS: _03_PRESS;
+	///Sistema de llenado
+	_04_FILL: _04_FILL;
+	///Sistema de Vaciado
+	_05_DRAIN: _05_DRAIN;
+	///Sistema de Niveles de la maquina
+	_06_LEVEL: _06_LEVEL;
+	///Sistema de Rebosadero
+	_07_OVERFLOW: _07_OVERFLOW;
+	///Valvulas de la circulacion
+	_08_CIRC: _08_CIRC;
+	///Bomba de circulacion
+	_09_CPUMP: _09_CPUMP;
+	///Tanque 1
+	_10_TK1: _10_TK1;
+	///Tanque 2
+	_11_TK2: _11_TK2;
+	///Sistema de Intorduccion
+	_12_INTRO: _12_INTRO;
+	///Tanque Preparacion
+	_13_TPrep: _13_T_PREP;
+	///Sistema de Consumos
+	_14_CONSUM: _14_CONSUM;
+	///Troniquetes
+	_15_WINCH: _15_WINCH;
+	
+
+	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

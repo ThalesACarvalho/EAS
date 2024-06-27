@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_04_Config_Fill" Id="{5f57d084-aa55-4613-8877-22e153d876be}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _04_Config_Fill
+VAR
+v001_cool: fValve;
+v002_Hot :fValve;
+v003_Hard :fValve;
+v004_ContW :fValve;
+v005_Salt :fValve;
+v006_InterMc :fValve;
+v007_InterCW :fValve;
+s011_FillTemp :fAI;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+(*Definir Hard*)
+(*Valvulas*)
+//v001_Cool
+v001_cool(valv:=mc._04_FILL.v001_Cool );
+
+//v002_Hot 
+v002_Hot(valv:=mc._04_FILL.v002_Hot);
+
+//v003_Hard
+v003_hard (valv:=mc._04_FILL.v003_Hard );
+
+//v004_ContW
+v004_ContW (valv:=mc._04_FILL.v004_ContW);
+
+//v005_Salt
+v005_Salt (valv:=mc._04_FILL.v005_Salt );
+
+//v006_InterMc 
+v006_InterMc (valv:=mc._04_FILL.v006_InterMc );
+
+//v007_InterCW
+v007_InterCW (valv:=mc._04_FILL.v007_InterCW );
+
+//v008_InterMod
+//v009_RetSer 
+//S010_Flowm :FCnt;
+
+//s011_FillTemp 
+s011_FillTemp.iPF_Ana_min:=0;
+s011_FillTemp.iPF_Ana_max:=1500;
+s011_FillTemp.iPFSnsMinUF:=0;
+s011_FillTemp.iPFSnsMaxUF:=150;
+s011_FillTemp(iAnalog:=mc._04_FILL.s011_FillTemp.iAnalog);
+
+//s012_FlowSalt :FCnt;
+
+
+	
+(*-------------------------------------------------------------------------------------------------------*)
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*Configuracion Caudalimetro*)
+(*Comprobar si hay presencia de caudalimetro *)
+IF (*mC.FILL.s010_Flowm.idCnt.T*) 1 > 0 
+	THEN
+	Mc._04_FILL.iCnt := Mc._04_FILL.s010_Flowm.iCnt;	
+	ELSE
+	Mc._04_FILL.iCnt := 0;			
+END_IF
+
+
+(*Comprobar si hay presencia de PT100 Para llenado por temperatura*)
+IF (*mC.FILL.s011_FillTemp.idTemp.T*) 0 > 0 
+	THEN
+	Mc._04_FILL.rFillTemp := Mc._04_FILL.s011_FillTemp.rValue;
+	ELSE
+	Mc._04_FILL.rFillTemp := 0;	
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="_04_Config_Fill">
+      <LineId Id="3" Count="0" />
+      <LineId Id="39" Count="2" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="123" Count="1" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="133" Count="7" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="9" Count="21" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

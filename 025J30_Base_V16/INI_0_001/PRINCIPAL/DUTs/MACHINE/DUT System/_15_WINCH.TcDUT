@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="_15_WINCH" Id="{28681a0b-5c01-4c24-88b5-2e58783c2cf8}">
+    <Declaration><![CDATA[TYPE _15_WINCH :
+STRUCT
+	W: ARRAY[1..6] OF _16_WINCH_X;
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	///+++++++++++++++++++++++++++++++++++++++
+	///READINGS
+	///+++++++++++++++++++++++++++++++++++++++
+	iSP_T_Pass: INT;
+	iSP_Speed: INT;
+	iPFWinchMaxSpeed: INT;
+	///Torniquete a parar en muestra (0= el primero que pase/ X= toniquete X)
+	iPFWinchToStop: INT;
+	iPFNumWinch: INT;
+	iPFNumSeam: INT;
+	iPFDelayRunWinch: INT;
+	iPFPercentWinch: INT;
+	iPFFactPulTor: INT;
+	/// Maximum time rope pass
+	iPFTimeMaxRope: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

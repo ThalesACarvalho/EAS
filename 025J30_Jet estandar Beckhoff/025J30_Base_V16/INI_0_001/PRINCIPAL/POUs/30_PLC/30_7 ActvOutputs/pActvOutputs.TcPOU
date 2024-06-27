@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="pActvOutputs" Id="{7c4f79d2-73ba-4371-a326-61c07187c10b}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM pActvOutputs
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*Activar Salidas BOMBA CIRCULACION*)
+Z_CP();
+
+(*Activar Salidas control*)
+z_control();
+
+(*Activar Salidas drain*)
+z_drain();
+
+(*Activar Salidas fILL*)
+z_FILL();
+
+(*Activar Salidas LEVEL*)
+z_level();
+
+(*Activar Salidas pRESS*)
+z_press();
+
+(*Activar Salidas tk1*)
+z_TK1();
+
+(*Activar Salidas tk2*)
+z_TK2();
+
+(*Activar Salidas CIRC*)
+Z_CIRC();
+
+(*Activar Salidas TERMo*)
+Z_TEMP();
+
+(*Activar Salidas OVERFLOW*)
+z_OVERFLOW();
+
+(*Activar Salidas INTRO*)
+z_INTRO();
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="pActvOutputs">
+      <LineId Id="3" Count="31" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

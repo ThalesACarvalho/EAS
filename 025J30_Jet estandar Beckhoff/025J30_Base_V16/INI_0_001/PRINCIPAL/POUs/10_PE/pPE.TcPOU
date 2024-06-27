@@ -1,0 +1,453 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="pPE" Id="{2a2bd424-0b38-4d3d-a78c-312f801c6ab7}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM pPE
+VAR PERSISTENT
+	Anar1:Salt;
+	Anar2:Salt;
+	Anar3:Salt;
+	Anar4:SaltDePasEnUnCicle;
+	Anar5:SaltDePasEnUnCicle;
+	Parar:PararTotesLesFuncions;
+	PararInici:PararTotesLesFuncions;
+	ComprobarSalt:ComprobarFuncionsPas;
+	SaltarProximPas:BOOL;
+	EsperaSalt:TON;
+	AcualitzaDB: CarregarFuncionsActivesAlDB;
+	AcualitzaDB2: CarregarFuncionsActivesAlDB;
+	PunterCicle0: WORD;
+	ferSalt: BOOL;
+	FerSaltParalel: BOOL;    (*ordre de salt*)
+	EsperaSaltar: TON;
+	SaltarPar: BOOL;
+	PararTot:PararTotesLesFuncions;
+	
+
+(*=========================================================*)	
+(*========  GESTIÓ MANUAL  ================================*)	
+
+	Punt_Func: WORD;
+	T_Func_Act:T_Funcio;				(* Funcio que indica el punterCicle *)
+	FiFuncio:Parar_Func_FiFuncio;
+	Incompatibles: Parar_Func_Incomp;
+	a: WORD;
+	AcualitzaDB3: CarregarFuncionsActivesAlDB;
+	
+
+(*=========================================================*)	
+	fbFUNBCK: FunBck_v01;
+	xFunBck: BOOL;
+	tFunBck: Ton;
+	tCicloOn: ton;
+	rsBatch: Rs;
+	
+END_VAR
+VAR
+	run:BOOL;
+	inici: Ton;
+	fb_UPS_CX8190: FB_S_UPS_CX81xx;
+	xCargadas: BOOL;
+	xUltimas: BOOL;
+	xBackup: BOOL;
+	END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*==============================================================*)
+(*		GESTION REMANENTES PARA CPU CX8190  					*)
+(*==============================================================*)
+(*
+fb_UPS_CX8190(
+	sNetID:= , 
+	iPLCPort:=851 , 
+	tTimeout:= , 
+	eUpsMode:= , 
+	ePersistentMode:= , 
+	tRecoverTime:= , 
+	bPowerFailDetect=> , 
+	eState=> );
+
+IF _AppInfo.BootDataLoaded THEN
+	xCargadas:=TRUE;
+	ELSE
+		xCargadas:=FALSE;
+END_IF
+
+IF _AppInfo.OldBootData THEN
+	xUltimas:=FALSE;
+	xBackup:=TRUE;
+	ELSIF _AppInfo.BootDataLoaded THEN
+		xUltimas:=TRUE; 
+		xBackup:=FALSE;
+END_IF
+
+
+*)
+
+
+(*==============================================================*)
+(*		GESTION PE												*)
+(*==============================================================*)
+(*,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Pasar a manual al reiniciar  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,	*)
+inici(IN:= run, PT:=T#5S , Q=> , ET=> );
+
+
+IF NOT inici.Q THEN
+ATL.PE_COM.xToManual:=TRUE;
+ATL.PE.wAutoMan:=1;
+ATL.PE_COM.xResetFunc:=TRUE;
+PararInici(Estat_F:=est_func );
+run:=TRUE;
+END_IF
+
+
+
+(*,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, Orde de Ejecutar Cicle    ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,	*)
+
+IF ATL.PE_COM.xRunCycle
+	THEN
+		Cicle0:=CicleRebut;
+		ATL.PE.wStep :=0;
+		ATL.PE.wAutoMan:=2;
+		Anar2(
+			PasInicial:= 0 ,
+			 PasFinal:= ATL.PE.wStep );
+		ATL.PE_COM.xRunCycle:= FALSE;
+END_IF
+
+(*,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Orde de Cicle Modificat ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,	*)
+IF ATL.PE_COM.xModifiedCycle
+	THEN
+		Cicle0:=CicleRebut;
+		ATL.PE_COM.xModifiedCycle:=FALSE;
+END_IF
+
+(*,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Orde de Reset ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,	*)
+IF ATL.PE_COM.xReset
+	THEN
+		PararTot(Estat_F:=Est_F_PE4 );
+		ATL.PE.wStep :=0;
+		ATL.PE_COM.xToManual:=TRUE;
+		ATL.PE_COM.xReset:=FALSE;
+END_IF
+(*,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Orde de Reset ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,	*)
+IF ATL.PE_COM.xResetFunc
+	THEN
+		PararTot(Estat_F:=Est_F_PE4 );
+		ATL.PE_COM.xResetFunc :=FALSE;
+END_IF
+
+
+(*=============================================================*)
+(*=============================================================*)
+
+(*Control si el sistema treballa en MANUAL / AUTOMATIC *)
+
+(*,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, Canvis d'estat AUTO/MAN ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,	*)
+(*  Automàtic   *)
+IF ((ATL.PE.xPulAuto)(*OR Com_PE.RetardArranc*) OR (ATL.PE_COM.xToAutomatic) OR (ATL.PE.wAutoMan>2))AND(cicle0[1].Pas<>0)
+	THEN
+		(* Pasar de Manual a Automatic*)
+		IF ATL.PE.wAutoMan<=1
+			THEN
+				Parar(Estat_F:=Est_Func);
+				IF ATL.PE.wStep=0
+					THEN
+						ATL.PE.wStep:=1;
+				END_IF
+				Anar3(
+					PasInicial:= 0 ,
+		 			PasFinal:= ATL.PE.wStep );
+		END_IF
+		ATL.PE.wAutoMan:=2;
+		AcualitzaDB
+			(EstatFuncions:= Est_Func  ,
+			FuncionsActives=>Func_Actives );
+END_IF;
+		ATL.PE_COM.xToAutomatic:=FALSE;
+
+(*  Manual   *)
+IF (ATL.PE.xPulMan) OR (ATL.PE_COM.xToManual) OR (ATL.PE.wAutoMan<1)
+	THEN
+		(* Pasar d'automatic a manual *)
+		IF ATL.PE.wAutoMan>=2
+			THEN
+				Parar(Estat_F:=Est_Func);
+		END_IF
+		ATL.PE.wAutoMan:=1;
+		ATL.PE_COM.xToManual:=FALSE;
+END_IF;
+
+
+(*=============================================================*)
+(* + + + + + + + +  +  + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + *)
+
+(*,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, Gestio Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,	*)
+
+IF ATL.PE.wAutoMan=1
+	THEN
+(*_____________________________________________________________________________________________________________*)
+		Punt_Func:=1;
+		REPEAT
+			IF (Est_Func[Punt_Func].Actv_Funcio)=(Est_F_PE4[Punt_Func].Actv_Funcio)
+			THEN
+				(*Igualar valors de les funcions*)
+				Est_Func[Punt_Func]:=Est_F_PE4[Punt_Func];
+				(*Aumentar el punter*)
+				Punt_Func:=Punt_Func+1;
+			ELSE
+				T_Func_Act:=Config_Func[Punt_Func];
+				IF Est_Func[Punt_Func].Actv_Funcio=TRUE
+				THEN
+					(* Parar la funcio al PLC per fi funcio manual al PE4  *)
+					Est_Func[Punt_Func].Actv_Funcio:=FALSE;
+				ELSE
+					IF (Est_F_PE4[Punt_Func].Actv_Funcio=TRUE)AND(Est_F_PE4_Ant[Punt_Func].Actv_Funcio=TRUE)
+					THEN
+						(*Parar la funcio al PE4 per que s'ha acabat*)
+							Est_F_Pe4[Punt_Func].Actv_Funcio:=FALSE;
+					ELSE
+						(*=====Activar la funció====*)
+						(*Mirar si hi ha alguna funció incompatible amb la nova funció*)
+						Incompatibles(
+							Funcio:= T_Func_Act.Cd_funcio ,
+							DB_Comp:= Func_Comp,
+							Estat_F:=Est_Func );
+		
+						(*Mirar si la funcio nova ha d'acabar alguna funció per Fin Funcion*)
+						FiFuncio(
+							Tipus_Funcio:= T_Func_Act ,
+							Estat_F:= Est_func);
+						(*Activar la funció*)
+						Est_Func[Punt_Func]:= Est_F_PE4[Punt_Func];
+					END_IF
+				END_IF
+			END_IF
+		UNTIL
+		Punt_Func>Max_Funcions
+		END_REPEAT
+		AcualitzaDB3
+			(EstatFuncions:= Est_Func  ,
+			FuncionsActives=>Func_Actives );
+		
+		Est_F_PE4_Ant:=Est_F_PE4;
+(*_____________________________________________________________________________________________________________*)
+		SaltarProximPas:=FALSE;
+END_IF
+
+
+(*=============================================================*)
+(* + + + + + + + +  +  + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + *)
+(*,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, Gestio En Autiomatic,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,	*)
+
+
+IF ATL.PE.wAutoMan=2
+	THEN
+		(*__________________Comprobar si cal pasar la seguent PAS_______________________________________________*)
+		ComprobarSalt(
+			Estat_F:= Est_Func,
+			Tipus_F:=Config_Func ,
+			FuncionsActives:= Func_Actives,
+			AumentaPas=> SaltarProximPas );
+
+		(*__________________Buscar Punter Cicle del pas inicial___________________________________________________*)
+
+	PunterCicle0:=0;
+		REPEAT
+			PunterCicle0 := PunterCicle0+1;
+		UNTIL
+			(((Cicle0[PunterCicle0].Pas=ATL.PE.wStep)AND(Cicle0[PunterCicle0+1].Pas<>ATL.PE.wStep)) OR (PunterCicle0>=max_PasCicle))
+		END_REPEAT
+
+		(*__________________Fer Canvi de pas _______________________________________________________________*)
+		IF SaltarProximPas AND NOT he_C_local
+			THEN
+				IF NOT(MaquinaEnParalel)
+				THEN
+				(* ·······················Maquina Single o Paralel desacoplada ··············································································································· *)
+				Anar4(
+					PasInicial:= ATL.PE.wStep,
+		 			PasFinal:= (ATL.PE.wStep + 1) );
+				ATL.PE.wStep:=ATL.PE.wStep + 1;
+				SaltarProximPas:=FALSE;
+				AcualitzaDB(
+					EstatFuncions:= Est_Func  ,
+					FuncionsActives=>Func_Actives );
+				ELSE
+				(* ·······················Maquina  En Paralel Acoplada ··························································································································· *)
+				(*---------------------------------------------------------------------------------------------------------------------------------------------------------*)
+				(*........................Indicar que la maquina local està preparada per pasar de pas..........................:........................................*)
+				Preparat_C_local:=TRUE;
+				(*........................Ordre de canvi ::::..........::::::::::.........::::::::::.........::::::::::.........::::::::::.........::::::::::.........::::::::::.........::::::::::.........:::::.*)
+				(*........................Maquina Master: Actv ordre de canvi de pas.::::::::::.........::::::::::.........::::::::::.........::::::::::.........::::::::::.........:::::.*)
+				(* 10/06/2011   preparat per diferents tipus de paralel   *)
+				IF tipoparalelo<=2 THEN
+					Ordre_C:= Master AND Preparat_C_local AND Preparat_C_S1;
+				END_IF
+				IF tipoparalelo=3 THEN
+					Ordre_C:= Master AND Preparat_C_local AND Preparat_C_S1 AND Preparat_C_S2;
+				END_IF
+				IF tipoparalelo=4 THEN
+					Ordre_C:= Master AND Preparat_C_local AND Preparat_C_S1 AND Preparat_C_S2 AND Preparat_C_S3;
+				END_IF
+				IF tipoparalelo>=5 THEN
+					Ordre_C:= Master AND Preparat_C_local AND Preparat_C_S1 AND Preparat_C_S2 AND Preparat_C_S3 AND Preparat_C_S4;
+				END_IF
+
+				(*........................Activar el canvi procedent del master ..........::::::::::.........::::::::::.........::::::::::.........::::::::::.........::::::::::.........:::::.*)
+				FerSaltParalel:=Ordre_C_Master AND NOT He_C_local;
+				(*"""""""""""""Ordre de saltar,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*)
+				IF  SaltarPar THEN
+					Anar5(
+						PasInicial:= ATL.PE.wStep,
+		 				PasFinal:= (ATL.PE.wStep+1) );
+					ATL.PE.wStep:=ATL.PE.wStep+1;
+					SaltarProximPas:=FALSE;
+					AcualitzaDB2(
+						EstatFuncions:= Est_Func  ,
+						FuncionsActives=>Func_Actives );
+				(*........................Marca local  que ja s'ha fet el salt ::::..........::::::::::.........::::::::::.........::::::::::.........::::::::::.........::::::::::.........:::::.*)
+					He_C_local:=TRUE;                            (* Marca de salt fet *)
+				END_IF
+			END_IF
+		END_IF
+		Est_F_PE4_Ant:=Est_F_PE4;
+		Est_F_PE4:=Est_Func;
+END_IF
+
+(*Espera per asegurar que no es fa més de un salt de cop*)
+EsperaSaltar(IN:= FerSaltParalel, PT:=t#1s , Q=>SaltarPar );
+
+(*........................Maquina Master: Comprobar que tots han fet el canvi:::::::::.........::::::::::.........::::::::::.........::::::::::.........:::::.*)
+(* 10/06/2011   preparat per diferents tipus de paralel   *)
+IF tipoparalelo<=2 THEN
+	Fi_C:= ( Master AND He_C_local AND He_C_S1 )OR( master AND Fi_C AND Preparat_C_S1);
+END_IF
+IF tipoparalelo=3 THEN
+	Fi_C:= ( Master AND He_C_local AND He_C_S1 AND He_C_S2 )OR( master AND Fi_C AND (Preparat_C_S1 OR Preparat_C_S2));
+END_IF
+IF tipoparalelo=4 THEN
+	Fi_C:= ( Master AND He_C_local AND He_C_S1 AND He_C_S2 AND He_C_S3 )OR( master AND Fi_C AND (Preparat_C_S1 OR Preparat_C_S2 OR Preparat_C_S3));
+END_IF
+IF tipoparalelo>=5 THEN
+	Fi_C:= ( Master AND He_C_local AND He_C_S1 AND He_C_S2 AND He_C_S3 AND He_C_S4 )OR( master AND Fi_C AND (Preparat_C_S1 OR Preparat_C_S2 OR Preparat_C_S3 OR Preparat_C_S4));
+END_IF
+
+
+
+(*........................Fer Reset dels valors per fi de canvi de pas::::::::::::::::::::::::::.........::::::::::.........::::::::::.........::::::::::.........:::::.*)
+IF Fi_C_Master OR ATL.PE.wAutoMan<=1 OR NOT(MaquinaEnParalel) THEN
+	Preparat_C_local:=FALSE;
+	Preparat_C_S1:=FALSE;
+	Preparat_C_S2:=FALSE;
+	Preparat_C_S3:=FALSE;
+	Preparat_C_S4:=FALSE;
+	He_C_local:=FALSE;
+	He_C_S1:=FALSE;
+	He_C_S2:=FALSE;
+	He_C_S3:=FALSE;
+	He_C_S4:=FALSE;
+	Ordre_C:=FALSE;
+	Ordre_C_Master:=FALSE;
+	FerSaltParalel:=FALSE;
+	SaltarPar:=FALSE;
+END_IF
+
+(* Reset valors paralel en cas de manual*)
+IF ATL.PE.wAutoMan=1
+	THEN
+	FerSaltParalel:=FALSE;
+END_IF
+
+(*,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Orde de Salt de pas ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,	*)
+EsperaSalt(IN:= ATL.PE_COM.xToStep, PT:=T#2S , Q=>ferSalt , ET=> );
+IF ferSalt 
+	THEN
+		Parar(Estat_F:= Est_Func );
+		Anar1(
+			PasInicial:= 0 ,
+			PasFinal:= ATL.PE_COM.wNewStep );
+		ATL.PE.wStep:=ATL.PE_COM.wNewStep;
+		ATL.PE_COM.xResetStep:=TRUE;
+		ATL.PE_COM.xToStep:= FALSE;
+END_IF
+AcualitzaDB(
+	EstatFuncions:= Est_Func  ,
+	FuncionsActives=>Func_Actives );
+
+
+(*=====================================================================================================================================*)
+(* INDICACIONS AUTO MAN*)
+
+ATL.PE.xMan := ATL.PE.wAutoMan= 1  ;
+ATL.PE.xAuto := ATL.PE.wAutoMan= 2  ;
+
+(*=====================================================================================================================================*)
+(*CALCULO DURACION PASO*)
+fbFUNBCK(funcioBck=>xFunBck );
+tFunBck(IN:=xFunBck , PT:=T#10D );
+ATL.PE.wTStep := REAL_TO_WORD((TIME_TO_REAL(tFunBck.ET))/1000.0); (*expresado en segundos*)
+(*=====================================================================================================================================*)
+(*CALCULO DURACION BARCADA*)
+rsBatch(SET:=ATL.PE.xStartBatch , RESET1:=ATL.PE.xEndBatch );
+tCicloOn(IN:= rsBatch.Q1, PT:=T#10D );
+ATL.PE.wTBatch:= REAL_TO_WORD((TIME_TO_REAL(tCicloOn.ET))/60000.0);(*expresado en minutos*)
+(*=====================================================================================================================================*)
+
+
+
+
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="pPE">
+      <LineId Id="563" Count="0" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="564" Count="0" />
+      <LineId Id="572" Count="0" />
+      <LineId Id="577" Count="7" />
+      <LineId Id="573" Count="0" />
+      <LineId Id="585" Count="0" />
+      <LineId Id="574" Count="0" />
+      <LineId Id="587" Count="0" />
+      <LineId Id="590" Count="1" />
+      <LineId Id="588" Count="0" />
+      <LineId Id="586" Count="0" />
+      <LineId Id="593" Count="1" />
+      <LineId Id="596" Count="0" />
+      <LineId Id="601" Count="0" />
+      <LineId Id="604" Count="1" />
+      <LineId Id="595" Count="0" />
+      <LineId Id="600" Count="0" />
+      <LineId Id="599" Count="0" />
+      <LineId Id="575" Count="0" />
+      <LineId Id="567" Count="1" />
+      <LineId Id="565" Count="0" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="566" Count="0" />
+      <LineId Id="35" Count="98" />
+      <LineId Id="349" Count="43" />
+      <LineId Id="348" Count="0" />
+      <LineId Id="134" Count="144" />
+      <LineId Id="436" Count="1" />
+      <LineId Id="431" Count="0" />
+      <LineId Id="477" Count="1" />
+      <LineId Id="482" Count="0" />
+      <LineId Id="479" Count="0" />
+      <LineId Id="485" Count="0" />
+      <LineId Id="487" Count="1" />
+      <LineId Id="500" Count="1" />
+      <LineId Id="508" Count="0" />
+      <LineId Id="505" Count="1" />
+      <LineId Id="606" Count="0" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="561" Count="0" />
+      <LineId Id="490" Count="5" />
+      <LineId Id="480" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

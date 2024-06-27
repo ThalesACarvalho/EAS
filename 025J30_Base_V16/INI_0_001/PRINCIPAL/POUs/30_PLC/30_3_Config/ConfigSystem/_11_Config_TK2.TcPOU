@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_11_Config_TK2" Id="{0ed9781f-fbe3-4869-adf8-e60cc2d87bc2}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _11_Config_TK2
+VAR
+	tonLvlMin: Tof;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+(*-------------------------------------------------------------------------------------------------------*)
+
+	
+//Mc._11_TK2.s213_Level();	
+(*-------------------------------------------------------------------------------------------------------*)
+(*Nivel analogico*)
+Mc._11_TK2.s213_Level.rAna_min		:=  Mc._11_TK2.iPFLvlAnaMin ;
+Mc._11_TK2.s213_Level.rAna_max		:=  Mc._11_TK2.iPFLvlAnaMax ;
+
+
+mc._11_TK2.s213_Level.rValue:= canvi_escala(mc._11_TK2.s213_Level.iAnalog, 0, 32767, 0, 100);
+	
+	
+// Nível 0-100%
+Mc._11_TK2.rLvl := Mc._11_TK2.s213_Level.rValue;
+
+(*Nivel minimo*)
+tonLvlMin(IN:=(Mc._11_TK2.rLvl>Mc._11_TK2.iPFLvlMin) , PT:= INT_TO_TIME(Mc._11_TK2.iPFDescSonda*1000) );
+Mc._11_TK2.xLvl_min := tonLvlMin.Q ;
+
+
+(*Nivel Maximo*)
+Mc._11_TK2.xLvl_max := (Mc._11_TK2.rLvl>=Mc._11_TK2.iPFLvlMax) ;
+
+(*Nivel Alto Recirculacion*)
+Mc._11_TK2.xLvlHighCirc := (Mc._11_TK2.rLvl>=Mc._11_TK2.iPFHighCirc) ;
+
+(*Nivel Bajo Recirculacion*)
+Mc._11_TK2.xLvlLowCirc := (Mc._11_TK2.rLvl>=Mc._11_TK2.iPFLowCirc) ;
+
+(*Nivel 1 *)
+Mc._11_TK2.xLvl_1 := (Mc._11_TK2.rLvl>=Mc._11_TK2.iPFLvl_1) ;
+
+(*Nivel 2 *)
+Mc._11_TK2.xLvl_2 := (Mc._11_TK2.rLvl>=Mc._11_TK2.iPFLvl_2) ;
+
+(*Nivel 3 *)
+Mc._11_TK2.xLvl_3 := (Mc._11_TK2.rLvl>=Mc._11_TK2.iPFLvl_3) ;
+
+(*-------------------------------------------------------------------------------------------------------*)
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="_11_Config_TK2">
+      <LineId Id="3" Count="1" />
+      <LineId Id="21" Count="6" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="28" Count="28" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

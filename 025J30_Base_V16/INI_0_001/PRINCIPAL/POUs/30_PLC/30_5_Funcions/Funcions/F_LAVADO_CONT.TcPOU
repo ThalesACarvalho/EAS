@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_LAVADO_CONT" Id="{22b9d554-1686-4946-83b8-089d1c9ddd3e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_LAVADO_CONT
+VAR_INPUT
+	Func:e_funcio;
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	///Parámetros
+	xP_ColdWater:BOOL;
+	xP_HotWater:BOOL;
+	xP_HardWater:BOOL;	
+	wP_Minutos: WORD;
+	wP_Litros: WORD;
+	wP_Pasajes: WORD;
+	///Fin Funcion
+	xFiFunc: BOOL;
+	
+	z_xCWater: BOOL;
+	z_xHWater: BOOL;
+	z_xSalt: BOOL;
+	xA_TempBloqValves: BOOL;
+	z_xActvVent: BOOL;
+	z_xOverflow: BOOL;
+	iTemperatura: INT;
+	iMinutos: INT;
+	iLitros: INT;
+	iPasajes: INT;
+	iTiempoFunc: INT;
+	tFuncAct: TMP_P;
+	
+	rLitAct: REAL;
+	rTiempoPorcent: REAL;
+	fContadro: fCaudal;
+	xResetLit: BOOL;
+	xFinFunc: BOOL;
+	rLitTeoricos: REAL;
+	xAgua: BOOL;
+	wTMan: WORD;
+	BB: WORD;
+	CC: WORD;
+	z_xLavadoCont: BOOL;
+	TON_High_lvl: TON;
+	
+	z_xAguaFria: BOOL;
+	z_xAguaCaliente: BOOL;
+	z_xAguaDura: BOOL;
+	xA_Bomba_Parada: BOOL;
+	
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(****Activa Funcion****)
+xActv:= func.Actv_Funcio;
+
+xP_ColdWater:= WORD_TO_BOOL (func.ParamFunc[1]);
+xP_HotWater:=  WORD_TO_BOOL (func.ParamFunc[2]);
+xP_HardWater:= WORD_TO_BOOL (func.ParamFunc[3]);
+wP_Minutos:= func.ParamFunc[4];
+wP_Litros:= func.ParamFunc[5];
+wP_Pasajes:= func.ParamFunc[6];
+
+//CArgar valores 
+
+iMinutos:= WORD_TO_INT(wP_Minutos);
+iLitros:= WORD_TO_INT(wP_Litros);
+iPasajes:= WORD_TO_INT(wP_Pasajes);
+
+//CALCULAR TIEMPO FUNCION
+IF iMinutos=0 
+	THEN
+	iTiempoFunc:=0;
+	ELSIF ipasajes>0
+		THEN
+		//iTiempoFunc:=iMinutos*_00_winch.TempsAnt1[1];
+		ELSE
+		iTiempoFunc:=iMinutos;	
+END_IF
+
+//CALCULAR TIEMPO MANTENIMIENTO
+wTMan:= DWORD_TO_WORD(wP_Minutos*60)-DWORD_TO_WORD(tFuncAct.dwTsegons);
+
+tFuncAct(
+	xIN:= xActv, 
+	xPausa:= NOT (mc._09_CPUMP.b450_CircPump.xRUN), 
+	dwSegons:= (wP_Minutos*60), 
+	xQ=> , 
+	dwTsegons=> , 
+	rTsegons=> ,
+);
+//Tiempo transcurrido en porcentaje
+IF iMinutos=0 
+	THEN
+	rTiempoPorcent:=1;
+	ELSE
+	rTiempoPorcent:= (tFuncAct.rTsegons) /WORD_TO_REAL(wP_Minutos*60);
+END_IF
+
+//Litros Actuales de LLenado
+IF rTiempoPorcent>0
+	THEN
+	rLitTeoricos:=(rTiempoPorcent)*WORD_TO_REAL(wP_Litros);
+	ELSE
+	rLitTeoricos:=0;
+END_IF
+
+//Calcular litros introducidos
+xResetLit:=NOT(xActv);
+
+fContadro(
+	iCnt:= 			Mc._04_FILL.iCnt, 
+	xReset:= 		xResetLit, 
+	iPFFrec:= 		Mc._04_FILL.iPFFrec, 
+	iPFFlowMax:= 	Mc._04_FILL.iPFFlowMax, 
+	iPFTmClcFlow:= 	Mc._04_FILL.iPFTmClcFlow,  
+	);
+rLitAct:=fContadro.rLit;
+
+// Carga Litros para visualizar en sinóptico
+MC._07_OVERFLOW.rLit_Actual := rLitAct;
+
+
+//Fin Funcion
+
+IF iMinutos=0 
+	THEN 
+	xFinFunc:= rLitAct>=iLitros; 		//Finaliza cuando haya introducido los litros
+	ELSIF iLitros=0
+		THEN
+		xFinfunc:=tFuncAct.xQ;			//Finaliza cuandotranscurre el tiempo
+		ELSE
+		xFinFunc:= 	tFuncAct.xQ AND 
+					(rLitAct>=iLitros);
+END_IF
+
+
+
+//Asegura nivel 2 (Alto)
+TON_High_lvl(IN:=MC._06_LEVEL.xLvl_2, PT:=T#5S , Q=> , ET=> );
+
+//Activar agua
+xAgua:= ((rLitAct<=rLitteoricos) OR (rLitteoricos=0) )AND xActv AND NOT TON_High_lvl.Q;
+
+	
+(*ACTIVAR SALIDAS*)
+(*Activa Valvula Rebosadero V25*)			
+z_xOverflow := xActv AND NOT mc._01_SEG.xBloqValv AND mc._09_CPUMP.b450_CircPump.xRUN;
+
+(*Activa Valvula Agua Lavado Continuo V4*)
+z_xLavadoCont := xAgua AND NOT mc._01_SEG.xBloqValv AND mc._09_CPUMP.b450_CircPump.xRUN;
+
+(*Activa Valvula Agua Fria*)
+z_xAguaFria:= xActv AND z_xLavadoCont AND xP_ColdWater;
+
+(*Activa Valvula Agua Caliente*)
+z_xAguaCaliente:= xActv AND z_xLavadoCont AND xP_HotWater;
+
+(*Activa Valvula Agua Dura*)
+z_xAguaDura:= xActv AND z_xLavadoCont AND xP_HardWater;
+
+(*Activa vent*)
+z_xActvVent := xActv AND NOT(Mc._01_SEG.xBloqValv);
+
+(*FINALIZAR FUNCION*)
+xFiFunc:= xActv AND(xFinFunc);
+
+
+
+(* Alarmas *)
+// Temperatura bloqueio de valvulas
+xA_TempBloqValves := xActv AND Mc._01_SEG.xBloqValv;	
+
+// Bomba Circulación parada
+xA_Bomba_Parada := xActv AND NOT (mc._09_CPUMP.b450_CircPump.xRUN);
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_LAVADO_CONT">
+      <LineId Id="208" Count="0" />
+      <LineId Id="205" Count="1" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="217" Count="1" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="3" Count="19" />
+      <LineId Id="238" Count="5" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="26" Count="29" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="56" Count="28" />
+      <LineId Id="222" Count="1" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="227" Count="1" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="230" Count="1" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="85" Count="11" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="235" Count="0" />
+      <LineId Id="97" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

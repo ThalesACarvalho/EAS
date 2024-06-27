@@ -1,0 +1,570 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="pComPE" Id="{037dbef7-5f04-44fc-8be6-a2742d289e8d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM pComPE
+VAR PERSISTENT
+	Punter: WORD;
+	Punter2: WORD;
+	Punter3: WORD;
+	Punter4: WORD;
+	tempo: TON;
+	CargaNouCicle: BOOL;
+	RetardCarga: BOOL;
+	EsperaArrancar: BOOL;
+	RetardArranc: BOOL;
+	tempo2: TON;
+
+	salto: WORD;
+	FIRetardArranc: BOOL;
+	tempo3: TON;
+	NouPas: TON;
+	RetardCicleMod: BOOL;
+	tempo4: TON;
+	RetardAutomatic: BOOL;
+	RetardPasarAutomatic: TON;
+
+END_VAR
+VAR
+	punt002: DWORD;
+	CD_func: DWORD;
+	CD_param: DWORD;
+	NovesVariables: BOOL;
+	RetardReset: BOOL;
+	Reset_ContinuaProg: TMP_P;
+	Reset_ParoAlarma: TMP_P;
+	TMP_Bit_Inici: TMP_P;
+	Fi_Reset: BOOL;
+
+	
+	(*******************************************************************************************)
+	
+	
+	
+	
+	
+
+	punt: WORD;
+	dd: TON;
+	D: TON;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*=================================================================================	*)
+(*								Transpas de Dades del PE cap al PLC					*)					 
+(*=================================================================================	*)
+CASE salto OF
+(*==============================================================================*)
+(*++++++++++++++++++++++++++++      Carregar el Cicle rebut      ++++++++++++++++++++++++++++++	*)
+1:
+	Punter:=1;
+	REPEAT
+		Punter2:= ((Punter*(Max_ParamFunc+2))-((Max_ParamFunc+2)-1));
+		CicleRebut[Punter].Pas := DWORD_TO_WORD(XI07[Punter2]);
+		CicleRebut[Punter].Funcio.Cd_Funcio :=DWORD_TO_WORD(XI07[Punter2+1]);
+		Punter3:=Punter2+2;
+		Punter4:=1;
+		WHILE  Punter4<=(Max_ParamFunc) DO
+			CicleRebut[Punter].Funcio.ParamFunc[Punter4] :=DWORD_TO_WORD(XI07[Punter3]);
+			Punter3:=Punter3+1;
+			Punter4:=Punter4+1;
+		END_WHILE
+		Punter:=Punter+1;
+	UNTIL
+	Punter >= Max_PasCicle
+	END_REPEAT
+	salto:=salto+1;
+
+(*=================================================================================	*)
+(*+++++++++++++++++++++++++	ConfIguración Funciones 	+++++++++++++++++++++++++++++++	*)
+2:
+	Punter:=1;
+	REPEAT
+		Config_Func[Punter].Cd_funcio:=Punter;
+		Config_Func[Punter].Background:=XI05[Punter];
+		Punter2:=1;
+		Punter3:=((Punter*Max_FinFunc)-(Max_FinFunc-1));
+		REPEAT
+			Config_Func[Punter].FinFunc[Punter2]:=XI06[Punter3];
+			Punter2:=Punter2+1;
+			Punter3:=Punter3+1;
+		UNTIL
+			(Punter2>Max_FinFunc)OR(Punter3>Max_DBFiFuncio)
+		END_REPEAT
+		Punter:=Punter+1;
+	UNTIL
+		Punter>Max_Funcions
+	END_REPEAT
+	salto:=salto+1;
+
+(*=================================================================================	*)
+(*++++++++++++++++++++++	ConfIguració Funcions Incompatibles 	+++++++++++++++++++++++++	*)
+5:
+	Punter:=1;
+	REPEAT
+		Punter2:=((Punter*2)-1);
+		Func_Comp[Punter].Funcio1:=XI04[Punter2] ;
+		Func_Comp[Punter].Funcio2:=XI04[Punter2+1];
+		Punter:=Punter+1;
+	UNTIL
+		Punter>=Max_Compatibles
+	END_REPEAT
+	salto:=salto+1;
+
+6:	salto:=1;
+ELSE
+	salto:=1;
+END_CASE
+(*=================================================================================	*)
+(*++++++++++++++++++++++	Datos de Ciclo	++++++++++++++++++++++++++++++++++++++++++	*)
+
+ATL.PE_COM.sBatch:=XC20;
+ATL.PE_COM.diNum_Task:=XC21;
+ATL.PE_COM.sCdRecipe:=XC22;
+ATL.PE_COM.sDesc_Recipe:=XC23;
+ATL.PE_COM.sCdCycle:=XC24;
+ATL.PE_COM.sDesc_Cycle:=XC25;
+
+
+(*=================================================================================	*)
+
+
+
+(*=================================================================================	*)
+(*								Transpas de Dades del PLC cap al PE											*)
+(*=================================================================================	*)
+
+(*=================================================================================	*)
+(*++++++++++++++++++++++++++++     Indicació AUTO/MAN	++++++++++++++++++++++++++++++++++	*)
+IF ATL.PE.wAutoMan>=2
+	THEN
+		XL02:=TRUE;
+	ELSE
+		XL02:=FALSE;
+END_IF
+
+(*=================================================================================	*)
+(*+++++++++++++++++++++++++++++     Enviar alarmes	+++++++++++++++++++++++++++++++++++++	*)
+Punter:=1;
+REPEAT
+	XL18[Punter] := ATL.PE.axAlarm[Punter];
+	Punter:=Punter+1;
+UNTIL
+	Punter>=Max_Alarmes
+END_REPEAT
+
+(*=================================================================================	*)
+(*+++++++++++++++++++++++++++++     Indicacions Varies	++++++++++++++++++++++++++++++++++	*)
+(* Pas Actual *)
+XL11:=ATL.PE.wStep;
+
+
+(* FuncionsActives *)
+XL13:=Func_Actives;
+
+(* LitrsBarcada *)
+XL14:=REAL_TO_DWORD(Mc._14_CONSUM.rLit_Batch) ;
+
+(* KwBarcada *)
+XL16:=REAL_TO_DWORD(mc._14_CONSUM.rKw_Batch);
+
+(* Kg de Vapor Barcada *)
+XL15:=REAL_TO_DWORD(Mc._14_CONSUM.rKgStm_Batch);
+
+
+
+
+
+(* Nom_Programa PLC *)
+XL30:= WSTRING_TO_STRING (F_GetTitle());
+
+
+
+
+
+
+(*=================================================================================	*)
+
+
+(*=================================================================================	*)
+(* 												Nova Dosificació														*)
+(*=================================================================================	*)
+(*+++++++++++++++++++++++++++++++	  Enviar  	+++++++++++++++++++++++++++++++++++++++*)
+XC60:= ATL.PE_COM.axDemandDos;
+XC61:= ATL.PE_COM.aiNumDos;
+XC62:= ATL.PE_COM.aiTypeDos;
+XC69:= ATL.PE_COM.axTankFree;
+XC80:= ATL.PE_COM.aiPriority;
+XC81:= ATL.PE_COM.axOnlyDissol;
+
+(*+++++++++++++++++++++++++++++++	  Rebre	+++++++++++++++++++++++++++++++++++++++	*)
+FOR punt:=1 TO max_tanks DO
+	(*Ok demand*)
+	IF XC63[punt]=TRUE THEN
+		ATL.PE_COM.axOkDemand[punt]:=XC63[punt];
+		XC63[punt]:=FALSE;
+	END_IF
+	(*Ok dossage*)
+	IF XC64[punt]=TRUE THEN
+		ATL.PE_COM.axOkDosage[punt]:=XC64[punt];
+		XC64[punt]:=FALSE;
+	END_IF
+	(*Productos manuales*)
+	IF XC65[punt]=TRUE THEN
+		ATL.PE_COM.axProdMan[punt]:=XC63[punt];
+		XC65[punt]:=FALSE;
+	END_IF
+	(*Error*)
+	IF XC66[punt]=TRUE THEN
+		ATL.PE_COM.axErrorDos[punt]:=XC63[punt];
+		XC66[punt]:=FALSE;
+	END_IF
+	(*Volumen dosificado*)
+	IF XC67[punt]>0 THEN
+		ATL.PE_COM.axOkDosage[punt]:=XC63[punt];
+		XC67[punt]:=0;
+	END_IF
+END_FOR
+
+
+
+(*=================================================================================	*)
+(* 												Ordres  Directes													*)
+(*=================================================================================	*)
+(*+++++++++++++++++++++++++++++++	Enclavar ordres rebudes  	+++++++++++++++++++++++++	*)
+(* Pasar a manual *)
+IF XC01=TRUE THEN
+	ATL.PE_COM.xToManual := XC01;
+	XC01:=FALSE;
+END_IF
+
+(* Pasar a automatic Per Pulsador *)
+IF XC54=TRUE THEN
+	ATL.PE_COM.xToAutomatic := TRUE;
+	XC54:=FALSE;
+	XC02:=FALSE;
+END_IF
+
+(* Pasar a automatic *)
+RetardPasarAutomatic(IN:= XC02, PT:= T#6S, Q=>RetardAutomatic , ET=> );
+
+	
+(*(XC02 AND NOT(EsperaArrancar))OR RetardArranc*)
+IF RetardAutomatic=TRUE
+	THEN															(*OOOOOOO         5/5/07    OOOOOOOOOO*)
+	ATL.PE_COM.xToAutomatic := TRUE;
+	XC02:=FALSE;
+END_IF
+
+
+
+(* Cicle modificat *)
+tempo4 (IN:= XC12, PT:=T#3S , Q=> RetardCicleMod, ET=> );
+
+IF RetardCicleMod=TRUE THEN
+
+	ATL.PE_COM.xModifiedCycle := XC12;
+	XC12:=FALSE;
+END_IF
+
+
+TMP_Bit_Inici(xIN:=TRUE , dwSegons:=2, );	(*Bit per resetejar les alarmes Paral.lel i afegides *)
+
+
+(*******  ANULAT  ******   26/11/2021   ***************************************
+
+(* Activar Paralel No Utilitzat *)
+IF XC04=TRUE OR NOT TMP_Bit_Inici.q THEN
+	Ordres_Batch.ActivarParalelo:=XC04;
+	XC04:=FALSE;
+END_IF
+
+(* Desactivar Paralel No Utilitzat *)
+IF XC05=TRUE OR NOT TMP_Bit_Inici.q THEN
+	Ordres_Batch.DesactivarParalelo:=XC05;
+	XC05:=FALSE;
+END_IF
+
+***************************************************************************)
+
+
+(* Activar "En afegides"  *)
+IF XC14=TRUE AND XC15=FALSE THEN
+	ATL.PE_COM.xStartTopping:=TRUE;
+	XC14:=FALSE;
+END_IF
+
+(* Desactivar "En afegides"  *)
+
+IF XC15=TRUE OR NOT TMP_Bit_Inici.xq THEN
+	ATL.PE_COM.xStartTopping:=FALSE;
+	ATL.PE_COM.xEndTopping:=TRUE;
+	XC15:=FALSE;
+	Fi_Reset:=TRUE;
+END_IF
+IF XC15=FALSE THEN
+	ATL.PE_COM.xEndTopping:=FALSE;
+END_IF
+
+(*  Pulsador de Reset  *)
+IF XC03=TRUE
+	THEN
+		ATL.PE_COM.xReset:=TRUE;
+		XC03:=FALSE;
+END_IF
+
+(* Canvi de Pas *)
+NouPas(IN:= XC17>0, PT:= T#3S, Q=> , ET=> );
+IF NouPas.Q
+	THEN
+		ATL.PE_COM.wNewStep:=XC17;
+		ATL.PE_COM.xToStep:=TRUE;
+		XC17:=0;
+END_IF
+
+(* Canvi de Pas A Afegides *)
+
+IF XC53>0
+	THEN
+		ATL.PE_COM.wNewStep:=XC53;
+		ATL.PE_COM.xToStep:=TRUE;
+		XC53:=0;
+END_IF
+
+
+
+(* Fi totes les funcions  *)
+IF (XC13=TRUE)AND(XC26=0)
+	THEN
+		ATL.PE_COM.xResetFunc:=TRUE;
+		XC13:=FALSE;
+END_IF
+(* Fi una funcio *)
+IF XC26>0 AND (ATL.PE.wAutoMan=1)
+	THEN
+		Est_F_PE4[XC26].Actv_Funcio:=FALSE;
+		XC26:=0;
+END_IF
+IF (XC26>0)  AND (ATL.PE.wAutoMan=2)
+	THEN
+		Est_FUNC[XC26].Actv_Funcio:=FALSE;
+		XC26:=0;
+END_IF
+(*=================================================================================	*)
+(*+++++++++++++++++++++++++++++++	Ordres Directes rebudes  	+++++++++++++++++++	*)
+(* ······························	Continua Programa 	···························	*)
+ATL.PE_COM.xContProg:=XC07;
+Reset_ContinuaProg
+	(xIN:= ATL.PE_COM.xContProg ,
+	dwSegons:= 2,
+	xQ=>RetardReset ,
+	 dwTsegons=> );
+IF RetardReset
+	THEN
+	XC07:=FALSE;
+END_IF
+(* ······························	Paro Alarma 	·······························	*)
+ATL.PE_COM.xStopAlarm:=XC06;
+Reset_ParoAlarma
+	(xIN:= ATL.PE_COM.xStopAlarm ,
+	dwSegons:= 2,
+	xQ=>RetardReset ,
+	 dwTsegons=> );
+IF RetardReset
+	THEN
+	XC06:=FALSE;
+END_IF
+
+
+(*=================================================================================	*)
+(*+++++++++++++++++++++++++++++++	Activar una funcio 	+++++++++++++++++++++++++++	*)
+(* En Manual *)
+IF (XC33[1]>0) AND (ATL.PE.wAutoMan=1)
+	THEN
+		(*Mirar si la funcio está aciva, si ho està, parar-la*)
+		IF Est_Func[XC33[1]].Actv_Funcio=TRUE
+			THEN
+				Est_F_PE4[XC33[1]].Actv_Funcio:=FALSE;
+			ELSE
+				Est_F_PE4[XC33[1]].Cd_Funcio:=XC33[1];
+				Est_F_PE4[XC33[1]].Actv_Funcio:=TRUE;
+				Est_F_PE4[XC33[1]].ParamFunc[1] :=XC33[2];
+				Est_F_PE4[XC33[1]].ParamFunc[2] :=XC33[3];
+				Est_F_PE4[XC33[1]].ParamFunc[3] :=XC33[4];
+				Est_F_PE4[XC33[1]].ParamFunc[4] :=XC33[5];
+				Est_F_PE4[XC33[1]].ParamFunc[5] :=XC33[6];
+				Est_F_PE4[XC33[1]].ParamFunc[6] :=XC33[7];
+				Est_F_PE4[XC33[1]].ParamFunc[7] :=XC33[8];
+				Est_F_PE4[XC33[1]].ParamFunc[8] :=XC33[9];
+				Est_F_PE4[XC33[1]].ParamFunc[9] :=XC33[10];
+				XC33[1]:=0;
+				XC33[2]:=0;
+				XC33[3]:=0;
+				XC33[4]:=0;
+				XC33[5]:=0;
+				XC33[6]:=0;
+				XC33[7]:=0;
+				XC33[8]:=0;
+				XC33[9]:=0;
+				XC33[10]:=0;
+		END_IF
+END_IF
+(* en Automatic *)
+IF (XC33[1]>0) AND (ATL.PE.wAutoMan=2)
+	THEN
+		Est_Func[XC33[1]].Cd_Funcio:=XC33[1];
+		Est_Func[XC33[1]].Actv_Funcio:=TRUE;
+		Est_Func[XC33[1]].ParamFunc[1] :=XC33[2];
+		Est_Func[XC33[1]].ParamFunc[2] :=XC33[3];
+		Est_Func[XC33[1]].ParamFunc[3] :=XC33[4];
+		Est_Func[XC33[1]].ParamFunc[4] :=XC33[5];
+		Est_Func[XC33[1]].ParamFunc[5] :=XC33[6];
+		Est_Func[XC33[1]].ParamFunc[6] :=XC33[7];
+		Est_Func[XC33[1]].ParamFunc[7] :=XC33[8];
+		Est_Func[XC33[1]].ParamFunc[8] :=XC33[9];
+		Est_Func[XC33[1]].ParamFunc[9] :=XC33[10];
+		XC33[1]:=0;
+		XC33[2]:=0;
+		XC33[3]:=0;
+		XC33[4]:=0;
+		XC33[5]:=0;
+		XC33[6]:=0;
+		XC33[7]:=0;
+		XC33[8]:=0;
+		XC33[9]:=0;
+		XC33[10]:=0;
+END_IF
+(*=================================================================================	*)
+
+
+(*=================================================================================	*)
+(* 											Crear bit inici cicle													*)
+(*=================================================================================	*)
+
+IF XC19=TRUE
+	THEN
+		ATL.PE_COM.xToManual:=TRUE;
+		ATL.PE_COM.xToAutomatic:=FALSE;
+		EsperaArrancar:=TRUE;
+		XC19:=FALSE;
+END_IF
+(*indicacio inici de cicle*)
+tempo(IN:= CargaNouCicle, PT:= T#2S, Q=> RetardCarga, ET=> );
+
+IF RetardCarga=TRUE
+	THEN
+	CargaNouCicle:=FALSE;
+	RetardCarga:=FALSE;
+END_IF
+iniciociclo:=(CargaNouCicle);
+
+(*Retard Arranc*) 
+tempo2(IN:= EsperaArrancar, PT:= T#6S, Q=> RetardArranc, ET=> ); (*el temps no pot ser inferior a 5seg*)									  (*05/05/07*)
+
+tempo3 (IN:= RetardArranc, PT:= T#2S, Q=> FIRetardArranc, ET=> );(*el temps no pot ser inferior a 5seg*)
+
+
+
+IF FIRetardArranc=TRUE
+	THEN
+	EsperaArrancar:=FALSE;
+	RetardArranc:=FALSE;
+	FIRetardArranc:=FALSE;
+END_IF
+
+ATL.PE.xStartBatch:=RetardArranc;
+
+
+(*=================================================================================	*)
+
+
+(*=================================================================================	*)
+(* 						Analogicas													*)
+(*=================================================================================	*)
+
+ZX[71]:= XL02  ;
+
+
+
+
+
+	
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="pComPE">
+      <LineId Id="40" Count="30" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="76" Count="3" />
+      <LineId Id="81" Count="10" />
+      <LineId Id="115" Count="19" />
+      <LineId Id="869" Count="0" />
+      <LineId Id="857" Count="0" />
+      <LineId Id="860" Count="1" />
+      <LineId Id="864" Count="2" />
+      <LineId Id="868" Count="0" />
+      <LineId Id="867" Count="0" />
+      <LineId Id="141" Count="40" />
+      <LineId Id="803" Count="0" />
+      <LineId Id="806" Count="1" />
+      <LineId Id="804" Count="1" />
+      <LineId Id="801" Count="1" />
+      <LineId Id="182" Count="3" />
+      <LineId Id="808" Count="0" />
+      <LineId Id="812" Count="0" />
+      <LineId Id="811" Count="0" />
+      <LineId Id="809" Count="0" />
+      <LineId Id="186" Count="7" />
+      <LineId Id="912" Count="0" />
+      <LineId Id="927" Count="0" />
+      <LineId Id="929" Count="3" />
+      <LineId Id="925" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="938" Count="0" />
+      <LineId Id="936" Count="0" />
+      <LineId Id="202" Count="3" />
+      <LineId Id="948" Count="19" />
+      <LineId Id="941" Count="0" />
+      <LineId Id="924" Count="0" />
+      <LineId Id="221" Count="1" />
+      <LineId Id="258" Count="17" />
+      <LineId Id="1204" Count="0" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="1150" Count="0" />
+      <LineId Id="281" Count="9" />
+      <LineId Id="1203" Count="0" />
+      <LineId Id="296" Count="8" />
+      <LineId Id="794" Count="0" />
+      <LineId Id="793" Count="0" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="797" Count="0" />
+      <LineId Id="306" Count="4" />
+      <LineId Id="799" Count="0" />
+      <LineId Id="311" Count="4" />
+      <LineId Id="798" Count="0" />
+      <LineId Id="316" Count="0" />
+      <LineId Id="796" Count="0" />
+      <LineId Id="795" Count="0" />
+      <LineId Id="317" Count="25" />
+      <LineId Id="1202" Count="0" />
+      <LineId Id="344" Count="127" />
+      <LineId Id="473" Count="2" />
+      <LineId Id="477" Count="2" />
+      <LineId Id="1198" Count="0" />
+      <LineId Id="484" Count="8" />
+      <LineId Id="1200" Count="0" />
+      <LineId Id="497" Count="1" />
+      <LineId Id="503" Count="9" />
+      <LineId Id="514" Count="0" />
+      <LineId Id="856" Count="0" />
+      <LineId Id="855" Count="0" />
+      <LineId Id="515" Count="5" />
+      <LineId Id="1011" Count="0" />
+      <LineId Id="537" Count="0" />
+      <LineId Id="1104" Count="0" />
+      <LineId Id="538" Count="8" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

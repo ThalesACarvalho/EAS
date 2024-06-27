@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_02_Config_TEMP" Id="{efc90374-b168-4e5c-9a8a-07fc47a45383}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _02_Config_TEMP
+VAR
+	
+	wTiempoPurga: WORD;
+	ExisteValvPurga: BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+
+//Cargar valor pt-100
+Mc._02_TEMP.rMacTemperature := Mc._02_TEMP.s065_Reg.rValue;
+
+mc._02_TEMP.s065_Reg();
+
+(* Activa Fallo PT100*)
+Mc._02_TEMP.xPT100Failure := (Mc._02_TEMP.rMacTemperature >= 150) OR (Mc._02_TEMP.rMacTemperature <= 0);
+///---------------------------------------------------------------------------------------------------------------
+
+//Maxima diferencia 5 ºC
+(*
+Mc._02_TEMP.xMaxDifTemp := (F_TERMOREG.  AND ( Mc._02_TEMP.rMacTemperature > (Mc._02_TEMP.rTempImp+5) ) ) OR
+						(F_TERMOREG.Termo.AiguaRefredament  AND ( Mc._02_TEMP.rMacTemperature < (Mc._02_TEMP.rTempImp-5) ) )	;
+
+*)
+
+	
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="_02_Config_TEMP">
+      <LineId Id="3" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="27" Count="12" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="44" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

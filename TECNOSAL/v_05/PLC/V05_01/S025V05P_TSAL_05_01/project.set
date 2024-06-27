@@ -1,0 +1,12 @@
+[Config]
+Name=S025V05P_TSAL_05
+DefaultLanguage=1033
+CoDeSysDP=1
+CoDeSysDPChecksum=0
+CoDeSysDPCreate=1
+CoDeSysDPCreateCOM=1
+CoDeSysDPByteAddr=0
+[Languages/Fonts]
+1033=1
+[Pane1]
+1114000=248,0,1033,81,1,1,80,2,2,-2

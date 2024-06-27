@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Tabla_00" Id="{37a6bd0d-8af6-497f-9599-90a8849a1a78}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Tabla_00
+VAR_INPUT
+	///CD Barcada
+	Barcada: STRING(10);
+	///Kwh Consumo kilowatts 
+	Cons_Kwh: REAL;
+	///lit Consumo Agua 
+	Cons_Agua: REAL;
+	///KgV Consumo Vapor
+	Cons_Vapor: REAL;
+	///Reset de los calculos
+	Reset: BOOL;
+	///Final de ciclo
+	FinCiclo: BOOL;
+	Kg_lote: REAL;
+	///	gr.Co2eq por kWh 	
+	PF_grCo2_kw: REAL;
+	///	gr.Co2eq por KgV 	
+	PF_grCo2_KgV: REAL;
+	///	gr.Co2eq por H20	
+	PF_grCo2_H2O: REAL;
+	///	1 Tep = 11630 Kwh	(Kwh/Tep)  
+	PF_kWh_to_tep: REAL := 11630;
+	///	(tep/KgVapor) * 	
+	PF_kgV_tep: REAL;
+	///	(tep/litH2O) * 		
+	PF_Agua_tep: REAL;
+END_VAR
+VAR_OUTPUT
+	///Consumos Barcada atual
+	Kwh_atual: REAL;
+	Kwh_KG_atual: REAL;
+	Kwh_KgCo_atual: REAL;
+	Kwh_tep_atual: REAL;
+	kgV_atual: REAL;
+	kgV_kg_atual: REAL;
+	kgV_KgCo_atual: REAL;
+	kgV_tep_atual: REAL;
+	H20_Lt_atual: REAL;
+	H20_Lt_KG_atual: REAL;
+	H20_KgCo_atual: REAL;
+	H20_tep_atual: REAL;
+	///Valor CD Barcada anterior
+	BARCADA_ANT: STRING(10);
+	Kg_lote_ant: REAL;
+	Kwh_ant: REAL;
+	Kwh_Kg_ant: REAL;
+	Kwh_KgCo_ant: REAL;
+	Kwh_tep_ant: REAL;
+	kgV_ant: REAL;
+	kgV_kg_ant: REAL;
+	kgV_KgCo_ant: REAL;
+	kgV_tep_ant: REAL;
+	H20_Lt_ant: REAL;
+	H20_Lt_kg_ant: REAL;
+	H20_KgCo_ant: REAL;
+	H20_tep_ant: REAL;
+END_VAR
+VAR
+	INICIO: BOOL;
+	///Valor Acumulado
+	VAL_ACUM: REAL;
+	///Valor Actual 
+	VAL_ACT: REAL;
+	PAUSE: BOOL;
+	PulsFinCiclo: R_TRIG;
+	Elec_Kwh_atual: BOOL;
+END_VAR
+VAR RETAIN
+	///Valor Total
+	VAL_TOT: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*///// INICIALIZACIÓN ////////*)
+
+
+
+(*///// CONVERSIONES ////////*)
+
+IF NOT FinCiclo THEN
+
+
+(*Eletricidade*)
+
+
+Kwh_atual:= Cons_Kwh;
+IF Kg_lote>0 THEN
+	Kwh_kg_atual:=Kwh_atual/Kg_lote;
+END_IF
+Kwh_KgCo_atual:= Cons_Kwh*((PF_grCo2_kw)/1000.0);
+Kwh_tep_atual:= Cons_Kwh*PF_kWh_to_tep;
+
+
+(*Vapor*)
+kgV_atual:=Cons_Vapor;
+IF Kg_lote>0 THEN
+	kgV_kg_atual:=kgV_atual/Kg_lote;
+END_IF
+kgV_KgCo_atual:=Cons_Vapor*((PF_grCo2_KgV)/1000.0);
+kgV_tep_atual:=Cons_Vapor*PF_kgV_tep;
+
+(*Agua*)
+H20_Lt_atual:=Cons_Agua;
+IF Kg_lote>0 THEN
+	H20_Lt_kg_atual:=Cons_Agua/Kg_lote;
+END_IF
+H20_KgCo_atual:=Cons_Agua*((PF_grCo2_H2O)/1000.0);
+H20_tep_atual:=Cons_Agua*PF_Agua_tep;
+
+END_IF
+
+
+(*//////// ACUMULAR VALORES /////////*)
+
+PulsFinCiclo(CLK:= reset);
+
+IF PulsFinCiclo.Q THEN
+
+
+	BARCADA_ANT:= Barcada;
+	Kwh_ant:=Kwh_atual;
+	Kwh_KgCo_ant:=Kwh_KgCo_atual;
+	Kwh_tep_ant:=Kwh_tep_atual;
+	kgV_ant:=kgV_atual;
+	kgV_KgCo_ant:=kgV_KgCo_atual;
+	kgV_tep_ant:=kgV_tep_atual;
+	H20_Lt_ant:=H20_Lt_atual;
+	H20_Lt_Kg_ant:=H20_Lt_Kg_atual;
+	H20_KgCo_ant:=H20_KgCo_atual;
+	H20_tep_ant:=H20_tep_atual;
+	Kg_lote_ant:=Kg_lote;
+	Kwh_kg_ant:=Kwh_kg_atual;
+	kgV_kg_ant:=kgV_kg_atual;
+	H20_Lt_kg_ant:=H20_Lt_kg_atual;
+
+
+
+
+
+
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="Tabla_00">
+      <LineId Id="3" Count="66" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

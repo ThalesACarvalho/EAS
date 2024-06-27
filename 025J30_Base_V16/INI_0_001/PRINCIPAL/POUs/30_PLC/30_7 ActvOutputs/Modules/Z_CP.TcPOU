@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="Z_CP" Id="{c5d69aa4-0f0e-4233-909e-503d0ba27b8e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Z_CP
+
+VAR
+	rOutAnalogVelPump: REAL;
+	DD: REAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Activar Bomba
+
+Mc._09_CPUMP.b450_CircPump.xRUN:= _00_CIRC_PUMP.Marcha.Run;
+
+
+//Velocidad
+
+rOutAnalogVelPump	:= Canvi_Escala(In:= mc._08_CIRC.rSP_SpeedPumpC,
+									In_Min:=0,
+									In_Max:=100,
+									Out_Min:= 0,
+									Out_Max:= 32767);
+									
+DD:=	rOutAnalogVelPump;								]]></ST>
+    </Implementation>
+    <LineIds Name="Z_CP">
+      <LineId Id="3" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="6" Count="1" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="2" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="29" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

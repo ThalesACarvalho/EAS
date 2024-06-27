@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="ProgramPLC" Id="{485eb957-f196-4400-8af7-77641c0ae79e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM ProgramPLC
+VAR
+	a: WORD;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[a:=a+1;
+IF A > 9999 THEN	
+	A :=0;
+END_IF
+
+(*Configuracion de los Modulos*)
+pConfig();
+
+(*Activar Funciones*)
+pFuctions();
+
+(*Activar salidas*)
+pActvOutputs();
+
+(*============================================================================
+21/06/2022 EDU inici comentaris*)
+
+
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="ProgramPLC">
+      <LineId Id="3" Count="6" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="15" Count="2" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="20" Count="9" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

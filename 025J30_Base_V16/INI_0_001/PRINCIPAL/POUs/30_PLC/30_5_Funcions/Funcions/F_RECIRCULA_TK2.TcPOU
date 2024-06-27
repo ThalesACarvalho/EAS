@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_RECIRCULA_TK2" Id="{cf13b111-fe97-4662-b25d-00f852b235e6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_RECIRCULA_TK2
+VAR_INPUT
+	Func:E_funcio;
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	///Parametros
+	wP_Time: WORD;
+	wP_Wash: WORD;
+	///Fin funcion
+	xFinFunc: BOOL;
+	z_PumpTK: BOOL;
+	z_DrainTK: BOOL;
+	z_TransferTK: BOOL;
+	z_IntercepTK: BOOL;
+	z_FillTK: BOOL;
+	z_RetMcTk: BOOL;
+	z_PreAviso: BOOL;
+	xA_TempBloqValves: BOOL;
+	xA_TNQ_NO_OK: BOOL;
+	TestPausa: BOOL;
+	xA_Bomba_Parada: BOOL;
+	PUL: PULS_1S;
+	xSegOK: BOOL;
+	xAlarmTempBloqValv: BOOL;
+	xTankNoOk: BOOL;
+	rsIniciRecircula: RS;
+	rsOkProd: RS;
+	xFiFunc: BOOL;
+	xOKProd: BOOL;
+	tOkProd: Tmp_P;
+	xPause: BOOL;
+	wT_FiFunc: WORD;
+	rsFinRecic: Rs;
+	xFinishByContProg: BOOL;
+	xRecirculaActv: BOOL;
+	TONFiIntro: TON;
+	RsFinIntro: RS;
+	xIntroActv: BOOL;
+	lavado: FBWash_TK;
+	tFinFuncion: TOF;
+	TOFHighLevl: TOF;
+	xRetMc: BOOL;
+	TONLowLvl: TON;
+	xToMc: BOOL;
+	xFill: BOOL;
+	xInterTk: BOOL;
+	xToDrain: BOOL;
+	xVent: BOOL;
+	xOKVent: BOOL;
+	xPumpTK: BOOL;
+	xOpCall: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+(*Activar fncion*)
+xActv:= Func.Actv_Funcio;
+
+wP_Time:= func.ParamFunc[1];
+wP_Wash:= func.ParamFunc[2];
+
+
+PUL(Q=> );
+
+//Seguridades
+xSegOK:= NOT(mc._01_SEG.xBloqValv);
+	
+//Alarma Bloqueo valvulas 	
+xAlarmTempBloqValv:= xActv AND mc._01_SEG.xBloqValv;
+
+xTankNoOk := rsIniciRecircula.Q1 AND NOT rsOkProd.Q1;
+
+//Activar la funcion
+rsIniciRecircula(SET:=xActv AND Mc._03_PRESS.xOKVent  AND xSegOK , RESET1:=xFiFunc OR NOT xActv );
+
+
+//Confirma producto
+rsOkProd(SET:=rsIniciRecircula.Q1 AND MC._11_TK2.p250_OKprod.xPul , RESET1:= xFiFunc OR NOT xActv);
+
+
+
+//Parar recirculacion
+tOkProd(
+	xIN:= rsOkProd.Q1 AND xActv, 
+	xPausa:= xPause , 
+	dwSegons:= wP_Time*60, 
+	 );
+	 
+wT_FiFunc:= (wP_Time*60)-DWORD_TO_WORD(tOkProd.dwTsegons);
+	 
+rsFinRecic(SET:=xActv AND (tOkProd.xQ OR (mc._00_GENERAL.p403_ContProg.xPul AND xFinishByContProg)), 
+			RESET1:= xFiFunc OR NOT xActv);
+
+xRecirculaActv:= rsIniciRecircula.Q1 AND NOT(rsFinRecic.Q1);
+
+//Introducir baño a maquina
+TONFiIntro(IN:=NOT(MC._11_TK2.xLvl_min) , PT:=T#100MS  ); (*Esperar intro cubeta*)
+RsFinIntro(SET:=rsFinRecic.Q1 AND TONFiIntro.Q, RESET1:= xFiFunc );
+xIntroActv:= rsFinRecic.Q1 AND NOT(rsFinIntro.Q1);
+
+//Lavar cubeta a cloaca
+
+lavado(
+	xStartWash:= 			rsFinIntro.Q1, 
+	xMinimLevel:= 			MC._11_TK2.xLvl_min, 
+	dwDetectLowLevelTime:= 	INT_TO_DWORD(Mc._11_TK2.iPFDescSonda), 
+	dwDrainTime:= 			INT_TO_DWORD(Mc._11_TK2.iPFDreno), 
+	dw1stWashTime:= 		INT_TO_DWORD(Mc._11_TK2.iPF1rLav), 
+	dw2ndWashTime:= 		INT_TO_DWORD(Mc._11_TK2.iPF2nLav), 
+	dw3rdWashTime:= 		INT_TO_DWORD(Mc._11_TK2.iPF3rLav), 
+	DrainType:= 			wP_Wash, 
+	);
+
+//Finaliozar funcion
+tFinFuncion(IN:= lavado.xFinWash, PT:=T#2S  );
+xFiFunc:= tFinFuncion.Q;
+
+
+//----------------------------------------------
+//Activar salidas
+//--------------------------------------------------------
+
+//Retono de maquina
+TOFHighLevl(IN:= Mc._11_TK2.xLvlHighCirc, PT:=INT_TO_TIME(5*1000)  );
+
+xRetMc:= 	xRecirculaActv AND
+			NOT(TOFHighLevl.Q) AND
+			NOT(mc._11_TK2.xLvl_max);
+ 	
+
+//introduce a maquina
+TONLowLvl(IN:=Mc._11_TK2.xLvlLowCirc  , PT:= INT_TO_TIME(5*1000)  );
+
+xToMc:= (xRecirculaActv AND TONLowLvl.Q)OR
+		xIntroActv OR
+		Lavado.xToMachine; 
+
+//llenado
+xFill:= 	lavado.xWash AND
+			NOT(mc._11_TK2.xLvl_max);
+
+//Intercepta TK
+xInterTk:= 	rsIniciRecircula.Q1 AND 
+			NOT(xFiFunc);
+
+// a cloaca
+xToDrain:=lavado.xToDrain;
+
+//Activar respiradero si esta cerrado
+xVent:= xActv AND NOT(Mc._03_PRESS.xOKVent);
+
+//Activar respiradero si esta cerrado
+xPumpTK:= xToMc;
+
+// Pre Aviso
+xOpCall := (PUL.Q AND xTankNoOk) OR rsOkProd.Q1;
+
+(*Activar salidas*)
+
+// p204 Bomba 
+z_PumpTK := xPumpTk AND Mc._11_TK2.xLvl_min;
+//v205 Vaciado 
+z_DrainTK := xToDrain;
+// v50 Intro Rapida 
+z_TransferTK := xToMc AND NOT Mc._01_SEG.xBloqValv AND Mc._03_PRESS.xOKVent;
+// v203 Intercepta 
+z_IntercepTK := xInterTk;
+// v201 LLenado
+z_FillTK := xFill AND NOT Mc._11_TK2.xLvl_max;
+// v202 Retorno de bano
+z_RetMcTk := xRetMc AND NOT Mc._01_SEG.xBloqValv AND Mc._03_PRESS.xOKVent AND NOT Mc._11_TK2.xLvl_max;
+// Pre Aviso
+z_PreAviso :=xOpCall;
+
+
+(* Alarmas *)
+// Temperatura bloqueio de valvulas
+xA_TempBloqValves := xAlarmTempBloqValv;
+
+// Tanq NO OK
+xA_TNQ_NO_OK := xTankNoOk;
+
+// Bomba parada
+xA_Bomba_Parada :=xActv AND NOT MC._09_CPUMP.b450_CircPump.xNo_Ok;
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_RECIRCULA_TK2">
+      <LineId Id="3" Count="2" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="102" Count="1" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="108" Count="6" />
+      <LineId Id="119" Count="19" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="139" Count="19" />
+      <LineId Id="169" Count="8" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="178" Count="31" />
+      <LineId Id="212" Count="1" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="249" Count="0" />
+      <LineId Id="32" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

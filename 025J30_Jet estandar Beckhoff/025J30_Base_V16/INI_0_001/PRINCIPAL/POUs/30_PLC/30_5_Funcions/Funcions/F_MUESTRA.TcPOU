@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_MUESTRA" Id="{282de0df-16b6-4e84-a0be-84a3fe472e6b}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_MUESTRA
+VAR_INPUT
+	Func: E_funcio;
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	///Fin Funcion
+	xFiFunc: BOOL;
+	
+	pul_FinMuestra: R_trig;
+	z_PilotoAlarma: BOOL;
+	pul_FinAviso: R_trig;
+	xA_MUESTRA: BOOL;
+	rsParoTorniq: Rs;
+	xParoTorniq: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*Activa funcio *)
+
+xActv:= func.Actv_Funcio;
+
+pul_FinMuestra(CLK:=mc._00_GENERAL.p403_ContProg.xPul) ;
+
+
+(*FIN FUNCION*)
+xFiFunc:=xActv AND (pul_FinMuestra.Q);
+
+
+(*ACTIVAR SALIDAS*)
+// Piloto Alarma
+z_PilotoAlarma := xActv AND NOT  (pul_FinAviso.Q);
+
+
+(*Alarma*)
+xA_MUESTRA:=xActv;
+
+
+//Orden Paro torniquete
+
+rsParoTorniq(	SET:= 	 xA_MUESTRA ,  						//Activar paro con la funcion y 
+						// AND Mc.WINCH.iPFWinchToStop>0 ,	//Habilitado por parametro
+				RESET1:= (Mc._09_CPUMP.p451_P_Run.xPul OR 	// anular con un pulso de marcha bomba o
+						NOT(Mc._09_CPUMP.p457_SelRun.xPul))	//anular deshabilitando el selector/barra
+						);	
+ 			
+xParoTorniq:=rsParoTorniq.Q1 ;
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_MUESTRA">
+      <LineId Id="3" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="4" Count="22" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="27" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

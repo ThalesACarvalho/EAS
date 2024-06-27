@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="_06_LEVEL" Id="{9a9108eb-2996-42c6-94e1-5a1d3a982fc5}">
+    <Declaration><![CDATA[TYPE _06_LEVEL :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	s031_Min: dutPul;
+	s032_Perc: dutAIn;
+	s033_max: dutPul;
+	s034_L3: dutPul;
+	s035_L2: dutPul;
+	s036_L1: dutPul;
+	v038_FillTb: dutValve;
+	v039_DrainTb: dutValve;
+	///Nivel de la maquina 0..100%
+	rLevel: REAL;
+	///Nivel 1 de la maquina
+	xLvl_1: BOOL;
+	///Nivel 2 de la maquina
+	xLvl_2: BOOL;
+	///Nivel 3 de la maquina
+	xLvl_3: BOOL;
+	///Nivel minimo de la maquina
+	xLvl_min: BOOL;
+	///Nivel maximo de la maquina
+	xLvl_max: BOOL;
+	///Nivel Alto de Recirculación
+	xLvl_Wh: BOOL;
+	///Nivel Bajoo de Recirculación
+	xLvl_Wl: BOOL;
+	///Fallo niveles
+	xFailLvl: BOOL;
+	///+++++++++++++++++++++++++++++++++++++++
+	///PF - CONFIG
+	///+++++++++++++++++++++++++++++++++++++++
+	///Parametros configuracion Nivel analogico de Maquina
+	iPFAna_min: INT := 0;
+	iPFAna_max: INT := 100;
+	///Porcentaje del nivel para bLvl_1
+	iPFLvl_1: INT := 20;
+	///Porcentaje del nivel para bLvl_2
+	iPFLvl_2: INT := 50;
+	///Porcentaje del nivel para bLvl_3
+	iPFLvl_3: INT := 70;
+	///Porcentaje del nivel para bLvl_min
+	iPFLvl_min: INT := 0;
+	///Porcentaje del nivel para bLvl_max
+	iPFLvl_max: INT := 100;
+	///Porcentaje del nivel alto de recirculación
+	iPFLvl_Wh: INT := 60;
+	///Porcentaje del nivel bajo de recirculación
+	iPFLvl_Wl: INT := 20;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

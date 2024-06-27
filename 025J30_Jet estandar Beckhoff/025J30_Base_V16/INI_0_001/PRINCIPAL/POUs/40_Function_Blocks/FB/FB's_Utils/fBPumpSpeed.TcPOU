@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fBPumpSpeed" Id="{681f0e86-bf2c-43d8-bfdb-5727650b1245}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fBPumpSpeed
+VAR_INPUT
+	///Bomba en marcha
+	xRun: BOOL;
+	///0=Man  1=Auto  
+	xAutoMan: BOOL;
+	///Pulsador Subir Velocidad
+	xUP_Speed: BOOL;
+	///Pulsador Bajar Velocidad
+	xDOWN_Speed: BOOL;
+	///Consigna de la funcion velocidad 0..100%
+	rSP_Function: REAL;
+	iFACTOR: INT := 50;
+END_VAR
+VAR_OUTPUT
+	///Consigna velocidad 0..100%
+	SP_Speed: REAL;
+	///Consigna velocidad Auto 0..100%
+	SP_Auto: REAL;
+	///Consigna velocidad Manual 0..100%
+	SP_Man: REAL;
+END_VAR
+VAR
+	GestPul: fBUP_down;
+	a: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[a:=a+1;
+(*GESTION SP MANUAL*)
+(*cargar valor sp auto al estar en auto*)
+IF (xAutoMan) THEN
+	SP_Man:=SP_Auto;
+END_IF
+
+(*GESTION SP AUTO*)
+SP_Auto:=rSP_Function;
+
+
+(*Gestion Pulsadores*)
+GestPul(
+	xUP:= 		xUP_Speed, 
+	xDOWN:= 	xDOWN_Speed, 
+	iFactor:= 	iFACTOR, 
+	rLimInf:= 	0, 
+	rLimSup:= 	100, 
+	SP:= SP_Man);
+
+(*Gestion SP*)
+
+IF xAutoMan 
+	THEN
+	SP_Speed:=SP_Auto;
+	ELSE
+	SP_Speed:=SP_Man;		
+END_IF
+
+IF NOT(xRun) 
+	THEN
+	SP_Speed:=0;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="fBPumpSpeed">
+      <LineId Id="3" Count="31" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_14_Config_Consum" Id="{023a7a77-0e5b-4226-b9f3-aeeae7650a83}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _14_Config_Consum
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*s 500 sensor ampers para consumo*)
+Mc._14_CONSUM.s500_Amperimetre.rAna_min:=0;
+Mc._14_CONSUM.s500_Amperimetre.rAna_max:=37000;
+Mc._14_CONSUM.s500_Amperimetre.rUf_min:=0;
+Mc._14_CONSUM.s500_Amperimetre.rUf_max:=WORD_TO_REAL(PF_consum[2]);
+
+
+Mc._14_CONSUM.rAmp:=Mc._14_CONSUM.s500_Amperimetre.rValue;]]></ST>
+    </Implementation>
+    <LineIds Name="_14_Config_Consum">
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

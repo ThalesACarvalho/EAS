@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_LLENADO_TK2" Id="{bdbb6698-7e31-4925-944d-4cc621d2b773}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_LLENADO_TK2
+VAR_INPUT
+	Func:E_funcio;
+END_VAR
+VAR
+		///Activa
+	xActv: BOOL;
+	///Parametros
+	wP_RetMc: WORD;
+	wP_FillLevel: WORD;
+	///Fin Funcion
+	xFiFunc: BOOL;
+	z_05_xCleanW: BOOL;
+	z_05_xMacW: BOOL;
+	xA_05_TempBloqValves: BOOL;
+	LlenaNivelBajo: BOOL;
+	LlenaNivelMed: BOOL;
+	LlenaNivelAlto: BOOL;
+	LlenaNivelAnalog: BOOL;
+	xLlenaAguadeRed: BOOL;
+	xLlenaAguadeMaq: BOOL;
+	TmpIniciaLlenado: Ton;
+	SRLlenar: SR;
+	xOkLlenado:BOOL;
+	/// Fill Setpoint (Liters)
+	wFillLiters: WORD:=0;
+	RSLlenar: RS;
+	TmpOK: TMP_P;
+	wDelayFinFunc: WORD:=1;
+	xAlarmTempBloqValves: BOOL;
+	xTempBloqValves: BOOL;
+	xCleanW: BOOL;
+	xMacW: BOOL;
+	rLitersTank: REAL:=0;
+	wMc: WORD:=0;
+	d: TMP_P;
+	xTmpOK: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+(*ACTIVAR FUNCION*)
+xActv:= Func.Actv_Funcio;
+
+wP_RetMc:= Func.ParamFunc[1];
+wP_FillLevel:= Func.ParamFunc[2];
+
+
+IF xActv THEN
+	CASE wP_FillLevel OF
+		0:	
+			LlenaNivelBajo := FALSE;
+			LlenaNivelMed  := TRUE;
+			LlenaNivelAlto := FALSE;
+			LlenaNivelAnalog := FALSE;
+
+		1:	
+			LlenaNivelBajo := TRUE;
+			LlenaNivelMed  := FALSE;
+			LlenaNivelAlto := FALSE;
+			LlenaNivelAnalog := FALSE;
+
+		2:	
+			LlenaNivelBajo := FALSE;
+			LlenaNivelMed  := TRUE;
+			LlenaNivelAlto := FALSE;
+			LlenaNivelAnalog := FALSE;
+
+		3:	
+			LlenaNivelBajo := FALSE;
+			LlenaNivelMed  := FALSE;
+			LlenaNivelAlto := TRUE;
+			LlenaNivelAnalog := FALSE;
+		
+		ELSE
+			LlenaNivelBajo := FALSE;
+			LlenaNivelMed  := FALSE;
+			LlenaNivelAlto := FALSE;
+			LlenaNivelAnalog := TRUE;	
+	END_CASE
+ELSE
+		LlenaNivelBajo := FALSE;
+		LlenaNivelMed  := FALSE;
+		LlenaNivelAlto := FALSE;
+		LlenaNivelAnalog := FALSE;
+END_IF
+
+(* Verfica el tipo del llenado*)
+IF xActv THEN
+	IF 	wP_RetMc = 0 THEN
+		xLlenaAguadeRed := TRUE;
+		xLlenaAguadeMaq := FALSE;
+	END_IF
+	IF 	wP_RetMc = 1 THEN
+		xLlenaAguadeRed := FALSE;
+		xLlenaAguadeMaq := TRUE;
+	END_IF
+ELSE
+	xLlenaAguadeRed := FALSE;
+	xLlenaAguadeMaq := FALSE;	
+END_IF
+
+(* Inicia el llenado*)	
+TmpIniciaLlenado(IN:= xActv, PT:= T#2S, Q=> , ET=> );
+
+SRLlenar(SET1:=TmpIniciaLlenado.Q AND NOT Mc._11_TK2.p251_P_Fill.xPul AND NOT xOkLlenado, RESET:=xTmpOk OR NOT xActv, Q1=> );
+
+(* Finaliza el llenado por OK Llenado*)
+IF NOT LlenaNivelAnalog AND LlenaNivelBajo AND (mc._11_TK2.s213_Level.rValue > INT_TO_WORD(Mc._11_TK2.iPFLvl_1)) THEN
+	xOkLlenado := TRUE;
+END_IF
+
+IF NOT LlenaNivelAnalog AND LlenaNivelMed AND (mc._11_TK2.s213_Level.rValue > INT_TO_WORD (Mc._11_TK2.iPFLvl_2)) THEN
+	xOkLlenado := TRUE;
+END_IF
+
+IF NOT LlenaNivelAnalog AND LlenaNivelAlto AND (mc._11_TK2.s213_Level.rValue > INT_TO_WORD (Mc._11_TK2.iPFLvl_3)) THEN
+	xOkLlenado := TRUE;
+END_IF
+
+IF LlenaNivelAnalog AND(mc._11_TK2.s213_Level.rValue > wP_FillLevel) THEN
+	xOkLlenado := TRUE;
+END_IF
+
+IF LlenaNivelAnalog AND wFillLiters> 0 AND (rLitersTank >= wFillLiters) THEN
+	xOkLlenado := TRUE;
+END_IF
+
+IF RSLlenar.Q1 AND mc._11_TK2.s213_Level.rValue >= INT_TO_WORD (Mc._11_TK2.iPFLvlMax) THEN  
+	xOkLlenado := TRUE;
+END_IF
+
+TmpOK(
+	xIN:= xOkLlenado, 
+	xPausa:= , 
+	dwSegons:= wDelayFinFunc, 
+	xQ=> xTmpOK, 
+	dwTsegons=> , 
+	rTsegons=> );
+
+(* Activa salidas *)
+xCleanW := SRLlenar.Q1 AND xLlenaAguadeRed AND NOT Mc._11_TK2.p251_P_Fill.xPul;
+xMacW  := SRLlenar.Q1 AND xLlenaAguadeMaq AND NOT xTempBloqValves AND NOT Mc._11_TK2.p251_P_Fill.xPul;
+
+(* Alarmas *)
+xAlarmTempBloqValves := RSLlenar.Q1 AND xLlenaAguadeMaq AND xTempBloqValves;
+
+(* Finaliza Funcion*)
+xFiFunc := mc._11_TK2.xLvl_max OR xTmpOK AND NOT SRLlenar.Q1;
+
+IF xFiFunc THEN
+	xActv := FALSE;
+	xOkLlenado := FALSE;
+END_IF
+
+(*ACTIVAR SALIDAS*)
+// Ev. Agua Limpa
+z_05_xCleanW := xCleanW AND NOT Mc._11_TK2.xLvl_max;
+// Ev. Agua Maquina
+z_05_xMacW := xMacW AND NOT Mc._01_SEG.xBloqValv AND NOT Mc._11_TK2.xLvl_max;
+
+
+
+(* Alarmas *)
+// Temperatura bloqueio de valvulas
+xA_05_TempBloqValves := xAlarmTempBloqValves;	
+	]]></ST>
+    </Implementation>
+    <LineIds Name="F_LLENADO_TK2">
+      <LineId Id="3" Count="2" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="90" Count="56" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="148" Count="25" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="235" Count="5" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="177" Count="13" />
+      <LineId Id="32" Count="5" />
+      <LineId Id="41" Count="5" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

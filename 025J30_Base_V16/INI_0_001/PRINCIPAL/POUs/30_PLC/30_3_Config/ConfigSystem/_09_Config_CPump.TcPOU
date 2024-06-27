@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_09_Config_CPump" Id="{4f90d002-d361-4905-ba7f-d3cbcc039f58}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _09_Config_CPump
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+(*-------------------------------------------------------------------------------------------------------*)
+(*CARGA PF*)
+(*Configuraion salida analogica y unidad de trabajo*)
+Mc._09_CPUMP.iPF_AnaMin_UF		:= 0;		(* Velocidad Minima de la salida analogica en formato RPM o % *)
+Mc._09_CPUMP.iPF_AnaMax_UF		:= 100;	(* Velocidad Maxima de la salida analogica en formato RPM o % *)
+Mc._09_CPUMP.iPF_AnaMin_perc	:= 0;		(* Valor Min de la out analog en % respeto a su fondo de escala p.ej 50= 5V o 12mA/ 0 = 0V o 4mA*)
+Mc._09_CPUMP.iPF_AnaMax_perc	:= 100;		(* Valor Max de la out analog en % respeto a su fondo de escala p.ej 100= 10V o 10mA*)
+
+Mc._09_CPUMP.iPF_SpeedMin_UF	:= 50;		(* Velocidad minima de Bomba*)
+Mc._09_CPUMP.iPF_SpeedMax_UF	:= 100;		(* Velocidad maxima de Bomba*)
+
+
+//Mc._09_CPUMP.rSpeedUF:= canvi_escala(Mc._09_CPUMP.b450_CircPump. , 0, 100, 0,  Mc._09_CPUMP.iPF_AnaMax_UF);
+
+//Mc._09_CPUMP.b450_CircPump();
+Mc._09_CPUMP.b450_CircPump.xOK:= Mc._09_CPUMP.b450_CircPump.xRUN and mc._09_CPUMP.b450_CircPump.xInCons;]]></ST>
+    </Implementation>
+    <LineIds Name="_09_Config_CPump">
+      <LineId Id="3" Count="15" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

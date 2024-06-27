@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="z_CONTROL" Id="{2da1a52e-dc32-49c2-8b8d-e3c17fe3e629}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM z_CONTROL
+VAR
+	{attribute 'old_input_assignments' := ''}
+	PULSO: PULS_1S;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[PULSO(Q=> );
+(*-------------------------------------------------------------------------------------------------------*)
+(*P402 Piloto Cala Alarma*)
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*P405 Sirena Alarma*)
+
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*P403 Piloto Continua Programa*)
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="z_CONTROL">
+      <LineId Id="3" Count="2" />
+      <LineId Id="13" Count="3" />
+      <LineId Id="19" Count="4" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

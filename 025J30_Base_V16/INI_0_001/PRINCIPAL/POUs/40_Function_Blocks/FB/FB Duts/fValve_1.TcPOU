@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="fValve_1" Id="{86141284-abfe-4b54-a28e-065288846a58}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fValve_1
+
+VAR_INPUT
+	bE:BOOL;				(*Estate valve*)
+	idV		:id;			(*Position valve*)
+	idFC_op	:id;			(*Position  FC open*)
+	idFC_cl	:id;			(*Position  FC close*)
+	tToFail	:TIME:=T#2S;  	(*Time to fail*)
+END_VAR
+VAR_OUTPUT
+	bFailFC:BOOL;	(*Fail FC*)
+	bFailCC:BOOL;	(*fail Corto Circuit*)
+	bFailOC:BOOL;	(*Fail Open Circuit*)
+END_VAR
+VAR
+	a: INT;
+	tonFailFCOp: Ton;
+	tonFailFCCl: Ton;
+	bFailFCop:BOOL;	(*Fail FC*)
+	bFailFCcl:BOOL;	(*Fail FC*)
+
+	test: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[a:=a+1;
+
+bFailFC:=FALSE;
+bFailCC:=FALSE;
+bFailOC:=FALSE;
+		
+(*=========================================================================================================*)
+(*Salida tipo 1002 BECHOFF DO*)
+IF idV.T=1002  THEN
+		HARD.Beck[idV.N].DOUT[idV.Sn]:=bE;
+					
+		(*FC valve open*)
+		IF idFC_op.T>0 
+			THEN
+			tonFailFCOp(IN:= (bE)AND NOT(HARD.Beck[idFC_op.N].DOUT[idFC_op.Sn]) , PT:=tToFail );
+			bFailFCop:= tonFailFCOp.Q;
+			ELSE
+			bFailFCop:= FALSE;
+		END_IF
+		(*FC valve close*)
+		IF idFC_cl.T>0 
+			THEN
+			tonFailFCCl(IN:= NOT(bE)AND NOT(HARD.Beck[idFC_cl.N].DOUT[idFC_cl.Sn]) , PT:=tToFail );
+			bFailFCcl:= tonFailFCCl.Q;
+			ELSE
+			bFailFCcl:= FALSE;
+		END_IF
+		(*FC Valve*)		
+		bFailFC:= bFailFCop OR bFailFCCL;
+		bFailCC:=FALSE;
+		bFailOC:=FALSE;
+END_IF
+(*=========================================================================================================*)]]></ST>
+    </Implementation>
+    <LineIds Name="fValve_1">
+      <LineId Id="9" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="97" Count="2" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="48" Count="2" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="68" Count="15" />
+      <LineId Id="54" Count="1" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

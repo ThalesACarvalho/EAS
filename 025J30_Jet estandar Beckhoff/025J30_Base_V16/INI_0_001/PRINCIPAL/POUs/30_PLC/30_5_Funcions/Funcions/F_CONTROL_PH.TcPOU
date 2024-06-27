@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_CONTROL_PH" Id="{db8b2a5c-9e57-4bc0-bb69-55d7587140a3}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_CONTROL_PH
+VAR_INPUT
+	Func:E_funcio;	
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	///Fin Funcions
+	xFiFunc: BOOL;
+	
+	pul_FinCntlPH: R_TRIG;
+	xA_CONTROL_PH: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+xActv:= func.Actv_Funcio;
+
+(*Activa funcio *)
+
+pul_FinCntlPH(CLK:=mc._00_GENERAL.p403_ContProg.xPul) ;
+
+
+
+(*FIN FUNCION*)
+xFiFunc:=xActv AND (pul_FinCntlPH.Q);
+
+(*Alarma*)
+xA_CONTROL_PH:=xActv;
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_CONTROL_PH">
+      <LineId Id="33" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="3" Count="13" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

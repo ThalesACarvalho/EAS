@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="PE" Id="{11bcce47-04f5-48a4-bfc3-89d02113b199}">
+    <Declaration><![CDATA[TYPE PE :
+STRUCT
+
+(*+++++++++++++++++++++++++++++++++++++++*)
+(*Variables Del Proceso*)
+(*+++++++++++++++++++++++++++++++++++++++*)
+
+	wAutoMan	:WORD;    		(*1:manual  2: auto*)
+	xAuto		:BOOL;
+	xMan		:BOOL;	
+	wStep		:WORD;			(*Pas en Automatic, actual o ultim*)
+	wFEndCycle	:WORD;			(*Función fin de Ciclo*)
+	wTBatch		:WORD;			(*Tiempo Barcada*)
+	wTStep		:WORD;			(*Tiempo Paso*)
+	wTMaint		:WORD;			(*Tiempo mantenimiento*)
+	xStartBatch	:BOOL;
+	xEndBatch	:BOOL;
+
+(* -------------------------------------------------------------------- *)
+(* Alarmes *)
+	axAlarm: ARRAY [1..Max_Alarmes] OF BOOL;		(*array alarmas*)
+	axHorn: ARRAY [1..Max_Alarmes] OF BOOL;			(*array Sirenas*)
+	xPulMan:BOOL;									(*Pulsador Manual*)
+	xPulAuto:BOOL;									(*Pulsador Auto*)
+	
+	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

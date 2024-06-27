@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="PE_COM" Id="{bdab3d2a-060f-4a28-b195-68f854ba8e9a}">
+    <Declaration><![CDATA[TYPE PE_COM :
+STRUCT
+	
+(* -------------------------------------------------------------------- *)
+(* InfoBarcada *)
+	sBatch:STRING[10];			
+	diNum_Task:DWORD;
+	sCdRecipe:STRING[24];
+	sDesc_Recipe:STRING[50];
+	sCdCycle:STRING[10];
+	sDesc_Cycle:STRING[50];
+
+(* -------------------------------------------------------------------- *)
+(* Ordenes PE *)
+	xToAutomatic	:BOOL;
+	xToManual		:BOOL;
+	xToStep			:BOOL;
+	xRunCycle		:BOOL;
+	xModifiedCycle	:BOOL;
+	xStopAlarm		:BOOL;
+	xContProg		:BOOL;		 	(*Bit Para continuar programa*)
+	xStartTopping	:BOOL;			(*Bit indicacion al iniciar una añadida*)
+	xEndTopping		:BOOL;			(*Bit indicacion al finalizar una añadida*)
+	xResetStep		:BOOL;			(*Bit indicacion para resetar los tiempos de la funcion al realizar un salto*)
+	xReset			:BOOL;
+	xResetFunc		:BOOL;
+	wNewStep		:WORD;			(*word Per fer un canvi de Pas*)
+
+	
+	
+(* -------------------------------------------------------------------- *)
+(* Dosificacio *)
+	
+	axDemandDos		: ARRAY [1..max_tanks] OF BOOL;	; 		(* Pedir Dosificacion*)
+	aiNumDos		: ARRAY [1..max_tanks] OF WORD;			(* Numero Dosificacion *)
+	axOkDemand		: ARRAY [1..max_tanks] OF BOOL;			(* OK Peticion Dosificacion*)	
+	axOkDosage		: ARRAY [1..max_tanks] OF BOOL;			(* OK  Dosificacion*)	
+	aiTypeDos		: ARRAY [1..max_tanks] OF WORD;	 	  	(* Tipo Dosificacion 1=Man 2=Auto 3=Mixta*)
+	axProdMan		: ARRAY [1..max_tanks] OF BOOL;			(* Dosificacion con Producto  Manual **)	
+	axErrorDos		: ARRAY [1..max_tanks] OF BOOL;			(* Error Dosificación  **)	
+	aiVolumDos		: ARRAY [1..max_tanks] OF DWORD;		(* Volumen dosificat*)
+	axTankFree		: ARRAY [1..max_tanks] OF BOOL;			(* Tanque libre *)
+	aiPriority		: ARRAY [1..max_tanks] OF WORD;			(* Prioridad*)
+	axOnlyDissol	: ARRAY [1..max_tanks] OF BOOL;			(* Solo Disolver*)
+
+
+
+
+
+	
+(* -------------------------------------------------------------------- *)
+	
+//	No utilizadas:
+//	ActivarParalelo:BOOL;
+//	DesactivarParalelo:BOOL;
+
+
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

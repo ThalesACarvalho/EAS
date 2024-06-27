@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_01_Config_SEG" Id="{dc023367-25dc-48a5-9f9f-9a2fcd178bcf}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _01_Config_SEG
+
+VAR
+	ExisteSenalPressMin: BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+(*Presión Mínima Máquina*)
+Mc._01_SEG.xPresMin  := Mc._01_SEG.s425_PresMin.xPul ;
+	
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*Maxima Pression o Temperatura*)
+(*Se Activa si hay entrada de maxima pression o temperatura (NC) o si la Temperatura Maq >= PF Temperatura Maxima*)
+Mc._01_SEG.xMaxPresTemp  := NOT(Mc._01_SEG.s420_MaxPresTemp.xPul) OR (Mc._02_TEMP.rMacTemperature > Mc._01_SEG.iPFMcMaxiTemper);
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*Temperatura Bloq. Valves*)
+(*Se Activa si hay entrada de temper. bloq. valv. (NC) o si la Temperatura Maq >= PF Temperatura Maxima*)
+Mc._01_SEG.xBloqValv  := NOT(Mc._01_SEG.s421_BloqValv.xPul)  OR (Mc._02_TEMP.rMacTemperature > Mc._01_SEG.iPFTempBloqValv);
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*Temperatura Cierra respiradero*)
+(*Se Activa si Temperatura Maq >= PF Temperatura Maxima*)
+Mc._01_SEG.xTempeCloseVent	:=(Mc._02_TEMP.rMacTemperature > Mc._01_SEG.iPFTempCloseVent);      
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*Maquina Cerrada*)
+Mc._01_SEG.xMcClosed:=	Mc._01_SEG.s422_McClose.xPul ;      
+
+//Alarma Maquina Abierta
+Mc._01_SEG.xMcOpen:=	NOT (Mc._01_SEG.s422_McClose.xPul) AND
+					(Mc._02_TEMP.rMacTemperature > MC._01_SEG.iPFTempBloqValv) ;
+
+(*--------------------------------------------------------------------------------------*)
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="_01_Config_SEG">
+      <LineId Id="3" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="31" Count="3" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="54" Count="7" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="80" Count="5" />
+      <LineId Id="62" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

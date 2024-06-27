@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="_01_SEG" Id="{a0b7b742-d2c6-462f-a6e8-c28bf52bbd3c}">
+    <Declaration><![CDATA[TYPE _01_SEG :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	s420_MaxPresTemp: dutpul;
+	s421_BloqValv: dutpul;
+	s422_McClose: dutpul;
+	p423_ColdMcSeg: dutpul;
+	p424_DrainMcSeg: dutpul;
+	s425_PresMin: dutpul;
+	p426_EmergStop: dutpul;
+	/// Maxima Pression o Temperatura 
+	xMaxPresTemp: BOOL;
+	/// Temperatura Bloqueo Valvulas 
+	xBloqValv: BOOL;
+	xPresMin: BOOL;
+	/// Temperatura Cierre Respiradero 
+	xTempeCloseVent: BOOL;
+	///Maquina cerrada
+	xMcClosed: BOOL;
+	///Maquina abierta a temperatura
+	xMcOpen: BOOL;
+	///+++++++++++++++++++++++++++++++++++++++
+	///PF- CONFIG
+	///+++++++++++++++++++++++++++++++++++++++
+	iPFPresMin: INT;
+	/// PF Maxima Temperatura Maquina 
+	iPFMcMaxiTemper: INT;
+	/// PF Temperatura Cierre Respiradero 
+	iPFTempCloseVent: INT;
+	/// PF Temperatura Bloqueo Valvulas 
+	iPFTempBloqValv: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

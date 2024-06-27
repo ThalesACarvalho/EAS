@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_00_GESTION_PUL" Id="{024594c5-9659-471f-a69a-f8553aaf3148}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _00_GESTION_PUL
+VAR
+	pPulseFillTK1: R_trig;
+	RS_ActiveFillTK1: RS;
+	xOKFillTK1: BOOL;
+	z_FillTK1Manual: BOOL;
+	pPulseDrainTK1: R_TRIG;
+	xOKDrainTK1: BOOL;
+	z_DrainTK1Manual: BOOL;
+	RS_ActiveDrainTK1: RS;
+	pPulseRut1: R_trig;
+	pPulseRetourn: R_trig;
+	RsRetounTK1: RS;
+	xOkRetournTK1: BOOL;
+	z_RetMcTk1Manual: BOOL;
+	pPulseSlowIntro: R_trig;
+	RsSlowIntroTK1: rs;
+	xOkSlowIntroTK1: BOOL;
+	z_IntroSlowManual: BOOL;
+	xA_RutinaActv: BOOL;
+	pPulseFastIntro: R_trig;
+	RsFastIntroTK1: Rs;
+	z_IntroFastManual: BOOL;
+	xOkFastIntroTK1: BOOL;
+	tDrenado: Ton;
+	pPulseLavTub: R_trig;
+	RsLavTuberias: Rs;
+	xLavTuberias: BOOL;
+	z_LavTuberias: BOOL;
+	tDrenadoColores: Ton;
+	pPulseTransMaq: R_trig;
+	RsTransMaq: Rs;
+	xTransMaq: BOOL;
+	z_TransMaq: BOOL;
+	pPulseTransTk1: R_trig;
+	xTransTK1: BOOL;
+	z_TransTK1: BOOL;
+	RsTransTK1: Rs;
+	tDrenadoVac: Ton;
+	tDrenadoIntroR: Ton;
+	tDrenadoIntroL: Ton;
+	tDrenadoColLTs: Ton;
+	tDrenadoColTMc: Ton;
+	tDrenadoColTK1: Ton;
+	pPulseLlenadoTKC: R_trig;
+	RsLlenTKC: Rs;
+	xLlenaTKC: BOOL;
+	z_LlenaTKC: BOOL;
+	pPulseVaciaTkc: R_trig;
+	tDrenadoColVac: Ton;
+	xVaciaTKC: BOOL;
+	RsVaciaTKC: Rs;
+	z_VaciaTKC: BOOL;
+	pPulseFillTK2: R_trig;
+	RS_ActiveFillTK2: RS;
+	xOKFillTK2: BOOL;
+	z_FillTK2Manual: BOOL;
+	pPulseDrainTK2: R_TRIG;
+	tDrenadoVacTK2: TON;
+	xOKDrainTK2: BOOL;
+	RS_ActiveDrainTK2: RS;
+	z_DrainTK2Manual: BOOL;
+	pPulseRetournTK2: R_TRIG;
+	RsRetounTK2: RS;
+	xOkRetournTK2: BOOL;
+	tDrenadoTK2: TON;
+	z_RetMcTk2Manual: BOOL;
+	tDrenadoIntroRTK2: TON;
+	xOkFastIntroTK2: BOOL;
+	RsFastIntroTK2: RS;
+	pPulseFastIntroTK2: R_TRIG;
+	z_IntroFastManualTK2: BOOL;
+	pPulsesLOWIntroTK2: R_TRIG;
+	tDrenadoIntroLTK2: TON;
+	xOkSLOWIntroTK2: BOOL;
+	z_IntroSlowManualTK2: BOOL;
+	pPulseEvMixer: R_trig;
+	RsMixerTK1: RS;
+	xOkMixerTK1: BOOL;
+	z_MixerTk1Manual: BOOL;
+	RsMixerTK2: RS;
+	pPulseEvMixerTK2: R_TRIG;
+	xOkMixerTK2: BOOL;
+	z_MixerTk2Manual: BOOL;
+	pPulsoVaporTK1: R_TRIG;
+	RsVaporTK1: RS;
+	xOkVaporTK1: BOOL;
+	z_VaporTk1Manual: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//  			TK1 TK1 TK1
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+(*
+//Calcular tiempo drenado
+tDrenado(IN:=NOT(Mc.TK1.xLvl_min) , PT:= INT_TO_TIME(Mc.TK1.iPFDreno)*1000  );
+
+
+
+// Rutina LLenado TK1 Manual
+
+pPulseFillTK1(CLK:= MC.TK1.p151_P_Fill.bPul , Q=> );				//Pulso llenado cubeta manual
+
+RS_ActiveFillTK1(SET:= pPulseFillTK1.Q AND NOT xOKFillTK1, //Activa por pulsador
+				RESET1:= (pPulseFillTK1.Q AND xOKFillTK1)  //Resetea por pulsador
+				OR MC.TK1.xLvl_3 , 						   //Resetea por llegar a nivel 1
+				Q1=> xOKFillTK1 );
+
+z_FillTK1Manual:= xOKFillTK1;
+
+
+// Rutina Vaciado TK1 Manual
+
+pPulseDrainTK1(CLK:= MC.TK1.p152_P_Drain.bPul , Q=> );				//Pulso Vaciado cubeta manual
+//Calcular tiempo drenado
+tDrenadoVac(IN:=xOKDrainTK1 AND NOT(Mc.TK1.xLvl_min) , PT:= INT_TO_TIME(Mc.TK1.iPFDreno)*1000  );
+
+RS_ActiveDrainTK1(	SET:= 	pPulseDrainTK1.Q AND 
+							NOT xOKDrainTK1, //Activa por pulsador
+					RESET1:= (pPulseDrainTK1.Q AND xOKDrainTK1)  OR //Resetea por pulsador
+							tDrenadoVac.Q , 		//Resetea si no tiene nivel mínimo
+					Q1=> xOKDrainTK1 );
+
+z_DrainTK1Manual:= xOKDrainTK1;
+
+
+// Activa Retorno TK1 Manual
+
+pPulseRetourn(CLK:=MC.TK1.P153_P_RetMc.bPul, Q=> ); //Pulso para activación Retorno TK1 Manual
+
+RsRetounTK1(	SET:= pPulseRetourn.Q AND 
+						NOT xOkRetournTK1,          //Start Retorno TK1 por pulsador
+				RESET1:= (pPulseRetourn.Q AND
+						 xOkRetournTK1)OR			//Stop retorno TK1 por pulsador
+						MC.SEG.xBloqValv OR
+						mc.TK1.xLvl_max	,			//Stop retorno TK1 por nivel minimo
+				Q1=> xOkRetournTK1 );
+
+z_RetMcTk1Manual:= xOkRetournTK1;
+
+// Activa Intro Rapida TK1 Manual
+
+pPulseFastIntro(CLK:=MC.TK1.p154_P_IntroFast.bPul  ); //Pulso para activación Intro Lenta Manual
+//Calcular tiempo drenado
+tDrenadoIntroR(IN:=xOkFastIntroTK1 AND NOT(Mc.TK1.xLvl_min) , PT:= INT_TO_TIME(Mc.TK1.iPFDescSonda)*1000  );
+
+RsFastIntroTK1(	SET:= pPulseFastIntro.Q AND 
+						NOT xOkFastIntroTK1 AND //Start Slow Intro TK1 por pulsador
+						mc.TK1.xLvl_min,        //Asegura nivel mínimo TK1
+				RESET1:= (pPulseFastIntro.Q AND
+						 xOkFastIntroTK1) OR 			//Stop retorno TK1 por Temp.Bloq.Valv
+						 tDrenadoIntroR.Q	,	
+				Q1=> xOkFastIntroTK1);
+
+z_IntroFastManual:= xOkFastIntroTK1;
+
+
+// Activa Intro lenta TK1 Manual
+
+pPulsesLOWIntro(CLK:=MC.TK1.p156_P_IntroSlow.bPul  ); //Pulso para activación Intro Lenta Manual
+//Calcular tiempo drenado
+tDrenadoIntroL(IN:=xOkSLOWIntroTK1 AND NOT(Mc.TK1.xLvl_min) , PT:= INT_TO_TIME(Mc.TK1.iPFDreno)*1000  );
+RsSlowIntroTK1(	SET:= pPulseSlowIntro.Q AND 
+						NOT xOkSlowIntroTK1 AND	//Start Slow Intro TK1 por pulsador
+						MC.TK1.xLvl_min,        //Asegura nivel mínimo TK1
+				RESET1:= (pPulseSlowIntro.Q AND
+						 xOkSlowIntroTK1) OR 			//Stop retorno TK1 por Temp.Bloq.Valv
+						 tDrenadoIntroL.Q	,	
+				Q1=> xOkSlowIntroTK1);
+
+z_IntroSlowManual:= xOkSlowIntroTK1;
+
+// Activa Mezcla TK1
+
+pPulseEvMixer(CLK:=MC.TK1.p158_P_Mixer.bPul, Q=> ); //Pulso para activación EV Mixer TK1 Manual
+
+RsMixerTK1(	SET:= pPulseEvMixer.Q AND NOT 			//Start Ev Mixer TK1 por pulsador
+					xOkMixerTK1 AND NOT
+					xOkMixerTK2,        			//No permite Start si mixer TK2 Activo
+				RESET1:=(pPulseEvMixer.Q AND
+						xOkMixerTK1)OR				//Stop Ev Mixer TK1 por pulsador
+						mc.TK1.xLvl_max OR NOT		//Stop Ev Mixer TK1 por nivel máximo
+						mc.TK1.xLvl_min OR			//Stop Ev Mixer TK1 por nivel mínimo
+						F_INTRO_TK1.xActv OR		//Stop Ev Mixer TK1 si Funcion Intro TK1 Activa
+						F_INTRO_TK2.xActv	,		//Stop Ev Mixer TK1 si Funcion Intro TK2 Activa
+				Q1=> xOkMixerTK1 );
+
+z_MixerTk1Manual:=  xOkMixerTK1;
+
+// Activa Mezcla TK1
+
+pPulsoVaporTK1(CLK:=MC.TK1.p155_P_Warm.bPul, Q=> ); //Pulso para activación EV Calentar TK1 Manual
+
+RsVaporTK1(	SET:= 	pPulsoVaporTK1.Q AND NOT 		//Start Calentar TK1 MANUAL
+					xOkVaporTK1, 	       			//No permite Start si mixer TK2 Activo
+				RESET1:=(pPulsoVaporTK1.Q AND
+						xOkVaporTK1)OR	NOT			//Stop Ev Vapor TK1 por pulsador
+						Mc.TK1.xLvl_2,			//Stop Ev Vapor TK1 por nivel mínimo
+				Q1=> xOkVaporTK1 );
+
+z_VaporTk1Manual:=  xOkVaporTK1;
+
+*)
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//  			TK2 TK2 TK2
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//Calcular tiempo drenado
+tDrenadoTK2(IN:=NOT(Mc._11_TK2.xLvl_min) , PT:= INT_TO_TIME(Mc._11_TK2.iPFDreno)*1000  );
+
+
+
+// Rutina LLenado TK2 Manual
+
+pPulseFillTK2(CLK:= MC._11_TK2.p251_P_Fill.xPul , Q=> );		//Pulso llenado cubeta manual
+
+RS_ActiveFillTK2(SET:= pPulseFillTK2.Q AND NOT xOKFillTK2, //Activa por pulsador
+				RESET1:= (pPulseFillTK2.Q AND xOKFillTK2)  //Resetea por pulsador
+				OR MC._11_TK2.xLvl_3 , 						   //Resetea por llegar a nivel 1
+				Q1=> xOKFillTK2 );
+
+z_FillTK2Manual:= xOKFillTK2;
+
+
+// Rutina Vaciado TK2 Manual
+
+pPulseDrainTK2(CLK:= MC._11_TK2.p252_P_Drain.xPul , Q=> );				//Pulso Vaciado cubeta manual
+//Calcular tiempo drenado
+tDrenadoVacTK2(IN:=xOKDrainTK2 AND NOT(Mc._11_TK2.xLvl_min) , PT:= INT_TO_TIME(Mc._11_TK2.iPFDreno)*1000  );
+
+RS_ActiveDrainTK2(	SET:= 	 pPulseDrainTK2.Q AND 
+							 NOT xOKDrainTK2, 						//Activa por pulsador
+					RESET1:= (pPulseDrainTK2.Q AND xOKDrainTK2)  OR //Resetea por pulsador
+							 tDrenadoVacTK2.Q , 					//Resetea si no tiene nivel mínimo
+					Q1=> xOKDrainTK2 );
+
+z_DrainTK2Manual:= xOKDrainTK2;
+
+
+// Activa Retorno TK2 Manual
+
+pPulseRetournTK2(CLK:=MC._11_TK2.P253_P_RetMc.xPul, Q=> ); //Pulso para activación Retorno TK1 Manual
+
+RsRetounTK2(	SET:= pPulseRetournTK2.Q AND 
+						NOT xOkRetournTK2,          //Start Retorno TK1 por pulsador
+				RESET1:= (pPulseRetournTK2.Q AND
+						 xOkRetournTK2)OR			//Stop retorno TK1 por pulsador
+						MC._01_SEG.xBloqValv OR
+						mc._11_TK2.xLvl_max	,			//Stop retorno TK1 por nivel minimo
+				Q1=> xOkRetournTK2 );
+
+z_RetMcTk2Manual:= xOkRetournTK2;
+
+// Activa Intro Rapida TK2 Manual
+
+pPulseFastIntroTK2(CLK:=MC._11_TK2.p254_P_IntroFast.xPul  ); //Pulso para activación Intro Lenta Manual
+//Calcular tiempo drenado
+tDrenadoIntroRTK2(IN:=xOkFastIntroTK2 AND NOT(Mc._11_TK2.xLvl_min) , PT:= INT_TO_TIME(Mc._11_TK2.iPFDescSonda)*1000  );
+
+RsFastIntroTK2(	SET:= 	pPulseFastIntroTK2.Q AND 
+						NOT xOkFastIntroTK2 AND 
+						mc._11_TK2.xLvl_min,        	//Start Slow Intro TK1 por pulsador
+				RESET1:= (pPulseFastIntroTK2.Q AND
+						 xOkFastIntroTK2) OR 			//Stop retorno TK1 por Temp.Bloq.Valv
+						 tDrenadoIntroRTK2.Q 	,	
+				Q1=> 	 xOkFastIntroTK2);
+
+z_IntroFastManualTK2:= xOkFastIntroTK2;
+
+
+// Activa Intro lenta TK2 Manual
+
+pPulsesLOWIntroTK2(CLK:=MC._11_TK2.p256_P_IntroSlow.xPul  ); //Pulso para activación Intro Lenta Manual
+//Calcular tiempo drenado
+tDrenadoIntroLTK2(IN:=xOkSLOWIntroTK2 AND NOT(Mc._11_TK2.xLvl_min) , PT:= INT_TO_TIME(Mc._11_TK2.iPFDreno)*1000  );
+RsSlowIntroTK1(	SET:= pPulseSlowIntroTK2.Q AND 
+						NOT xOkSlowIntroTK2,        //Start Slow Intro TK1 por pulsador
+				RESET1:= (pPulseSlowIntroTK2.Q AND
+						 xOkSlowIntroTK2) OR 			//Stop retorno TK1 por Temp.Bloq.Valv
+						 tDrenadoIntroLTK2.Q	,	
+				Q1=> xOkSlowIntroTK2);
+
+z_IntroSlowManualTK2:= xOkSlowIntroTK2;
+
+// Activa Mezcla TK2
+
+pPulseEvMixerTK2(CLK:=MC._11_TK2.p258_P_Mixer.xPul, Q=> ); //Pulso para activación EV Mixer TK2 Manual
+
+RsMixerTK2(	SET:= pPulseEvMixerTK2.Q AND NOT     	//Start Ev Mixer TK2 por pulsador
+				 		xOkMixerTK2 AND NOT
+						xOkMixerTK1,             	//No permite Start si mixer TK1 Activo
+				RESET1:=(pPulseEvMixerTK2.Q AND
+						xOkMixerTK2)OR				//Stop Ev Mixer TK2 por pulsador
+						mc._11_TK2.xLvl_max OR NOT		//Stop Ev Mixer TK2 por nivel máximo
+						mc._11_TK2.xLvl_min OR			//Stop Ev Mixer TK2 por nivel mínimo
+						//F_INTRO_TK1.xActv OR		//Stop Ev Mixer TK2 si Funcion Intro TK1 Activa
+						F_INTRO_TK2.xActv	,		//Stop Ev Mixer TK2 si Funcion Intro TK2 Activa
+				Q1=> xOkMixerTK2 );
+
+z_MixerTk2Manual:= xOkMixerTK2;
+
+//Rutina activa
+xA_RutinaActv:=  xOKFillTK1 OR
+				xOKDrainTK1 OR
+				xOkRetournTK1 OR
+				xOkSlowIntroTK1	OR
+				xOkFastIntroTK1 OR
+				xOKFillTK2 OR
+				xOKDrainTK2 OR
+				xOkRetournTK2 OR
+				xOkSlowIntroTK2 OR
+				xOKFastIntroTK2;
+
+(*
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//  			TKC TKC TKC
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//Drenado cocina colores
+
+
+//Calcular tiempo drenado
+tDrenadoColores(IN:=NOT(Mc.TKC.xLvl_min) , PT:= INT_TO_TIME(Mc.TKC.iPFDreno)*1000  );
+
+//------------------------------------------------------------
+
+// Lavado tuberias
+pPulseLavTub(CLK:=MC.TKC.p351_Pul_LavTub.bPul  ); //Pulso para activación Intro Lenta Manual
+//Calcular tiempo drenado
+tDrenadoColLTs(IN:=xLavTuberias AND NOT(Mc.TKC.xLvl_min) , PT:= INT_TO_TIME(Mc.TKC.iPFDreno)*1000  );
+
+RsLavTuberias(	SET:= pPulseLavTub.Q AND 
+						NOT xLavTuberias,        //Start Slow Intro TK1 por pulsador
+				RESET1:= (pPulseLavTub.Q AND
+						 xLavTuberias) OR 			//Stop retorno TK1 por Temp.Bloq.Valv
+						 tDrenadoColLTs.Q	,	
+				Q1=> xLavTuberias);
+
+//Salidas
+z_LavTuberias:= xLavTuberias;
+Mc.TKC.p351_Pul_LavTub.bPilot:= xLavTuberias ;
+//------------------------------------------------------------
+
+// Transferencia maquina
+pPulseTransMaq(CLK:=MC.TKC.p352_Pul_TransMaq.bPul  ); //Pulso para activación Intro Lenta Manual
+//Calcular tiempo drenado
+tDrenadoColTMc(IN:=xTransMaq AND NOT(Mc.TKC.xLvl_min) , PT:= INT_TO_TIME(Mc.TKC.iPFDreno)*1000  );
+
+RsTransMaq(		SET:= 	pPulseTransMaq.Q AND 
+						NOT xTransMaq,        //Start Slow Intro TK1 por pulsador
+				RESET1:= (pPulseTransMaq.Q AND
+						 xTransMaq) OR 			//Stop retorno TK1 por Temp.Bloq.Valv
+						 tDrenadoColTMc.Q	,	
+				Q1=> 	xTransMaq);
+
+//Salidas
+z_TransMaq:= xTransMaq;
+Mc.TKC.p352_Pul_TransMaq.bPilot:= xTransMaq ;
+//------------------------------------------------------------
+
+// Transferencia tanque
+pPulseTransTk1(CLK:=MC.TKC.p353_Pul_TransTanque.bPul  ); //Pulso para activación Intro Lenta Manual
+//Calcular tiempo drenado
+tDrenadoColTK1(IN:=xTransTK1 AND NOT(Mc.TKC.xLvl_min) , PT:= INT_TO_TIME(Mc.TKC.iPFDreno)*1000  );
+
+RsTransTK1(		SET:= 	pPulseTransTk1.Q AND 
+						NOT xTransTK1,        //Start Slow Intro TK1 por pulsador
+				RESET1:= (pPulseTransTk1.Q AND
+						 xTransTK1) OR 			//Stop retorno TK1 por Temp.Bloq.Valv
+						 tDrenadoColTK1.Q	,	
+				Q1=> 	xTransTK1);
+
+//Salidas
+z_TransTK1:= xTransTK1;
+Mc.TKC.p353_Pul_TransTanque.bPilot:= xTransTK1 ;
+//------------------------------------------------------------
+
+// Llenado tanque Color
+pPulseLlenadoTKC(CLK:=MC.TKC.p354_Pul_llenado.bPul  ); //Pulso para activación 
+
+RsLlenTKC(		SET:= 	pPulseLlenadoTKC.Q AND 
+						NOT xLlenaTKC,        //Start Slow Intro TK1 por pulsador
+				RESET1:= (pPulseLlenadoTKC.Q AND
+						 xLlenaTKC) OR 			//Stop retorno TK1 por Temp.Bloq.Valv
+						 Mc.TKC.xLvl_max	,	
+				Q1=> 	xLlenaTKC);
+
+//Salidas
+z_LlenaTKC:= xLlenaTKC;
+
+
+
+
+
+//------------------------------------------------------------
+
+// Vaciado tanque
+pPulseVaciaTkc(CLK:=MC.TKC.p355_Pul_Vaciado.bPul  ); //Pulso para activación 
+//Calcular tiempo drenado
+tDrenadoColVac(IN:=xVaciaTKC AND NOT(Mc.TKC.xLvl_min) , PT:= INT_TO_TIME(Mc.TKC.iPFDreno)*1000  );
+
+RsVaciaTKC(		SET:= 	pPulseVaciaTkc.Q AND 
+						NOT xVaciaTKC,        //Start Slow Intro TK1 por pulsador
+				RESET1:= (pPulseVaciaTkc.Q AND
+						 xVaciaTKC) OR 			//Stop retorno TK1 por Temp.Bloq.Valv
+						 tDrenadoColVac.Q	,	
+				Q1=> 	xVaciaTKC);
+
+//Salidas
+z_VaciaTKC:= xVaciaTKC;
+ //------------------------------------------------------------*)]]></ST>
+    </Implementation>
+    <LineIds Name="_00_GESTION_PUL">
+      <LineId Id="3" Count="57" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="61" Count="14" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="76" Count="22" />
+      <LineId Id="395" Count="6" />
+      <LineId Id="403" Count="3" />
+      <LineId Id="410" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="501" Count="0" />
+      <LineId Id="500" Count="0" />
+      <LineId Id="100" Count="58" />
+      <LineId Id="392" Count="0" />
+      <LineId Id="159" Count="147" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

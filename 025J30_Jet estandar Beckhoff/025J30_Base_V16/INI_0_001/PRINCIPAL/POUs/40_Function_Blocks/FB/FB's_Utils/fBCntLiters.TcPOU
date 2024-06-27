@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fBCntLiters" Id="{9ce31104-74a8-4e2f-943e-cff35b30f87c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fBCntLiters
+VAR_INPUT
+	/// Activate the counter
+	xActv: BOOL;
+	/// Reset the liters value
+	xReset: BOOL;
+	/// Liters Input
+	rInLiters: REAL;
+END_VAR
+VAR_OUTPUT
+	/// Actual value 
+	rLiters: REAL;
+END_VAR
+VAR
+	pResetLitros: R_TRIG;
+	pInicio: R_TRIG;
+	LitrosAcum: REAL;
+END_VAR
+VAR RETAIN
+	/// Litros acumulados
+	LitrosAc: REAL;
+	/// Litros Inicial
+	LitrosIni: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[pInicio(CLK:=xActv );
+//CARGAR LITROS INICIO
+IF Pinicio.Q THEN
+	LitrosIni := rInLiters;
+	LitrosAcum:=rLiters;
+END_IF
+
+//CALCULAR LITROS EN PERIODO ACTIVO
+IF xActv THEN
+	LitrosAc := rInLiters-LitrosIni;
+END_IF
+
+//cALCULO LITROS
+	rLiters := LitrosAc + LitrosAcum;
+
+
+//PULSO RESET
+pResetLitros(CLK:=xReset );
+//rESET VALORES ACUMULADOS
+IF  pResetLitros.Q THEN
+	LitrosAcum := 0;	
+	LitrosAc := 0;
+	LitrosIni := 0;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="fBCntLiters">
+      <LineId Id="3" Count="14" />
+      <LineId Id="19" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

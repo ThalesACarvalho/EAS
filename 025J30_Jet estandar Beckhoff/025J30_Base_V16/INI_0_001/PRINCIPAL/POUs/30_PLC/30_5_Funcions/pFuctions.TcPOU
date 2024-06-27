@@ -1,0 +1,2307 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="pFuctions" Id="{e1a5c658-a316-457d-896f-960bb267958d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM pFuctions
+VAR
+	n: WORD;
+	n_Vaciado:WORD;
+	b: INT;
+	n_Llenado:WORD;
+	n_FinCiclo: WORD;
+	n_Aviso: WORD;
+	n_Carga: WORD;
+	n_ControlPH: WORD;
+	n_Descarga: WORD;
+	n_Espera: WORD;
+	n_LlenadoTK2: WORD;
+	n_VaciadoTK2: WORD;
+	n_IntroTK2: WORD;
+	n_PreparaTK2: WORD;
+	n_Velocidades: WORD;
+	n_RecirculaTK2: WORD;
+	n_Muestra: WORD;
+	n_LavadoCont: WORD;
+	A: INT;
+	n_Duchas: WORD;
+	n_FinDuchas: WORD;
+	n_Presurizar: WORD;
+	n_Despresurizar: WORD;
+	n_Termo: WORD;
+	n_Isoterma: WORD;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[b:=b+1;
+(* Lecturas Atlantis *)
+_00_ZF();
+_00_ZW();
+_00_ZX();
+_00_Alarms();
+_00_Mainte_Time();
+
+(*UTILS*)
+_00_VENT();
+_00_CONSUMS();
+_00_CIRC_PUMP();
+_00_GESTION_PUL();
+_00_GENERALES ();
+
+
+(************************FUNCIONES******************************)
+(*FUNCION 1: FIN DE CICLO*)
+n_FinCiclo:=1;
+Est_Func[n_FinCiclo].Actv_Funcio:= Est_Func[n_FinCiclo].Actv_Funcio;
+F_FIN_CICLO(Func:=Est_Func[n_FinCiclo] );
+
+(*FUNCION 2: CARGA*)
+n_Carga:=2;
+Est_Func[n_Carga].Actv_Funcio:= Est_Func[n_Carga].Actv_Funcio AND NOT (F_CARGA.xFiFunc);
+F_CARGA(Func:=Est_Func[n_Carga] );
+
+(*FUNCION 3: TERMOREGULACION*)
+n_Termo:=3;
+Est_Func[n_Termo].Actv_Funcio:= Est_Func[n_Termo].Actv_Funcio AND NOT (F_TERMOREG.xFiFunc);
+F_TERMOREG(Func:=Est_Func[n_Termo] );
+
+(*FUNCION 4: ISOTERMA*)
+n_Isoterma:=4;
+Est_Func[n_Isoterma].Actv_Funcio:= Est_Func[n_Isoterma].Actv_Funcio AND NOT (F_ISOTERMA.xFiFunc);
+F_ISOTERMA(Func:=Est_Func[n_Isoterma] );
+
+(*FUNCION 5: AVISO*)
+n_Aviso:=5;
+Est_Func[n_Aviso].Actv_Funcio:= Est_Func[n_Aviso].Actv_Funcio AND NOT (F_AVISO.xFiFunc);
+F_AVISO(Func:=Est_Func[n_Aviso] );
+
+(*FUNCION 8: MUESTRA*)
+n_Muestra:=8;
+Est_Func[n_Muestra].Actv_Funcio:= Est_Func[n_Muestra].Actv_Funcio AND NOT (F_MUESTRA.xFiFunc);
+F_MUESTRA(Func:=Est_Func[n_Muestra] );
+
+(*FUNCION 9: ESPERA*)
+n_Espera:=9;
+Est_Func[n_Espera].Actv_Funcio:= Est_Func[n_Espera].Actv_Funcio AND NOT (F_ESPERA.xFiFunc);
+F_ESPERA(Func:=Est_Func[n_Espera] );
+
+(*FUNCION 10: LLENADO MAQUINA*)
+n_Llenado:=10;
+Est_Func[n_Llenado].Actv_Funcio:= Est_Func[n_Llenado].Actv_Funcio AND NOT (F_LLENADO.xFiFunc);
+F_LLENADO(Func:=Est_Func[n_Llenado] );
+
+(*FUNCION 13: CONTROL PH*)
+n_ControlPH:=13;
+Est_Func[n_ControlPH].Actv_Funcio:= Est_Func[n_ControlPH].Actv_Funcio AND NOT (F_CONTROL_PH.xFiFunc);
+F_CONTROL_PH(Func:=Est_Func[n_ControlPH] );
+
+(*FUNCION 16: VELOCIDADES*)
+n_Velocidades:=16;
+Est_Func[n_Velocidades].Actv_Funcio:= Est_Func[n_Velocidades].Actv_Funcio AND NOT (F_VELOCIDADES.xFinFunc);
+F_VELOCIDADES(Func:=Est_Func[n_Velocidades] );
+
+(*FUNCION 19: DESCARGA*)
+n_Descarga:=19;
+Est_Func[n_Descarga].Actv_Funcio:= Est_Func[n_Descarga].Actv_Funcio AND NOT (F_DESCARGA.xFiFunc);
+F_DESCARGA(Func:=Est_Func[n_Descarga] );
+
+(*FUNCION 20: LAVADO CONTINUO*)
+n_LavadoCont:=20;
+Est_Func[n_LavadoCont].Actv_Funcio:= Est_Func[n_LavadoCont].Actv_Funcio AND NOT (F_LAVADO_CONT.xFiFunc);
+F_LAVADO_CONT(Func:=Est_Func[n_LavadoCont] );
+
+(*FUNCION 21: DUCHAS*)
+n_Duchas:=21;
+Est_Func[n_Duchas].Actv_Funcio:= Est_Func[n_Duchas].Actv_Funcio AND NOT (F_DUCHAS.xFiFunc);
+F_DUCHAS(Func:=Est_Func[n_Duchas] );
+
+(*FUNCION 22: FIN DUCHAS*)
+n_FinDuchas:=22;
+Est_Func[n_FinDuchas].Actv_Funcio:= Est_Func[n_FinDuchas].Actv_Funcio AND NOT (F_FIN_DUCHAS.xFiFunc);
+F_FIN_DUCHAS(Func:=Est_Func[n_FinDuchas] );
+
+(*FUNCION 27: VACIADO MAQUINA*)
+n_Vaciado:=27;
+Est_Func[n_Vaciado].Actv_Funcio:= Est_Func[n_Vaciado].Actv_Funcio AND NOT (F_VACIADO.xFiFunc);
+F_VACIADO(Func:=Est_Func[n_Vaciado] );
+
+(*FUNCION 28: PRESURIZAR*)
+n_Presurizar:=28;
+Est_Func[n_Presurizar].Actv_Funcio:= Est_Func[n_Presurizar].Actv_Funcio AND NOT (F_PRESURIZAR.xFinFunc);
+F_PRESURIZAR(Func:=Est_Func[n_Presurizar] );
+
+(*FUNCION 29: DESPRESURIZAR*)
+n_Despresurizar:=29;
+Est_Func[n_Despresurizar].Actv_Funcio:= Est_Func[n_Despresurizar].Actv_Funcio AND NOT (F_DESPRESURIZA.xFinFunc);
+F_DESPRESURIZA(Func:=Est_Func[n_Despresurizar] );
+
+(*FUNCION 50: PREPARA TK2*)
+n_PreparaTK2:=50;
+Est_Func[n_PreparaTK2].Actv_Funcio:= Est_Func[n_PreparaTK2].Actv_Funcio AND NOT (F_PREP_TK2.xFiFunc);
+F_PREP_TK2(Func:=Est_Func[n_PreparaTK2] );
+
+(*FUNCION 51: INTRODUCCIÓN TK2*)
+n_IntroTK2:=51;
+Est_Func[n_IntroTK2].Actv_Funcio:= Est_Func[n_IntroTK2].Actv_Funcio AND NOT (F_INTRO_TK2.xFiFunc);
+F_INTRO_TK2(Func:=Est_Func[n_IntroTK2] );
+
+(*FUNCION 52: RECIRCULACION TK2*)
+n_RecirculaTK2:=52;
+Est_Func[n_RecirculaTK2].Actv_Funcio:= Est_Func[n_RecirculaTK2].Actv_Funcio AND NOT (F_RECIRCULA_TK2.xFiFunc);
+F_RECIRCULA_TK2(Func:=Est_Func[n_RecirculaTK2] );
+
+(*FUNCION 53: LLENADO TK2*)
+n_LlenadoTK2:=53;
+Est_Func[n_LlenadoTK2].Actv_Funcio:= Est_Func[n_LlenadoTK2].Actv_Funcio AND NOT (F_LLENADO_TK2.xFiFunc);
+F_LLENADO_TK2(Func:=Est_Func[n_LlenadoTK2] );
+
+(*FUNCION 59: VACIADO TK2*)
+n_VaciadoTK2:=59;
+Est_Func[n_VaciadoTK2].Actv_Funcio:= Est_Func[n_VaciadoTK2].Actv_Funcio AND NOT (F_VACIADO_TK2.xFiFunc);
+F_VACIADO_TK2(Func:=Est_Func[n_VaciadoTK2] );
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <Action Name="_00_Alarms" Id="{edf02505-6bc2-440c-9290-38c067350147}">
+      <Implementation>
+        <ST><![CDATA[(* Alarmas Atlantis *)
+
+ATL.PE.axAlarm[1] := FALSE;
+ATL.PE.axHorn[1] := FALSE;
+
+// Maxima pression o temperatura
+ATL.PE.axAlarm[2] := MC._01_SEG.xMaxPresTemp;
+ATL.PE.axHorn[2] := MC._01_SEG.xMaxPresTemp;
+
+// Maquina en Manual
+ATL.PE.axAlarm[3] := Atl.PE.xMan;
+ATL.PE.axHorn[3] := FALSE;
+
+// Maquina Abierta
+ATL.PE.axAlarm[4] := mc._01_SEG.xMcOpen;
+ATL.PE.axHorn[4] := mc._01_SEG.xMcOpen;
+
+// Falta Consenso Bomba Circulacion
+ATL.PE.axAlarm[5] := _00_CIRC_PUMP.xAFaltaConsensoCP;
+ATL.PE.axHorn[5] := _00_CIRC_PUMP.xAFaltaConsensoCP;
+
+// Cubeta 1 No Ok
+ATL.PE.axAlarm[6] := FALSE;
+ATL.PE.axHorn[6] := FALSE;
+
+// Fin de Ciclo
+ATL.PE.axAlarm[7] := F_FIN_CICLO.xA_FIN_CICLO ;
+ATL.PE.axHorn[7] :=  F_FIN_CICLO.xA_FIN_CICLO ;
+
+//bOmba parada
+ATL.PE.axAlarm[8] := F_INTRO_TK2.xA_BombaParadaiNTRO OR
+					F_RECIRCULA_TK2.xA_Bomba_Parada OR
+					F_LAVADO_CONT.xA_Bomba_Parada OR
+					F_TERMOREG.xABombaCircParada;
+ATL.PE.axHorn[8] := F_INTRO_TK2.xA_BombaParadaiNTRO OR
+					F_RECIRCULA_TK2.xA_Bomba_Parada OR
+					F_LAVADO_CONT.xA_Bomba_Parada OR
+					F_TERMOREG.xABombaCircParada;
+
+//Faltaconenso B. Intro
+ATL.PE.axAlarm[9] := FALSE;
+ATL.PE.axHorn[9] := FALSE;
+
+
+//Intro Atrasada
+ATL.PE.axAlarm[10] := F_INTRO_TK2.xA_IntroTooSlow;
+ATL.PE.axHorn[10] := F_INTRO_TK2.xA_IntroTooSlow;
+
+//MAQUINA NO VACIA
+ATL.PE.axAlarm[11] := FALSE;
+ATL.PE.axHorn[11] := FALSE;
+
+//TRANSFERENCIA EN ESPERA
+ATL.PE.axAlarm[12] := FALSE;
+ATL.PE.axHorn[12] := FALSE;
+
+//RUTINA CUBETA ACTIVA
+ATL.PE.axAlarm[13] := FALSE;
+ATL.PE.axHorn[13] := FALSE;
+
+// Cubetas en Manual
+ATL.PE.axAlarm[14] := FALSE;
+ATL.PE.axHorn[14] := FALSE;
+
+//NIVEL MAX CUBETA 1
+ATL.PE.axAlarm[15] := MC._10_TK1.xLvl_max OR
+					MC._11_TK2.xLvl_max;
+ATL.PE.axHorn[15] :=  MC._10_TK1.xLvl_max OR
+					MC._11_TK2.xLvl_max;
+
+
+// Temperatura Bloqueo Valvulas
+ATL.PE.axAlarm[16] :=	F_VACIADO.xA_TempBloqValves OR
+						F_LLENADO.xA_TempBloqValves OR
+						F_RECIRCULA_TK2.xA_TempBloqValves OR
+						F_INTRO_TK2.xA_TempBloqValves OR
+						F_LAVADO_CONT.xA_TempBloqValves
+						;
+ATL.PE.axHorn[16] := 	F_VACIADO.xA_TempBloqValves OR
+						F_LLENADO.xA_TempBloqValves OR
+						F_RECIRCULA_TK2.xA_TempBloqValves OR
+						F_INTRO_TK2.xA_TempBloqValves OR
+						F_LAVADO_CONT.xA_TempBloqValves
+						;
+
+//teMPERATURA MAYOR 5 GRADOS
+ATL.PE.axAlarm[17] := Mc._02_TEMP.xMaxDifTemp;
+ATL.PE.axHorn[17] := Mc._02_TEMP.xMaxDifTemp;
+
+//cOCINA EN MANUAL
+ATL.PE.axAlarm[18] := FALSE;
+ATL.PE.axHorn[18] := FALSE;
+
+
+// Fallo Cuenta Litros
+ATL.PE.axAlarm[19] := F_LLENADO.xA_FlowMeterFailure;
+ATL.PE.axHorn[19] := F_LLENADO.xA_FlowMeterFailure;
+
+// Fallo PT-100
+ATL.PE.axAlarm[20] := Mc._02_TEMP.xPT100Failure;
+ATL.PE.axHorn[20] := Mc._02_TEMP.xPT100Failure;
+
+
+// Control PH
+ATL.PE.axAlarm[21] := F_CONTROL_PH.xA_CONTROL_PH;
+ATL.PE.axHorn[21] :=  F_CONTROL_PH.xA_CONTROL_PH;
+
+//Maxima diferencia de temperatura
+ATL.PE.axAlarm[22] := FALSE;
+ATL.PE.axHorn[22] := FALSE;
+
+
+// Aviso
+ATL.PE.axAlarm[23] := F_AVISO.xA_AVISO;
+ATL.PE.axHorn[23] :=  F_AVISO.xA_AVISO;
+
+//fIN FUNCION MANUAL
+ATL.PE.axAlarm[24] := FALSE;
+ATL.PE.axHorn[24] := FALSE;
+
+
+//TANQUE 1 NO OK
+ATL.PE.axAlarm[25] :=FALSE;
+ATL.PE.axHorn[25] := FALSE; 
+
+
+//TANQUE 2 NO OK
+ATL.PE.axAlarm[26] := F_RECIRCULA_TK2.xA_TNQ_NO_OK;
+ATL.PE.axHorn[26] := F_RECIRCULA_TK2.xA_TNQ_NO_OK;
+
+
+//TERMICO MOTORES
+ATL.PE.axAlarm[27] := MC._00_GENERAL.p411_FailPump.xPul;
+ATL.PE.axHorn[27] :=  MC._00_GENERAL.p411_FailPump.xPul;
+
+//CORDA 1 PARADA
+ATL.PE.axAlarm[28] := FALSE;
+ATL.PE.axHorn[28] := FALSE;
+
+//CORDA 2 PARADA
+ATL.PE.axAlarm[29] := FALSE;
+ATL.PE.axHorn[29] := FALSE;
+
+//CORDA 3 PARADA
+ATL.PE.axAlarm[30] := FALSE;
+ATL.PE.axHorn[30] := FALSE;
+
+//CORDA 4 PARADA
+ATL.PE.axAlarm[31] := FALSE;
+ATL.PE.axHorn[31] := FALSE;
+
+// MUESTRA
+ATL.PE.axAlarm[32] :=  F_MUESTRA.xA_MUESTRA;
+ATL.PE.axHorn[32] :=  F_MUESTRA.xA_MUESTRA;
+
+//NIVEL MAX CUBETA 1
+ATL.PE.axAlarm[33] := FALSE;
+ATL.PE.axHorn[33] := FALSE;
+
+//NIVEL MAX CUBETA 2
+ATL.PE.axAlarm[34] := MC._11_TK2.xLvl_max;
+ATL.PE.axHorn[34] := MC._11_TK2.xLvl_max;
+
+//FALLO NIVELES
+ATL.PE.axAlarm[35] := FALSE;
+ATL.PE.axHorn[35] := FALSE;
+
+//DOS AUTO ON CUB1
+ATL.PE.axAlarm[36] := 	FALSE;
+ATL.PE.axHorn[36] := FALSE;
+
+//DOS AUTO ON CUB2
+ATL.PE.axAlarm[37] := FALSE;
+ATL.PE.axHorn[37] := FALSE;
+
+//ESPERA DOS AUTO C1
+ATL.PE.axAlarm[38] := FALSE;
+ATL.PE.axHorn[38] := FALSE;
+
+//ESPERA DOS AUTO C2
+ATL.PE.axAlarm[39] := FALSE;
+ATL.PE.axHorn[39] := FALSE;
+
+//RECIRCULACION CUB 1
+ATL.PE.axAlarm[40] := FALSE;
+ATL.PE.axHorn[40] := FALSE;
+
+//LIBRE
+ATL.PE.axAlarm[41] := FALSE;
+ATL.PE.axHorn[41] := FALSE;
+
+//tEMP BLOQ VALV EN INTRO
+ATL.PE.axAlarm[42] := F_INTRO_TK2.xA_TempBloqValves;
+ATL.PE.axHorn[42] := F_INTRO_TK2.xA_TempBloqValves;
+
+//
+// DESCARGA
+ATL.PE.axAlarm[43] := F_DESCARGA.xA_DESCARGA;
+ATL.PE.axHorn[43] := F_DESCARGA.xA_DESCARGA;
+
+// CARGA
+ATL.PE.axAlarm[44] := FALSE;
+ATL.PE.axHorn[44] := FALSE;
+
+//PREAVISO CUBETA 1
+ATL.PE.axAlarm[45] := FALSE;
+ATL.PE.axHorn[45] := FALSE;
+
+//PREAVISO CUBETA 2
+ATL.PE.axAlarm[46] := F_PREP_TK2.xA_PrepareTK2;
+ATL.PE.axHorn[46] := F_PREP_TK2.xA_PrepareTK2; 
+
+//ENRREDO TORNIQUETE 1
+ATL.PE.axAlarm[47] := FALSE;
+ATL.PE.axHorn[47] := FALSE;
+
+//ENRREDO TORNIQUETE 2
+ATL.PE.axAlarm[48] := FALSE;
+ATL.PE.axHorn[48] := FALSE;
+
+//ENRREDO TORNIQUETE 3
+ATL.PE.axAlarm[49] := FALSE;
+ATL.PE.axHorn[49] := FALSE;
+
+//ENRREDO TORNIQUETE 4
+ATL.PE.axAlarm[50] := FALSE;
+ATL.PE.axHorn[50] := FALSE;
+
+//FALTA PREPARACION C1 ¿?
+ATL.PE.axAlarm[51] := FALSE;
+ATL.PE.axHorn[51] := FALSE;
+
+//FALTA PREPARACION COCINA
+ATL.PE.axAlarm[52] := FALSE;
+ATL.PE.axHorn[52] := FALSE;
+
+//TIEMPO MAXIMO CUERDA 1
+ATL.PE.axAlarm[53] := FALSE;
+ATL.PE.axHorn[53] := FALSE;
+
+//TIEMPO MAXIMO CUERDA 2
+ATL.PE.axAlarm[54] := FALSE;
+ATL.PE.axHorn[54] := FALSE;
+
+//TIEMPO MAXIMO CUERDA 3
+ATL.PE.axAlarm[55] := FALSE;
+ATL.PE.axHorn[55] := FALSE;
+
+//TIEMPO MAXIMO CUERDA 4
+ATL.PE.axAlarm[56] := FALSE;
+ATL.PE.axHorn[56] := FALSE;
+
+//MAXIMO TIEMPO LLENADO
+ATL.PE.axAlarm[57] := F_LLENADO.xAlarmMaxFillTime;
+ATL.PE.axHorn[57] := F_LLENADO.xAlarmMaxFillTime;
+
+//MAXIMO TIEMPO VACIADO
+ATL.PE.axAlarm[58] := F_VACIADO.xA_TempoMaximoVaciado;
+ATL.PE.axHorn[58] := F_VACIADO.xA_TempoMaximoVaciado;
+
+//
+ATL.PE.axAlarm[59] := FALSE;
+ATL.PE.axHorn[59] := FALSE;
+
+//
+ATL.PE.axAlarm[60] := FALSE;
+ATL.PE.axHorn[60] := FALSE;
+
+//
+ATL.PE.axAlarm[61] := FALSE;
+ATL.PE.axHorn[61] := FALSE;
+
+//
+ATL.PE.axAlarm[62] := FALSE;
+ATL.PE.axHorn[62] := FALSE;
+
+//
+ATL.PE.axAlarm[63] := FALSE;
+ATL.PE.axHorn[63] := FALSE;
+
+//
+ATL.PE.axAlarm[64] := FALSE;
+ATL.PE.axHorn[64] := FALSE;
+
+//
+ATL.PE.axAlarm[65] := FALSE;
+ATL.PE.axHorn[65] := FALSE;
+
+//
+ATL.PE.axAlarm[66] := FALSE;
+ATL.PE.axHorn[66] := FALSE;
+
+//
+ATL.PE.axAlarm[67] := FALSE;
+ATL.PE.axHorn[67] := FALSE;
+ATL.PE.axAlarm[68] := FALSE;
+ATL.PE.axHorn[68] := FALSE;
+ATL.PE.axAlarm[69] := FALSE;
+ATL.PE.axHorn[69] := FALSE;
+ATL.PE.axAlarm[70] := FALSE;
+ATL.PE.axHorn[70] := FALSE;
+ATL.PE.axAlarm[71] := FALSE;
+ATL.PE.axHorn[71] := FALSE;
+ATL.PE.axAlarm[72] := FALSE;
+ATL.PE.axHorn[72] := FALSE;
+ATL.PE.axAlarm[73] := FALSE;
+ATL.PE.axHorn[73] := FALSE;
+ATL.PE.axAlarm[74] := FALSE;
+ATL.PE.axHorn[74] := FALSE;
+ATL.PE.axAlarm[75] := FALSE;
+ATL.PE.axHorn[75] := FALSE;
+ATL.PE.axAlarm[76] := FALSE;
+ATL.PE.axHorn[76] := FALSE;
+ATL.PE.axAlarm[77] := FALSE;
+ATL.PE.axHorn[77] := FALSE;
+ATL.PE.axAlarm[78] := FALSE;
+ATL.PE.axHorn[78] := FALSE;
+ATL.PE.axAlarm[79] := FALSE;
+ATL.PE.axHorn[79] := FALSE;
+ATL.PE.axAlarm[80] := FALSE;
+ATL.PE.axHorn[80] := FALSE;
+ATL.PE.axAlarm[81] := FALSE;
+ATL.PE.axHorn[81] := FALSE;
+ATL.PE.axAlarm[82] := FALSE;
+ATL.PE.axHorn[82] := FALSE;
+ATL.PE.axAlarm[83] := FALSE;
+ATL.PE.axHorn[83] := FALSE;
+ATL.PE.axAlarm[84] := FALSE;
+ATL.PE.axHorn[84] := FALSE;
+ATL.PE.axAlarm[85] := FALSE;
+ATL.PE.axHorn[85] := FALSE;
+ATL.PE.axAlarm[86] := FALSE;
+ATL.PE.axHorn[86] := FALSE;
+ATL.PE.axAlarm[87] := FALSE;
+ATL.PE.axHorn[87] := FALSE;
+ATL.PE.axAlarm[88] := FALSE;
+ATL.PE.axHorn[88] := FALSE;
+ATL.PE.axAlarm[89] := FALSE;
+ATL.PE.axHorn[89] := FALSE;
+ATL.PE.axAlarm[90] := FALSE;
+ATL.PE.axHorn[90] := FALSE;
+ATL.PE.axAlarm[91] := FALSE;
+ATL.PE.axHorn[91] := FALSE;
+ATL.PE.axAlarm[92] := FALSE;
+ATL.PE.axHorn[92] := FALSE;
+ATL.PE.axAlarm[93] := FALSE;
+ATL.PE.axHorn[93] := FALSE;
+ATL.PE.axAlarm[94] := FALSE;
+ATL.PE.axHorn[94] := FALSE;
+ATL.PE.axAlarm[95] := FALSE;
+ATL.PE.axHorn[95] := FALSE;
+ATL.PE.axAlarm[96] := FALSE;
+ATL.PE.axHorn[96] := FALSE;
+ATL.PE.axAlarm[97] := FALSE;
+ATL.PE.axHorn[97] := FALSE;
+ATL.PE.axAlarm[98] := FALSE;
+ATL.PE.axHorn[98] := FALSE;
+ATL.PE.axAlarm[99] := FALSE;
+ATL.PE.axHorn[99] := FALSE;
+ATL.PE.axAlarm[100] := FALSE;
+ATL.PE.axHorn[100] := FALSE;
+ATL.PE.axAlarm[101] := FALSE;
+ATL.PE.axHorn[101] := FALSE;
+ATL.PE.axAlarm[102] := FALSE;
+ATL.PE.axHorn[102] := FALSE;
+ATL.PE.axAlarm[103] := FALSE;
+ATL.PE.axHorn[103] := FALSE;
+ATL.PE.axAlarm[104] := FALSE;
+ATL.PE.axHorn[104] := FALSE;
+ATL.PE.axAlarm[105] := FALSE;
+ATL.PE.axHorn[105] := FALSE;
+ATL.PE.axAlarm[106] := FALSE;
+ATL.PE.axHorn[106] := FALSE;
+ATL.PE.axAlarm[107] := FALSE;
+ATL.PE.axHorn[107] := FALSE;
+ATL.PE.axAlarm[108] := FALSE;
+ATL.PE.axHorn[108] := FALSE;
+ATL.PE.axAlarm[109] := FALSE;
+ATL.PE.axHorn[109] := FALSE;
+ATL.PE.axAlarm[110] := FALSE;
+ATL.PE.axHorn[110] := FALSE;
+ATL.PE.axAlarm[111] := FALSE;
+ATL.PE.axHorn[111] := FALSE;
+ATL.PE.axAlarm[112] := FALSE;
+ATL.PE.axHorn[112] := FALSE;
+ATL.PE.axAlarm[113] := FALSE;
+ATL.PE.axHorn[113] := FALSE;
+ATL.PE.axAlarm[114] := FALSE;
+ATL.PE.axHorn[114] := FALSE;
+ATL.PE.axAlarm[115] := FALSE;
+ATL.PE.axHorn[115] := FALSE;
+ATL.PE.axAlarm[116] := FALSE;
+ATL.PE.axHorn[116] := FALSE;
+ATL.PE.axAlarm[117] := FALSE;
+ATL.PE.axHorn[117] := FALSE;
+ATL.PE.axAlarm[118] := FALSE;
+ATL.PE.axHorn[118] := FALSE;
+ATL.PE.axAlarm[119] := FALSE;
+ATL.PE.axHorn[119] := FALSE;
+ATL.PE.axAlarm[120] := FALSE;
+ATL.PE.axHorn[120] := FALSE;
+ATL.PE.axAlarm[121] := FALSE;
+ATL.PE.axHorn[121] := FALSE;
+ATL.PE.axAlarm[122] := FALSE;
+ATL.PE.axHorn[122] := FALSE;
+ATL.PE.axAlarm[123] := FALSE;
+ATL.PE.axHorn[123] := FALSE;
+ATL.PE.axAlarm[124] := FALSE;
+ATL.PE.axHorn[124] := FALSE;
+ATL.PE.axAlarm[125] := FALSE;
+ATL.PE.axHorn[125] := FALSE;
+ATL.PE.axAlarm[126] := FALSE;
+ATL.PE.axHorn[126] := FALSE;
+ATL.PE.axAlarm[127] := FALSE;
+ATL.PE.axHorn[127] := FALSE;
+ATL.PE.axAlarm[128] := FALSE;
+ATL.PE.axHorn[128] := FALSE;
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="_00_Mainte_Time" Id="{cad2256b-16b7-43b8-b7d6-ebb919c998cd}">
+      <Implementation>
+        <ST><![CDATA[(* Indicacions Generals Atlantis *)
+A:= A+1;
+
+// Cargar in out
+
+FOR n:=1 TO 128 DO
+IN[n]:=hard.Beck[1].DIN[n];
+OUT[n]:=hard.Beck[1].DOUT[n];
+END_FOR
+
+
+// Tempo Mantenimient Atlantis (segundos)
+
+
+IF 
+	//Cargar en lavado continuo	
+	
+	F_LAVADO_CONT.xActv THEN 
+	Atl.PE.wTMaint:= DWORD_TO_WORD(F_LAVADO_CONT.wTMan);
+	
+	//ELSIF
+	// Recirculacion Cubeta 1
+	//F_RECIRCULA_TK1.Recirculacion1.xActvFunc THEN
+	//ATL.PE.wTMaint:= F_RECIRCULA_TK1.Recirculacion1.wET_FiFunc;
+	
+	ELSIF
+	// Recirculacion Cubeta 2
+	F_RECIRCULA_TK2.xActv THEN
+	ATL.PE.wTMaint:= F_RECIRCULA_TK2.wT_FiFunc;
+	
+	ELSIF 
+	// Espera	
+	F_ESPERA.xActv  THEN
+	ATL.PE.wTMaint := DWORD_TO_WORD(F_ESPERA.dwTimeLeft);
+	//Cargar en termo
+	ELSIF
+		F_TERMOREG.xActv THEN 
+		Atl.PE.wTMaint:= DINT_TO_WORD(F_TERMOREG.dwTempsMsnt);
+	
+
+	// Si no hay funcion Ativa
+	ELSE
+	ATL.PE.wTMaint := 0;
+	
+	
+END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="_00_ZF" Id="{8c43b820-7c46-4fe5-9d98-b7946c393dd9}">
+      <Implementation>
+        <ST><![CDATA[(* Indicacions Tipo Real Atlantis *)
+
+ZF[1] := 0;
+ZF[2] := 0;
+ZF[3] := 0;
+ZF[4] := 0;
+ZF[5] := 0;
+ZF[6] := 0;
+ZF[7] := 0;
+ZF[8] := 0;
+ZF[9] := 0;
+ZF[10] := Mc._04_FILL.rLitMc;
+ZF[11] := 0;
+ZF[12] := 0;
+ZF[13] := 0;
+ZF[14] := 0;
+ZF[15] := mc._08_CIRC.rSP_SpeedPumpC;
+ZF[16] := 0;
+ZF[17] := 0;
+ZF[18] := 0;
+ZF[19] := 0;
+ZF[20] := F_LAVADO_CONT.rLitAct;
+ZF[21] := 0;
+ZF[22] := 0;
+ZF[23] := 0;
+ZF[24] := 0;
+ZF[25] := 0;
+ZF[26] := 0;
+ZF[27] := 0;
+ZF[28] := 0;
+ZF[29] := 0;
+ZF[30] := 0;
+ZF[31] := 0;
+ZF[32] := 0;
+ZF[33] := 0;
+ZF[34] := 0;
+ZF[35] := 0;
+ZF[36] := 0;
+ZF[37] := 0;
+ZF[38] := 0;
+ZF[39] := 0;
+ZF[40] := 0;
+ZF[41] := 0;
+ZF[42] := 0;
+ZF[43] := 0;
+ZF[44] := 0;
+ZF[45] := 0;
+ZF[46] := 0;
+ZF[47] := 0;
+ZF[48] := 0;
+ZF[49] := 0;
+ZF[50] := 0;
+ZF[51] := 0;
+ZF[52] := 0;
+ZF[53] := 0;
+ZF[54] := 0;
+ZF[55] := 0;
+ZF[56] := 0;
+ZF[57] := 0;
+ZF[58] := 0;
+ZF[59] := 0;
+ZF[60] := Mc._02_TEMP.v060_Aper.rValue ;
+ZF[61] := 0;
+ZF[62] := 0;
+ZF[63] := 0;
+ZF[64] := 0;
+ZF[65] := Mc._02_TEMP.rTempImp;
+ZF[66] := Mc._02_TEMP.rMacTemperature ;
+ZF[67] := 0;
+ZF[68] := 0;
+ZF[69] := 0;
+ZF[70] := 0;
+ZF[71] := 0;
+ZF[72] := 0;
+ZF[73] := 0;
+ZF[74] := 0;
+ZF[75] := 0;
+ZF[76] := 0;
+ZF[77] := 0;
+ZF[78] := 0;
+ZF[79] := 0;
+ZF[80] := 0;
+ZF[81] := 0;
+ZF[82] := 0;
+ZF[83] := 0;
+ZF[84] := 0;
+ZF[85] := 0;
+ZF[86] := 0;
+ZF[87] := 0;
+ZF[88] := 0;
+ZF[89] := 0;
+ZF[90] := 0;
+ZF[91] := 0;
+ZF[92] := 0;
+ZF[93] := 0;
+ZF[94] := 0;
+ZF[95] := 0;
+ZF[96] := 0;
+ZF[97] := 0;
+ZF[98] := 0;
+ZF[99] := 0;
+ZF[100] := 0;
+ZF[101] := 0;
+ZF[102] := 0;
+ZF[103] := 0;
+ZF[104] := 0;
+ZF[105] := 0;
+ZF[106] := 0;
+ZF[107] := 0;
+ZF[108] := 0;
+ZF[109] := 0;
+ZF[110] := 0;
+ZF[111] := 0;
+ZF[112] := 0;
+ZF[113] := 0;
+ZF[114] := mc._11_TK2.s213_Level.rValue;
+ZF[115] := 0;
+ZF[116] := 0;
+ZF[117] := 0;
+ZF[118] := 0;
+ZF[119] := 0;
+ZF[120] := 0;
+ZF[121] := 0;
+ZF[122] := 0;
+ZF[123] := 0;
+ZF[124] := 0;
+ZF[125] := 0;
+ZF[126] := 0;
+ZF[127] := 0;
+ZF[128] := 0;
+ZF[129] := 0;
+ZF[130] := 0;
+ZF[131] := 0;
+ZF[132] := 0;
+ZF[133] := 0;
+ZF[134] := 0;
+ZF[135] := 0;
+ZF[136] := 0;
+ZF[137] := 0;
+ZF[138] := 0;
+ZF[139] := 0;
+ZF[140] := 0;
+ZF[141] := 0;
+ZF[142] := 0;
+ZF[143] := 0;
+ZF[144] := 0;
+ZF[145] := 0;
+ZF[146] := 0;
+ZF[147] := 0;
+ZF[148] := 0;
+ZF[149] := 0;
+ZF[150] := 0;
+ZF[151] := 0;
+ZF[152] := 0;
+ZF[153] := 0;
+ZF[154] := 0;
+ZF[155] := 0;
+ZF[156] := 0;
+ZF[157] := 0;
+ZF[158] := 0;
+ZF[159] := 0;
+ZF[160] := 0;
+ZF[161] := 0;
+ZF[162] := 0;
+ZF[163] := 0;
+ZF[164] := 0;
+ZF[165] := 0;
+ZF[166] := 0;
+ZF[167] := 0;
+ZF[168] := 0;
+ZF[169] := 0;
+ZF[170] := 0;
+ZF[171] := 0;
+ZF[172] := 0;
+ZF[173] := 0;
+ZF[174] := 0;
+ZF[175] := 0;
+ZF[176] := 0;
+ZF[177] := 0;
+ZF[178] := 0;
+ZF[179] := 0;
+ZF[180] := 0;
+ZF[181] := 0;
+ZF[182] := 0;
+ZF[183] := 0;
+ZF[184] := 0;
+ZF[185] := 0;
+ZF[186] := 0;
+ZF[187] := 0;
+ZF[188] := 0;
+ZF[189] := 0;
+ZF[190] := 0;
+ZF[191] := 0;
+ZF[192] := 0;
+ZF[193] := 0;
+ZF[194] := 0;
+ZF[195] := 0;
+ZF[196] := 0;
+ZF[197] := 0;
+ZF[198] := 0;
+ZF[199] := 0;
+ZF[200] := 0;
+ZF[201] := 0;
+ZF[202] := 0;
+ZF[203] := 0;
+ZF[204] := 0;
+ZF[205] := 0;
+ZF[206] := 0;
+ZF[207] := 0;
+ZF[208] := 0;
+ZF[209] := 0;
+ZF[210] := 0;
+ZF[211] := 0;
+ZF[212] := 0;
+ZF[213] := 0;
+ZF[214] := 0;
+ZF[215] := 0;
+ZF[216] := 0;
+ZF[217] := 0;
+ZF[218] := 0;
+ZF[219] := 0;
+ZF[220] := 0;
+ZF[221] := 0;
+ZF[222] := 0;
+ZF[223] := 0;
+ZF[224] := 0;
+ZF[225] := 0;
+ZF[226] := 0;
+ZF[227] := 0;
+ZF[228] := 0;
+ZF[229] := 0;
+ZF[230] := 0;
+ZF[231] := 0;
+ZF[232] := 0;
+ZF[233] := 0;
+ZF[234] := 0;
+ZF[235] := 0;
+ZF[236] := 0;
+ZF[237] := 0;
+ZF[238] := 0;
+ZF[239] := 0;
+ZF[240] := 0;
+ZF[241] := 0;
+ZF[242] := 0;
+ZF[243] := 0;
+ZF[244] := 0;
+ZF[245] := 0;
+ZF[246] := 0;
+ZF[247] := 0;
+ZF[248] := 0;
+ZF[249] := 0;
+ZF[250] := 0;
+ZF[251] := 0;
+ZF[252] := 0;
+ZF[253] := 0;
+ZF[254] := 0;
+ZF[255] := 0;
+ZF[256] := 0;
+ZF[257] := 0;
+ZF[258] := 0;
+ZF[259] := 0;
+ZF[260] := 0;
+ZF[261] := 0;
+ZF[262] := 0;
+ZF[263] := 0;
+ZF[264] := 0;
+ZF[265] := 0;
+ZF[266] := 0;
+ZF[267] := 0;
+ZF[268] := 0;
+ZF[269] := 0;
+ZF[270] := 0;
+ZF[271] := 0;
+ZF[272] := 0;
+ZF[273] := 0;
+ZF[274] := 0;
+ZF[275] := 0;
+ZF[276] := 0;
+ZF[277] := 0;
+ZF[278] := 0;
+ZF[279] := 0;
+ZF[280] := 0;
+ZF[281] := 0;
+ZF[282] := 0;
+ZF[283] := 0;
+ZF[284] := 0;
+ZF[285] := 0;
+ZF[286] := 0;
+ZF[287] := 0;
+ZF[288] := 0;
+ZF[289] := 0;
+ZF[290] := 0;
+ZF[291] := 0;
+ZF[292] := 0;
+ZF[293] := 0;
+ZF[294] := 0;
+ZF[295] := 0;
+ZF[296] := 0;
+ZF[297] := 0;
+ZF[298] := 0;
+ZF[299] := 0;
+ZF[300] := 0;
+ZF[301] := 0;
+ZF[302] := 0;
+ZF[303] := 0;
+ZF[304] := 0;
+ZF[305] := 0;
+ZF[306] := 0;
+ZF[307] := 0;
+ZF[308] := 0;
+ZF[309] := 0;
+ZF[310] := 0;
+ZF[311] := 0;
+ZF[312] := 0;
+ZF[313] := 0;
+ZF[314] := 0;
+ZF[315] := 0;
+ZF[316] := 0;
+ZF[317] := 0;
+ZF[318] := 0;
+ZF[319] := 0;
+ZF[320] := 0;
+ZF[321] := 0;
+ZF[322] := 0;
+ZF[323] := 0;
+ZF[324] := 0;
+ZF[325] := 0;
+ZF[326] := 0;
+ZF[327] := 0;
+ZF[328] := 0;
+ZF[329] := 0;
+ZF[330] := 0;
+ZF[331] := 0;
+ZF[332] := 0;
+ZF[333] := 0;
+ZF[334] := 0;
+ZF[335] := 0;
+ZF[336] := 0;
+ZF[337] := 0;
+ZF[338] := 0;
+ZF[339] := 0;
+ZF[340] := 0;
+ZF[341] := 0;
+ZF[342] := 0;
+ZF[343] := 0;
+ZF[344] := 0;
+ZF[345] := 0;
+ZF[346] := 0;
+ZF[347] := 0;
+ZF[348] := 0;
+ZF[349] := 0;
+ZF[350] := 0;
+ZF[351] := 0;
+ZF[352] := 0;
+ZF[353] := 0;
+ZF[354] := 0;
+ZF[355] := 0;
+ZF[356] := 0;
+ZF[357] := 0;
+ZF[358] := 0;
+ZF[359] := 0;
+ZF[360] := 0;
+ZF[361] := 0;
+ZF[362] := 0;
+ZF[363] := 0;
+ZF[364] := 0;
+ZF[365] := 0;
+ZF[366] := 0;
+ZF[367] := 0;
+ZF[368] := 0;
+ZF[369] := 0;
+ZF[370] := 0;
+ZF[371] := 0;
+ZF[372] := 0;
+ZF[373] := 0;
+ZF[374] := 0;
+ZF[375] := 0;
+ZF[376] := 0;
+ZF[377] := 0;
+ZF[378] := 0;
+ZF[379] := 0;
+ZF[380] := 0;
+ZF[381] := 0;
+ZF[382] := 0;
+ZF[383] := 0;
+ZF[384] := 0;
+ZF[385] := 0;
+ZF[386] := 0;
+ZF[387] := 0;
+ZF[388] := 0;
+ZF[389] := 0;
+ZF[390] := 0;
+ZF[391] := 0;
+ZF[392] := 0;
+ZF[393] := 0;
+ZF[394] := 0;
+ZF[395] := 0;
+ZF[396] := 0;
+ZF[397] := 0;
+ZF[398] := 0;
+ZF[399] := 0;
+ZF[400] := 0;
+ZF[401] := 0;
+ZF[402] := 0;
+ZF[403] := 0;
+ZF[404] := 0;
+ZF[405] := 0;
+ZF[406] := 0;
+ZF[407] := 0;
+ZF[408] := 0;
+ZF[409] := 0;
+ZF[410] := 0;
+ZF[411] := 0;
+ZF[412] := 0;
+ZF[413] := 0;
+ZF[414] := 0;
+ZF[415] := 0;
+ZF[416] := 0;
+ZF[417] := 0;
+ZF[418] := 0;
+ZF[419] := 0;
+ZF[420] := 0;
+ZF[421] := 0;
+ZF[422] := 0;
+ZF[423] := 0;
+ZF[424] := 0;
+ZF[425] := 0;
+ZF[426] := 0;
+ZF[427] := 0;
+ZF[428] := 0;
+ZF[429] := 0;
+ZF[430] := 0;
+ZF[431] := 0;
+ZF[432] := 0;
+ZF[433] := 0;
+ZF[434] := 0;
+ZF[435] := 0;
+ZF[436] := 0;
+ZF[437] := 0;
+ZF[438] := 0;
+ZF[439] := 0;
+ZF[440] := 0;
+ZF[441] := 0;
+ZF[442] := 0;
+ZF[443] := 0;
+ZF[444] := 0;
+ZF[445] := 0;
+ZF[446] := 0;
+ZF[447] := 0;
+ZF[448] := 0;
+ZF[449] := 0;
+ZF[450] := 0;
+ZF[451] := 0;
+ZF[452] := 0;
+ZF[453] := 0;
+ZF[454] := 0;
+ZF[455] := 0;
+ZF[456] := 0;
+ZF[457] := 0;
+ZF[458] := 0;
+ZF[459] := 0;
+ZF[460] := 0;
+ZF[461] := 0;
+ZF[462] := 0;
+ZF[463] := 0;
+ZF[464] := 0;
+ZF[465] := 0;
+ZF[466] := 0;
+ZF[467] := 0;
+ZF[468] := 0;
+ZF[469] := 0;
+ZF[470] := 0;
+ZF[471] := 0;
+ZF[472] := 0;
+ZF[473] := 0;
+ZF[474] := 0;
+ZF[475] := 0;
+ZF[476] := 0;
+ZF[477] := 0;
+ZF[478] := 0;
+ZF[479] := 0;
+ZF[480] := 0;
+ZF[481] := 0;
+ZF[482] := 0;
+ZF[483] := 0;
+ZF[484] := 0;
+ZF[485] := 0;
+ZF[486] := 0;
+ZF[487] := 0;
+ZF[488] := 0;
+ZF[489] := 0;
+ZF[490] := 0;
+ZF[491] := 0;
+ZF[492] := 0;
+ZF[493] := 0;
+ZF[494] := 0;
+ZF[495] := 0;
+ZF[496] := 0;
+ZF[497] := 0;
+ZF[498] := 0;
+ZF[499] := 0;
+ZF[500] := 0;
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="_00_ZW" Id="{a3c04b62-330b-4bdc-bbac-939b472f2674}">
+      <Implementation>
+        <ST><![CDATA[
+
+(* Indicacions Tipo Word Atlantis *)
+
+ZW[1] := ATL.PE.wTMaint;//Tiempo de Mantenimiento - Esta en el COM_PE
+ZW[2] := ATL.PE.wTBatch;//Tiempo de ciclo - Esta en el COM_PE 
+ZW[3] := ATL.PE.wTStep;	//Tiempo de paso - Esta en el COM_PE
+ZW[4] := 0;
+ZW[5] := 0;
+ZW[6] := 0;
+ZW[7] := 0;
+ZW[8] := 0;
+ZW[9] := 0;
+ZW[10] := //INT_TO_WORD(_00_winch.TimeActual[1]);
+ZW[11] := //INT_TO_WORD(_00_winch.TempsAnt1[1]);
+ZW[12] := //INT_TO_WORD(_00_winch.TimeActual[2]);
+ZW[13] := //INT_TO_WORD(_00_winch.TempsAnt1[2]);
+ZW[14] := 0;
+ZW[15] := 0;
+ZW[16] := 0;
+ZW[17] := 0;
+ZW[18] := 0;
+ZW[19] := 0;
+ZW[20] := 0;
+ZW[21] := 0;
+ZW[22] := 0;
+ZW[23] := 0;
+ZW[24] := 0;
+ZW[25] := 0;
+ZW[26] := 0;
+ZW[27] := 0;
+ZW[28] := 0;
+ZW[29] := 0;
+ZW[30] := 0;
+ZW[31] := 0;
+ZW[32] := 0;
+ZW[33] := 0;
+ZW[34] := 0;
+ZW[35] := 0;
+ZW[36] := 0;
+ZW[37] := 0;
+ZW[38] := 0;
+ZW[39] := 0;
+ZW[40] := 0;
+ZW[41] := 0;
+ZW[42] := 0;
+ZW[43] := 0;
+ZW[44] := 0;
+ZW[45] := 0;
+ZW[46] := 0;
+ZW[47] := 0;
+ZW[48] := 0;
+ZW[49] := 0;
+ZW[50] := 0;
+ZW[51] := 0;
+ZW[52] := 0;
+ZW[53] := 0;
+ZW[54] := 0;
+ZW[55] := 0;
+ZW[56] := 0;
+ZW[57] := 0;
+ZW[58] := 0;
+ZW[59] := 0;
+ZW[60] := 0;
+ZW[61] := 0;
+ZW[62] := 0;
+ZW[63] := 0;
+ZW[64] := 0;
+ZW[65] := 0;
+ZW[66] := 0;
+ZW[67] := 0;
+ZW[68] := 0;
+ZW[69] := 0;
+ZW[70] := 0;
+ZW[71] := 0;
+ZW[72] := 0;
+ZW[73] := 0;
+ZW[74] := 0;
+ZW[75] := 0;
+ZW[76] := 0;
+ZW[77] := 0;
+ZW[78] := 0;
+ZW[79] := 0;
+ZW[80] := 0;
+ZW[81] := 0;
+ZW[82] := 0;
+ZW[83] := 0;
+ZW[84] := 0;
+ZW[85] := 0;
+ZW[86] := 0;
+ZW[87] := 0;
+ZW[88] := 0;
+ZW[89] := 0;
+ZW[90] := 0;
+ZW[91] := 0;
+ZW[92] := 0;
+ZW[93] := 0;
+ZW[94] := 0;
+ZW[95] := 0;
+ZW[96] := 0;
+ZW[97] := 0;
+ZW[98] := 0;
+ZW[99] := 0;
+ZW[100] := 0;
+ZW[101] := 0;
+ZW[102] := 0;
+ZW[103] := 0;
+ZW[104] := 0;
+ZW[105] := 0;
+ZW[106] := 0;
+ZW[107] := 0;
+ZW[108] := 0;
+ZW[109] := 0;
+ZW[110] := 0;
+ZW[111] := 0;
+ZW[112] := 0;
+ZW[113] := 0;
+ZW[114] := 0;
+ZW[115] := 0;
+ZW[116] := 0;
+ZW[117] := 0;
+ZW[118] := 0;
+ZW[119] := 0;
+ZW[120] := 0;
+ZW[121] := 0;
+ZW[122] := 0;
+ZW[123] := 0;
+ZW[124] := 0;
+ZW[125] := 0;
+ZW[126] := 0;
+ZW[127] := 0;
+ZW[128] := 0;
+ZW[129] := 0;
+ZW[130] := 0;
+ZW[131] := 0;
+ZW[132] := 0;
+ZW[133] := 0;
+ZW[134] := 0;
+ZW[135] := 0;
+ZW[136] := 0;
+ZW[137] := 0;
+ZW[138] := 0;
+ZW[139] := 0;
+ZW[140] := 0;
+ZW[141] := 0;
+ZW[142] := 0;
+ZW[143] := 0;
+ZW[144] := 0;
+ZW[145] := 0;
+ZW[146] := 0;
+ZW[147] := 0;
+ZW[148] := 0;
+ZW[149] := 0;
+ZW[150] := 0;
+ZW[151] := 0;
+ZW[152] := 0;
+ZW[153] := 0;
+ZW[154] := 0;
+ZW[155] := 0;
+ZW[156] := 0;
+ZW[157] := 0;
+ZW[158] := 0;
+ZW[159] := 0;
+ZW[160] := 0;
+ZW[161] := 0;
+ZW[162] := 0;
+ZW[163] := 0;
+ZW[164] := 0;
+ZW[165] := 0;
+ZW[166] := 0;
+ZW[167] := 0;
+ZW[168] := 0;
+ZW[169] := 0;
+ZW[170] := 0;
+ZW[171] := 0;
+ZW[172] := 0;
+ZW[173] := 0;
+ZW[174] := 0;
+ZW[175] := 0;
+ZW[176] := 0;
+ZW[177] := 0;
+ZW[178] := 0;
+ZW[179] := 0;
+ZW[180] := 0;
+ZW[181] := 0;
+ZW[182] := 0;
+ZW[183] := 0;
+ZW[184] := 0;
+ZW[185] := 0;
+ZW[186] := 0;
+ZW[187] := 0;
+ZW[188] := 0;
+ZW[189] := 0;
+ZW[190] := 0;
+ZW[191] := 0;
+ZW[192] := 0;
+ZW[193] := 0;
+ZW[194] := 0;
+ZW[195] := 0;
+ZW[196] := 0;
+ZW[197] := 0;
+ZW[198] := 0;
+ZW[199] := 0;
+ZW[200] := 0;
+ZW[201] := 0;
+ZW[202] := 0;
+ZW[203] := 0;
+ZW[204] := 0;
+ZW[205] := 0;
+ZW[206] := 0;
+ZW[207] := 0;
+ZW[208] := 0;
+ZW[209] := 0;
+ZW[210] := 0;
+ZW[211] := 0;
+ZW[212] := 0;
+ZW[213] := 0;
+ZW[214] := 0;
+ZW[215] := 0;
+ZW[216] := 0;
+ZW[217] := 0;
+ZW[218] := 0;
+ZW[219] := 0;
+ZW[220] := 0;
+ZW[221] := 0;
+ZW[222] := 0;
+ZW[223] := 0;
+ZW[224] := 0;
+ZW[225] := 0;
+ZW[226] := 0;
+ZW[227] := 0;
+ZW[228] := 0;
+ZW[229] := 0;
+ZW[230] := 0;
+ZW[231] := 0;
+ZW[232] := 0;
+ZW[233] := 0;
+ZW[234] := 0;
+ZW[235] := 0;
+ZW[236] := 0;
+ZW[237] := 0;
+ZW[238] := 0;
+ZW[239] := 0;
+ZW[240] := 0;
+ZW[241] := 0;
+ZW[242] := 0;
+ZW[243] := 0;
+ZW[244] := 0;
+ZW[245] := 0;
+ZW[246] := 0;
+ZW[247] := 0;
+ZW[248] := 0;
+ZW[249] := 0;
+ZW[250] := 0;
+ZW[251] := 0;
+ZW[252] := 0;
+ZW[253] := 0;
+ZW[254] := 0;
+ZW[255] := 0;
+ZW[256] := 0;
+ZW[257] := 0;
+ZW[258] := 0;
+ZW[259] := 0;
+ZW[260] := 0;
+ZW[261] := 0;
+ZW[262] := 0;
+ZW[263] := 0;
+ZW[264] := 0;
+ZW[265] := 0;
+ZW[266] := 0;
+ZW[267] := 0;
+ZW[268] := 0;
+ZW[269] := 0;
+ZW[270] := 0;
+ZW[271] := 0;
+ZW[272] := 0;
+ZW[273] := 0;
+ZW[274] := 0;
+ZW[275] := 0;
+ZW[276] := 0;
+ZW[277] := 0;
+ZW[278] := 0;
+ZW[279] := 0;
+ZW[280] := 0;
+ZW[281] := 0;
+ZW[282] := 0;
+ZW[283] := 0;
+ZW[284] := 0;
+ZW[285] := 0;
+ZW[286] := 0;
+ZW[287] := 0;
+ZW[288] := 0;
+ZW[289] := 0;
+ZW[290] := 0;
+ZW[291] := 0;
+ZW[292] := 0;
+ZW[293] := 0;
+ZW[294] := 0;
+ZW[295] := 0;
+ZW[296] := 0;
+ZW[297] := 0;
+ZW[298] := 0;
+ZW[299] := 0;
+ZW[300] := 0;
+ZW[301] := 0;
+ZW[302] := 0;
+ZW[303] := 0;
+ZW[304] := 0;
+ZW[305] := 0;
+ZW[306] := 0;
+ZW[307] := 0;
+ZW[308] := 0;
+ZW[309] := 0;
+ZW[310] := 0;
+ZW[311] := 0;
+ZW[312] := 0;
+ZW[313] := 0;
+ZW[314] := 0;
+ZW[315] := 0;
+ZW[316] := 0;
+ZW[317] := 0;
+ZW[318] := 0;
+ZW[319] := 0;
+ZW[320] := 0;
+ZW[321] := 0;
+ZW[322] := 0;
+ZW[323] := 0;
+ZW[324] := 0;
+ZW[325] := 0;
+ZW[326] := 0;
+ZW[327] := 0;
+ZW[328] := 0;
+ZW[329] := 0;
+ZW[330] := 0;
+ZW[331] := 0;
+ZW[332] := 0;
+ZW[333] := 0;
+ZW[334] := 0;
+ZW[335] := 0;
+ZW[336] := 0;
+ZW[337] := 0;
+ZW[338] := 0;
+ZW[339] := 0;
+ZW[340] := 0;
+ZW[341] := 0;
+ZW[342] := 0;
+ZW[343] := 0;
+ZW[344] := 0;
+ZW[345] := 0;
+ZW[346] := 0;
+ZW[347] := 0;
+ZW[348] := 0;
+ZW[349] := 0;
+ZW[350] := 0;
+ZW[351] := 0;
+ZW[352] := 0;
+ZW[353] := 0;
+ZW[354] := 0;
+ZW[355] := 0;
+ZW[356] := 0;
+ZW[357] := 0;
+ZW[358] := 0;
+ZW[359] := 0;
+ZW[360] := 0;
+ZW[361] := 0;
+ZW[362] := 0;
+ZW[363] := 0;
+ZW[364] := 0;
+ZW[365] := 0;
+ZW[366] := 0;
+ZW[367] := 0;
+ZW[368] := 0;
+ZW[369] := 0;
+ZW[370] := 0;
+ZW[371] := 0;
+ZW[372] := 0;
+ZW[373] := 0;
+ZW[374] := 0;
+ZW[375] := 0;
+ZW[376] := 0;
+ZW[377] := 0;
+ZW[378] := 0;
+ZW[379] := 0;
+ZW[380] := 0;
+ZW[381] := 0;
+ZW[382] := 0;
+ZW[383] := 0;
+ZW[384] := 0;
+ZW[385] := 0;
+ZW[386] := 0;
+ZW[387] := 0;
+ZW[388] := 0;
+ZW[389] := 0;
+ZW[390] := 0;
+ZW[391] := 0;
+ZW[392] := 0;
+ZW[393] := 0;
+ZW[394] := 0;
+ZW[395] := 0;
+ZW[396] := 0;
+ZW[397] := 0;
+ZW[398] := 0;
+ZW[399] := 0;
+ZW[400] := 0;
+ZW[401] := 0;
+ZW[402] := 0;
+ZW[403] := 0;
+ZW[404] := 0;
+ZW[405] := 0;
+ZW[406] := 0;
+ZW[407] := 0;
+ZW[408] := 0;
+ZW[409] := 0;
+ZW[410] := 0;
+ZW[411] := 0;
+ZW[412] := 0;
+ZW[413] := 0;
+ZW[414] := 0;
+ZW[415] := 0;
+ZW[416] := 0;
+ZW[417] := 0;
+ZW[418] := 0;
+ZW[419] := 0;
+ZW[420] := 0;
+ZW[421] := 0;
+ZW[422] := 0;
+ZW[423] := 0;
+ZW[424] := 0;
+ZW[425] := 0;
+ZW[426] := 0;
+ZW[427] := 0;
+ZW[428] := 0;
+ZW[429] := 0;
+ZW[430] := 0;
+ZW[431] := 0;
+ZW[432] := 0;
+ZW[433] := 0;
+ZW[434] := 0;
+ZW[435] := 0;
+ZW[436] := 0;
+ZW[437] := 0;
+ZW[438] := 0;
+ZW[439] := 0;
+ZW[440] := 0;
+ZW[441] := 0;
+ZW[442] := 0;
+ZW[443] := 0;
+ZW[444] := 0;
+ZW[445] := 0;
+ZW[446] := 0;
+ZW[447] := 0;
+ZW[448] := 0;
+ZW[449] := 0;
+ZW[450] := 0;
+ZW[451] := 0;
+ZW[452] := 0;
+ZW[453] := 0;
+ZW[454] := 0;
+ZW[455] := 0;
+ZW[456] := 0;
+ZW[457] := 0;
+ZW[458] := 0;
+ZW[459] := 0;
+ZW[460] := 0;
+ZW[461] := 0;
+ZW[462] := 0;
+ZW[463] := 0;
+ZW[464] := 0;
+ZW[465] := 0;
+ZW[466] := 0;
+ZW[467] := 0;
+ZW[468] := 0;
+ZW[469] := 0;
+ZW[470] := 0;
+ZW[471] := 0;
+ZW[472] := 0;
+ZW[473] := 0;
+ZW[474] := 0;
+ZW[475] := 0;
+ZW[476] := 0;
+ZW[477] := 0;
+ZW[478] := 0;
+ZW[479] := 0;
+ZW[480] := 0;
+ZW[481] := 0;
+ZW[482] := 0;
+ZW[483] := 0;
+ZW[484] := 0;
+ZW[485] := 0;
+ZW[486] := 0;
+ZW[487] := 0;
+ZW[488] := 0;
+ZW[489] := 0;
+ZW[490] := 0;
+ZW[491] := 0;
+ZW[492] := 0;
+ZW[493] := 0;
+ZW[494] := 0;
+ZW[495] := 0;
+ZW[496] := 0;
+ZW[497] := 0;
+ZW[498] := 0;
+ZW[499] := 0;
+ZW[500] := 0;
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="_00_ZX" Id="{ab2e9a24-ae30-45da-ade4-89f1f80b85d8}">
+      <Implementation>
+        <ST><![CDATA[(* Indicacions Tipo Bool Atlantis *)
+
+ZX[1] := FALSE;
+ZX[2] := FALSE;
+ZX[3] := FALSE;
+ZX[4] := FALSE;
+ZX[5] := FALSE;
+ZX[6] := FALSE;
+ZX[7] := FALSE;
+ZX[8] := FALSE;
+ZX[9] := FALSE;
+ZX[10] := FALSE;
+ZX[11] := FALSE;
+ZX[12] := FALSE;
+ZX[13] := Mc._05_DRAIN.s018_LvlHT.xPul;
+ZX[14] := Mc._04_FILL.v001_Cool.xOpen;
+ZX[15] := MC._05_DRAIN.v015_Grv.xOpen;
+ZX[16] := FALSE;
+ZX[17] := FALSE;
+ZX[18] := FALSE;
+ZX[19] := FALSE;
+ZX[20] := FALSE;
+ZX[21] := FALSE;
+ZX[22] := FALSE;
+ZX[23] := FALSE;
+ZX[24] := Mc._04_FILL.v002_Hot.xOpen;
+ZX[25] := Mc._04_FILL.v003_Hard.xOpen;
+ZX[26] := FALSE;
+ZX[27] := Mc._07_OVERFLOW.v025_Valv.xOpen;
+ZX[28] := Mc._07_OVERFLOW.v004_WaterInlet.xOpen;
+ZX[29] := FALSE;
+ZX[30] := FALSE;
+ZX[31] := Mc._06_LEVEL.s031_Min.xPul;
+ZX[32] := FALSE;
+ZX[33] := Mc._06_LEVEL.s034_L3.xPul;
+ZX[34] := FALSE;
+ZX[35] := Mc._06_LEVEL.s035_L2.xPul;
+ZX[36] := Mc._06_LEVEL.s036_L1.xPul;
+ZX[38] := FALSE;
+ZX[39] := FALSE;
+ZX[40] := FALSE;
+ZX[41] := FALSE;
+ZX[42] := FALSE;
+ZX[43] := FALSE;
+ZX[44] := MC._08_CIRC.v044_Spray.xOpen;
+ZX[45] := Mc._09_CPUMP.b450_CircPump.XRun;
+ZX[46] := FALSE;
+ZX[47] := FALSE;
+ZX[48] := FALSE;
+ZX[49] := FALSE;
+ZX[50] := Mc._12_INTRO.v050_Fast.xOpen;
+ZX[51] := FALSE;
+ZX[52] := FALSE;
+ZX[53] := FALSE;
+ZX[54] := FALSE;
+ZX[55] := FALSE;
+ZX[56] := FALSE;
+ZX[57] := FALSE;
+ZX[58] := FALSE;
+ZX[59] := FALSE;
+ZX[60] := FALSE;
+ZX[61] := Mc._02_TEMP.v061_Steam.xOpen;
+ZX[62] := Mc._02_TEMP.v062_Cool.xOpen;
+ZX[63] := Mc._02_TEMP.v068_Purge.xOpen;
+ZX[64] := Mc._02_TEMP.v064_RecW.xOpen;
+ZX[65] := FALSE;
+ZX[66] := FALSE;
+ZX[67] := FALSE;
+ZX[68] := Mc._02_TEMP.v063_RetCon.xOpen;
+ZX[69] := FALSE;
+ZX[70] := Mc._03_PRESS.v070_Vent.xOpen;
+ZX[71] := Mc._03_PRESS.v071_Load.xOpen;
+ZX[72] := FALSE;
+ZX[73] := FALSE;
+ZX[74] := FALSE;
+ZX[75] := FALSE;
+ZX[76] := FALSE;
+ZX[77] := FALSE;
+ZX[78] := FALSE;
+ZX[79] := FALSE;
+ZX[80] := FALSE;
+ZX[81] := FALSE;
+ZX[82] := FALSE;
+ZX[83] := FALSE;
+ZX[84] := FALSE;
+ZX[85] := FALSE;
+ZX[86] := FALSE;
+ZX[87] := FALSE;
+ZX[88] := FALSE;
+ZX[89] := FALSE;
+ZX[90] := FALSE;
+ZX[91] := FALSE;
+ZX[92] := FALSE;
+ZX[93] := FALSE;
+ZX[94] := FALSE;
+ZX[95] := FALSE;
+ZX[96] := FALSE;
+ZX[97] := FALSE;
+ZX[98] := FALSE;
+ZX[99] := FALSE;
+ZX[100] := FALSE;
+ZX[101] := Mc._10_TK1.v101_Fill.xOpen;// Ev. Agua Limpia TK1
+ZX[102] := Mc._10_TK1.v102_RetMc.xOpen;// Ev. Retorno Maq -> TK1
+ZX[103] := Mc._10_TK1.v103_IntercTK.xOpen;// Ev. Intercepta TK1
+ZX[104] := mc._10_TK1.b104_Intro.xOK;// Bomba Cubeta 1
+ZX[105] := FALSE;// Ev. Vaciado con Bomba TK1
+ZX[106] := Mc._10_TK1.v106_Drain_grav.xOpen;// Ev. Vaciado Gravidad TK1
+ZX[107] := Mc._10_TK1.v107_Warm.xOpen;// Ev. Vapor TK1
+ZX[108] := FALSE;// Agitador TK1
+ZX[109] := Mc._10_TK1.v109_Mixer.xOpen;// Ev. Mixador TK1
+ZX[110] := FALSE;// Ev. Intercepta Intro TK1
+ZX[111] := FALSE;// Ev. Llenar TK1
+ZX[112] := FALSE;// Ev. Intro TK1 -> TK2
+ZX[113] := FALSE;// RESERVA
+ZX[114] := FALSE;// RESERVA
+ZX[115] := FALSE;// Salida Nivel 1 Cubeta 1
+ZX[116] := FALSE;// Salida Nivel 2 Cubeta 1
+ZX[117] := FALSE;
+ZX[118] := FALSE;
+ZX[119] := FALSE;
+ZX[120] := FALSE;
+ZX[121] := MC._11_TK2.v201_Fill.xOpen;// Ev. Agua Limpia TK2
+ZX[122] := MC._11_TK2.v202_RetMc.xOpen;// Ev. Retorno Maq -> TK2
+ZX[123] := Mc._11_TK2.v203_IntercTK.xOpen;// Ev. Intercepta TK2;
+ZX[124] := MC._11_TK2.b204_Intro.XRun;//Bomba Cubeta 2
+ZX[125] := Mc._11_TK2.v205_Drain_Pump.xOpen;// Ev. Vaciado por bomba TK2
+ZX[126] := MC._11_TK2.v206_Drain_grav.xOpen;// Ev. Vaciado Gravidad TK2
+ZX[127] := FALSE;// Ev. Vapor TK2
+ZX[128] := FALSE;
+ZX[129] := FALSE;// Ev. Mixador TK2
+ZX[130] := FALSE;
+ZX[131] := FALSE;
+ZX[132] := FALSE;
+ZX[133] := FALSE;
+ZX[134] := FALSE;
+ZX[135] := FALSE;
+ZX[136] := FALSE;
+ZX[137] := mc._11_TK2.xLvl_1;
+ZX[138] := mc._11_TK2.xLvl_2;
+ZX[139] := mc._11_TK2.xLvl_3;
+ZX[140] := mc._11_TK2.xLvl_min;
+ZX[141] := FALSE;
+ZX[142] := FALSE;
+ZX[143] := FALSE;
+ZX[144] := FALSE;
+ZX[145] := FALSE;
+ZX[146] := FALSE;
+ZX[147] := FALSE;
+ZX[148] := FALSE;
+ZX[149] := FALSE;
+ZX[150] := FALSE;
+ZX[151] := FALSE;
+ZX[152] := FALSE;
+ZX[153] := FALSE;
+ZX[154] := FALSE;
+ZX[155] := FALSE;
+ZX[156] := FALSE;
+ZX[157] := FALSE;
+ZX[158] := FALSE;
+ZX[159] := FALSE;
+ZX[160] := FALSE;
+ZX[161] := FALSE;
+ZX[162] := FALSE;
+ZX[163] := FALSE;
+ZX[164] := FALSE;
+ZX[165] := FALSE;
+ZX[166] := FALSE;
+ZX[167] := FALSE;
+ZX[168] := FALSE;
+ZX[169] := FALSE;
+ZX[170] := FALSE;
+ZX[171] := FALSE;
+ZX[172] := FALSE;
+ZX[173] := FALSE;
+ZX[174] := FALSE;
+ZX[175] := FALSE;
+ZX[176] := FALSE;
+ZX[177] := FALSE;
+ZX[178] := FALSE;
+ZX[179] := FALSE;
+ZX[180] := FALSE;
+ZX[181] := FALSE;
+ZX[182] := FALSE;
+ZX[183] := FALSE;
+ZX[184] := FALSE;
+ZX[185] := FALSE;
+ZX[186] := FALSE;
+ZX[187] := FALSE;
+ZX[188] := FALSE;
+ZX[189] := FALSE;
+ZX[190] := FALSE;
+ZX[191] := FALSE;
+ZX[192] := FALSE;
+ZX[193] := FALSE;
+ZX[194] := FALSE;
+ZX[195] := FALSE;
+ZX[196] := FALSE;
+ZX[197] := FALSE;
+ZX[198] := FALSE;
+ZX[199] := FALSE;
+ZX[200] := FALSE;
+ZX[201] := FALSE;
+ZX[202] := FALSE;
+ZX[203] := FALSE;
+ZX[204] := FALSE;
+ZX[205] := FALSE;
+ZX[206] := FALSE;
+ZX[207] := FALSE;
+ZX[208] := FALSE;
+ZX[209] := FALSE;
+ZX[210] := FALSE;
+ZX[211] := FALSE;
+ZX[212] := FALSE;
+ZX[213] := FALSE;
+ZX[214] := FALSE;
+ZX[215] := FALSE;
+ZX[216] := FALSE;
+ZX[217] := FALSE;
+ZX[218] := FALSE;
+ZX[219] := FALSE;
+ZX[220] := FALSE;
+ZX[221] := FALSE;
+ZX[222] := FALSE;
+ZX[223] := FALSE;
+ZX[224] := FALSE;
+ZX[225] := FALSE;
+ZX[226] := FALSE;
+ZX[227] := FALSE;
+ZX[228] := FALSE;
+ZX[229] := FALSE;
+ZX[230] := FALSE;
+ZX[231] := FALSE;
+ZX[232] := FALSE;
+ZX[233] := FALSE;
+ZX[234] := FALSE;
+ZX[235] := FALSE;
+ZX[236] := FALSE;
+ZX[237] := FALSE;
+ZX[238] := FALSE;
+ZX[239] := FALSE;
+ZX[240] := FALSE;
+ZX[241] := FALSE;
+ZX[242] := FALSE;
+ZX[243] := FALSE;
+ZX[244] := FALSE;
+ZX[245] := FALSE;
+ZX[246] := FALSE;
+ZX[247] := FALSE;
+ZX[248] := FALSE;
+ZX[249] := FALSE;
+ZX[250] := FALSE;
+ZX[251] := FALSE;
+ZX[252] := FALSE;
+ZX[253] := FALSE;
+ZX[254] := FALSE;
+ZX[255] := FALSE;
+ZX[256] := FALSE;
+ZX[257] := FALSE;
+ZX[258] := FALSE;
+ZX[259] := FALSE;
+ZX[260] := FALSE;
+ZX[261] := FALSE;
+ZX[262] := FALSE;
+ZX[263] := FALSE;
+ZX[264] := FALSE;
+ZX[265] := FALSE;
+ZX[266] := FALSE;
+ZX[267] := FALSE;
+ZX[268] := FALSE;
+ZX[269] := FALSE;
+ZX[270] := FALSE;
+ZX[271] := FALSE;
+ZX[272] := FALSE;
+ZX[273] := FALSE;
+ZX[274] := FALSE;
+ZX[275] := FALSE;
+ZX[276] := FALSE;
+ZX[277] := FALSE;
+ZX[278] := FALSE;
+ZX[279] := FALSE;
+ZX[280] := FALSE;
+ZX[281] := FALSE;
+ZX[282] := FALSE;
+ZX[283] := FALSE;
+ZX[284] := FALSE;
+ZX[285] := FALSE;
+ZX[286] := FALSE;
+ZX[287] := FALSE;
+ZX[288] := FALSE;
+ZX[289] := FALSE;
+ZX[290] := FALSE;
+ZX[291] := FALSE;
+ZX[292] := FALSE;
+ZX[293] := FALSE;
+ZX[294] := FALSE;
+ZX[295] := FALSE;
+ZX[296] := FALSE;
+ZX[297] := FALSE;
+ZX[298] := FALSE;
+ZX[299] := FALSE;
+ZX[300] := FALSE;
+ZX[301] := FALSE;
+ZX[302] := FALSE;
+ZX[303] := FALSE;
+ZX[304] := FALSE;
+ZX[305] := FALSE;
+ZX[306] := FALSE;
+ZX[307] := FALSE;
+ZX[308] := FALSE;
+ZX[309] := FALSE;
+ZX[310] := FALSE;
+ZX[311] := FALSE;
+ZX[312] := FALSE;
+ZX[313] := FALSE;
+ZX[314] := FALSE;
+ZX[315] := FALSE;
+ZX[316] := FALSE;
+ZX[317] := FALSE;
+ZX[318] := FALSE;
+ZX[319] := FALSE;
+ZX[320] := FALSE;
+ZX[321] := FALSE;
+ZX[322] := FALSE;
+ZX[323] := FALSE;
+ZX[324] := FALSE;
+ZX[325] := FALSE;
+ZX[326] := FALSE;
+ZX[327] := FALSE;
+ZX[328] := FALSE;
+ZX[329] := FALSE;
+ZX[330] := FALSE;
+ZX[331] := FALSE;
+ZX[332] := FALSE;
+ZX[333] := FALSE;
+ZX[334] := FALSE;
+ZX[335] := FALSE;
+ZX[336] := FALSE;
+ZX[337] := FALSE;
+ZX[338] := FALSE;
+ZX[339] := FALSE;
+ZX[340] := FALSE;
+ZX[341] := FALSE;
+ZX[342] := FALSE;
+ZX[343] := FALSE;
+ZX[344] := FALSE;
+ZX[345] := FALSE;
+ZX[346] := FALSE;
+ZX[347] := FALSE;
+ZX[348] := FALSE;
+ZX[349] := FALSE;
+ZX[350] := FALSE;
+ZX[351] := FALSE;
+ZX[352] := FALSE;
+ZX[353] := FALSE;
+ZX[354] := FALSE;
+ZX[355] := FALSE;
+ZX[356] := FALSE;
+ZX[357] := FALSE;
+ZX[358] := FALSE;
+ZX[359] := FALSE;
+ZX[360] := FALSE;
+ZX[361] := FALSE;
+ZX[362] := FALSE;
+ZX[363] := FALSE;
+ZX[364] := FALSE;
+ZX[365] := FALSE;
+ZX[366] := FALSE;
+ZX[367] := FALSE;
+ZX[368] := FALSE;
+ZX[369] := FALSE;
+ZX[370] := FALSE;
+ZX[371] := FALSE;
+ZX[372] := FALSE;
+ZX[373] := FALSE;
+ZX[374] := FALSE;
+ZX[375] := FALSE;
+ZX[376] := FALSE;
+ZX[377] := FALSE;
+ZX[378] := FALSE;
+ZX[379] := FALSE;
+ZX[380] := FALSE;
+ZX[381] := FALSE;
+ZX[382] := FALSE;
+ZX[383] := FALSE;
+ZX[384] := FALSE;
+ZX[385] := FALSE;
+ZX[386] := FALSE;
+ZX[387] := FALSE;
+ZX[388] := FALSE;
+ZX[389] := FALSE;
+ZX[390] := FALSE;
+ZX[391] := FALSE;
+ZX[392] := FALSE;
+ZX[393] := FALSE;
+ZX[394] := FALSE;
+ZX[395] := FALSE;
+ZX[396] := FALSE;
+ZX[397] := FALSE;
+ZX[398] := FALSE;
+ZX[399] := FALSE;
+ZX[400] := FALSE;
+ZX[401] := FALSE;
+ZX[402] := FALSE;
+ZX[403] := FALSE;
+ZX[404] := FALSE;
+ZX[405] := FALSE;
+ZX[406] := FALSE;
+ZX[407] := FALSE;
+ZX[408] := FALSE;
+ZX[409] := FALSE;
+ZX[410] := FALSE;
+ZX[411] := FALSE;
+ZX[412] := FALSE;
+ZX[413] := FALSE;
+ZX[414] := FALSE;
+ZX[415] := FALSE;
+ZX[416] := FALSE;
+ZX[417] := FALSE;
+ZX[418] := FALSE;
+ZX[419] := FALSE;
+ZX[420] := FALSE;
+ZX[421] := FALSE;
+ZX[422] := FALSE;
+ZX[423] := FALSE;
+ZX[424] := FALSE;
+ZX[425] := FALSE;
+ZX[426] := FALSE;
+ZX[427] := FALSE;
+ZX[428] := FALSE;
+ZX[429] := FALSE;
+ZX[430] := FALSE;
+ZX[431] := FALSE;
+ZX[432] := FALSE;
+ZX[433] := FALSE;
+ZX[434] := FALSE;
+ZX[435] := FALSE;
+ZX[436] := FALSE;
+ZX[437] := FALSE;
+ZX[438] := FALSE;
+ZX[439] := FALSE;
+ZX[440] := FALSE;
+ZX[441] := FALSE;
+ZX[442] := FALSE;
+ZX[443] := FALSE;
+ZX[444] := FALSE;
+ZX[445] := FALSE;
+ZX[446] := FALSE;
+ZX[447] := FALSE;
+ZX[448] := FALSE;
+ZX[449] := FALSE;
+ZX[450] := FALSE;
+ZX[451] := FALSE;
+ZX[452] := FALSE;
+ZX[453] := FALSE;
+ZX[454] := FALSE;
+ZX[455] := FALSE;
+ZX[456] := FALSE;
+ZX[457] := FALSE;
+ZX[458] := FALSE;
+ZX[459] := FALSE;
+ZX[460] := FALSE;
+ZX[461] := FALSE;
+ZX[462] := FALSE;
+ZX[463] := FALSE;
+ZX[464] := FALSE;
+ZX[465] := FALSE;
+ZX[466] := FALSE;
+ZX[467] := FALSE;
+ZX[468] := FALSE;
+ZX[469] := FALSE;
+ZX[470] := FALSE;
+ZX[471] := FALSE;
+ZX[472] := FALSE;
+ZX[473] := FALSE;
+ZX[474] := FALSE;
+ZX[475] := FALSE;
+ZX[476] := FALSE;
+ZX[477] := FALSE;
+ZX[478] := FALSE;
+ZX[479] := FALSE;
+ZX[480] := FALSE;
+ZX[481] := FALSE;
+ZX[482] := FALSE;
+ZX[483] := FALSE;
+ZX[484] := FALSE;
+ZX[485] := FALSE;
+ZX[486] := FALSE;
+ZX[487] := FALSE;
+ZX[488] := FALSE;
+ZX[489] := FALSE;
+ZX[490] := FALSE;
+ZX[491] := FALSE;
+ZX[492] := FALSE;
+ZX[493] := FALSE;
+ZX[494] := FALSE;
+ZX[495] := FALSE;
+ZX[496] := FALSE;
+ZX[497] := FALSE;
+ZX[498] := FALSE;
+ZX[499] := FALSE;
+ZX[500] := FALSE;
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="pFuctions">
+      <LineId Id="3" Count="0" />
+      <LineId Id="484" Count="4" />
+      <LineId Id="911" Count="0" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="696" Count="0" />
+      <LineId Id="828" Count="1" />
+      <LineId Id="990" Count="0" />
+      <LineId Id="827" Count="0" />
+      <LineId Id="678" Count="0" />
+      <LineId Id="677" Count="0" />
+      <LineId Id="698" Count="2" />
+      <LineId Id="697" Count="0" />
+      <LineId Id="718" Count="3" />
+      <LineId Id="717" Count="0" />
+      <LineId Id="985" Count="3" />
+      <LineId Id="984" Count="0" />
+      <LineId Id="992" Count="3" />
+      <LineId Id="991" Count="0" />
+      <LineId Id="711" Count="0" />
+      <LineId Id="713" Count="2" />
+      <LineId Id="712" Count="0" />
+      <LineId Id="880" Count="3" />
+      <LineId Id="879" Count="0" />
+      <LineId Id="742" Count="3" />
+      <LineId Id="741" Count="0" />
+      <LineId Id="710" Count="0" />
+      <LineId Id="679" Count="1" />
+      <LineId Id="682" Count="0" />
+      <LineId Id="681" Count="0" />
+      <LineId Id="730" Count="3" />
+      <LineId Id="729" Count="0" />
+      <LineId Id="848" Count="0" />
+      <LineId Id="851" Count="2" />
+      <LineId Id="849" Count="0" />
+      <LineId Id="736" Count="3" />
+      <LineId Id="735" Count="0" />
+      <LineId Id="905" Count="3" />
+      <LineId Id="904" Count="0" />
+      <LineId Id="913" Count="3" />
+      <LineId Id="912" Count="0" />
+      <LineId Id="919" Count="3" />
+      <LineId Id="918" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="674" Count="2" />
+      <LineId Id="402" Count="0" />
+      <LineId Id="948" Count="3" />
+      <LineId Id="947" Count="0" />
+      <LineId Id="954" Count="3" />
+      <LineId Id="953" Count="0" />
+      <LineId Id="806" Count="3" />
+      <LineId Id="805" Count="0" />
+      <LineId Id="785" Count="3" />
+      <LineId Id="784" Count="0" />
+      <LineId Id="856" Count="3" />
+      <LineId Id="855" Count="0" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="759" Count="2" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="765" Count="3" />
+      <LineId Id="764" Count="0" />
+      <LineId Id="239" Count="4" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="pFuctions._00_Alarms">
+      <LineId Id="2" Count="30" />
+      <LineId Id="428" Count="0" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="440" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="429" Count="0" />
+      <LineId Id="439" Count="0" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="36" Count="27" />
+      <LineId Id="430" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="431" Count="0" />
+      <LineId Id="65" Count="2" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="424" Count="0" />
+      <LineId Id="426" Count="0" />
+      <LineId Id="432" Count="0" />
+      <LineId Id="436" Count="0" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="425" Count="0" />
+      <LineId Id="427" Count="0" />
+      <LineId Id="434" Count="0" />
+      <LineId Id="437" Count="0" />
+      <LineId Id="435" Count="0" />
+      <LineId Id="82" Count="26" />
+      <LineId Id="110" Count="11" />
+      <LineId Id="123" Count="3" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="132" Count="39" />
+      <LineId Id="174" Count="249" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="pFuctions._00_Mainte_Time">
+      <LineId Id="2" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="4" Count="6" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="15" Count="2" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="20" Count="5" />
+      <LineId Id="29" Count="4" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="pFuctions._00_ZF">
+      <LineId Id="2" Count="502" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="pFuctions._00_ZW">
+      <LineId Id="505" Count="1" />
+      <LineId Id="2" Count="502" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="pFuctions._00_ZX">
+      <LineId Id="2" Count="37" />
+      <LineId Id="41" Count="462" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

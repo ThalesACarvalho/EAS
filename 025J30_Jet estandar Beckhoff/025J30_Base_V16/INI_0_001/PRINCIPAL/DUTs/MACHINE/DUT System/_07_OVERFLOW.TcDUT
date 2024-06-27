@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="_07_OVERFLOW" Id="{42ae0694-913a-4efa-b279-88c4e3069a9d}">
+    <Declaration><![CDATA[TYPE _07_OVERFLOW :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	v025_Valv: dutValve;
+	v026_intrHT: dutValve;
+	v027_VentHt: dutValve;
+	v028_DrainHT: dutValve;
+	v004_WaterInlet: dutValve;
+	///Litros de la barcada
+	rLit_Batch: REAL;
+	///Litros Actuales
+	rLit_Actual: REAL;
+	///+++++++++++++++++++++++++++++++++++++++
+	///CONFIG
+	///+++++++++++++++++++++++++++++++++++++++
+	iPFTimeFillAuxT: INT := 5;
+	iPFTimeCloseAuzT: INT := 5;
+	iPFTimeDepAuxT: INT := 5;
+	iPFTimeDrainAuxT: INT := 5;
+	iPFTimeCloseDrainAuxT: INT := 5;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

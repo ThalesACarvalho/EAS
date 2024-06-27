@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="z_DRAIN" Id="{d3bb7290-da44-4f84-8764-07165e0e713d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM z_DRAIN
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+(*v015 Ev. Vaciado Gravidad*)
+MC._05_DRAIN.v015_Grv.xOpen:= F_VACIADO.z_DrainValveGrv;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v016 Ev. Vaciado 2 Gravidad*)
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v017 Ev. Vaciado Con Bomba*)
+MC._05_DRAIN.v017_Pump.xOpen:= F_VACIADO.z_DrainValvePump;
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="z_DRAIN">
+      <LineId Id="3" Count="1" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="19" Count="3" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

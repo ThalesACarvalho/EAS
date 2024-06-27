@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="z_FILL" Id="{05b7e967-6f4f-4a41-b973-30add8500adf}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM z_FILL
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*-------------------------------------------------------------------------------------------------------*)
+(*v001  Llenado agua fria*)
+Mc._04_FILL.v001_Cool.xOpen:= F_LLENADO.z_xCWater OR
+							F_LAVADO_CONT.z_xAguaFria;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v002  Llenado agua Caliente*)
+Mc._04_FILL.v002_Hot.xOpen := F_LLENADO.z_xHWater OR 
+							F_LAVADO_CONT.z_xAguaCaliente;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v003  Hard Water Fill*)
+Mc._04_FILL.v003_Hard.xOpen:= F_LLENADO.z_xHWater OR
+							F_LAVADO_CONT.z_xAguaDura;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v005  Llenado Salmuera*)
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v006  Intercepta Llenado*)
+Mc._04_FILL.v006_InterMc.xOpen:= F_LLENADO.xFillInterceptValve;
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="z_FILL">
+      <LineId Id="3" Count="2" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="12" Count="2" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="30" Count="2" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

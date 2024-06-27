@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="fAO" Id="{1f9c34d4-49b7-46fa-bb12-9f9c42743003}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fAO
+VAR_INPUT
+	rAnalogUF: INT;
+	///Valor minino del sensor en UF
+	iPFSnsMinUF: INT:= 0;
+	///Valor maxino del sensor en UF
+	iPFSnsMaxUF: INT:= 32767;
+	iPF_Ana_min: INT := 0;
+	iPF_Ana_max: INT := 100;
+END_VAR
+VAR_OUTPUT
+	rValor: REAL;
+	rAnaUF: REAL;
+END_VAR
+VAR
+	rAna_min: REAL := 0;
+	rAna_max: REAL := 32767;
+	bCre: BOOL;
+	rSns_min: REAL;
+	rSns_max: REAL;
+	rReadAna: REAL;
+	rSns_min_UF: REAL;
+	rSns_max_UF: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+	
+	(*valores min y maximo de la analogica*)
+rAna_min:=((INT_TO_REAL(iPF_Ana_min)/100.0)*32767);
+rAna_max:=((INT_TO_REAL(iPF_Ana_max)/100.0)*32767);
+	
+	(*salidas porentual nivel*)
+rSns_min_UF:=INT_TO_REAL(iPFSnsMinUF);
+rSns_max_UF:=INT_TO_REAL(iPFSnsMaxUF);
+
+	(*Buscar valor de lectrua analogico*)
+rReadAna:=INT_TO_REAL (rAnalogUF);					
+
+	(*Carregar lectura percentual *)
+rValor:=Canvi_Escala(
+		In:= rReadAna, 
+		In_Min:= rAna_min, 
+		In_Max:= rAna_max, 
+		Out_Min:= 0, 
+		Out_Max:= 100);
+
+	(*Carregar lectura Analog UF*)
+rAnaUF:=Canvi_Escala(
+		In:= rReadAna, 
+		In_Min:= 0, 
+		In_Max:= 32767, 
+		Out_Min:= rSns_min, 
+		Out_Max:= rSns_max);
+	
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="fAO">
+      <LineId Id="3" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="30" Count="2" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="35" Count="6" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="42" Count="9" />
+      <LineId Id="91" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

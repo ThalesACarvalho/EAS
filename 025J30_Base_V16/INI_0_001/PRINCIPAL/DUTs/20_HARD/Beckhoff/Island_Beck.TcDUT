@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="Island_Beck" Id="{9e6faf4a-26de-4995-83e7-0106db39c6eb}">
+    <Declaration><![CDATA[TYPE Island_Beck :
+STRUCT
+DIN		:ARRAY[1..Max_DI_Beck] OF BOOL;
+DOUT	:ARRAY[1..Max_DO_Beck] OF BOOL;
+AIN		:ARRAY[1..Max_AI_Beck] OF INT;
+AOUT	:ARRAY[1..Max_AO_Beck] OF INT;
+CNT		:ARRAY[1..Max_CNT_Beck] OF UDINT;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

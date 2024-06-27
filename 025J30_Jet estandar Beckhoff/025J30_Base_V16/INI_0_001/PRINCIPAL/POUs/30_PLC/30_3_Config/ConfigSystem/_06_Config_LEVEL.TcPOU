@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_06_Config_LEVEL" Id="{3c0f7049-8da8-4403-8ab7-65f726084d23}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _06_Config_LEVEL
+VAR
+v038_FillTb :fValve;
+v039_DrainTb :fValve;
+	
+	PresenciaNivelAnalogMc: BOOL;
+	PresenciaNivelMinMc: BOOL;
+	PresenciaNivelMaxMc: BOOL;
+	PresenciaNivel_1_Mc: BOOL;
+	PresenciaNivel_2_Mc: BOOL;
+	PresenciaNivel_3_Mc: BOOL;
+	NivelAltoRecircPorAnalog: BOOL;
+	NivelBajoRecircPorAnalog: BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*------------------------------------------------------------------------------------------------------*)
+(*Configuracion nivel analogico*)
+
+Mc._06_LEVEL.s032_Perc.rAna_max := Mc._06_LEVEL.iPFAna_max;
+Mc._06_LEVEL.s032_Perc.rAna_min := Mc._06_LEVEL.iPFAna_min;
+
+(*Comprobar si hay presencia de nivel analogico *)
+PresenciaNivelAnalogMc:= TRUE;
+
+IF PresenciaNivelAnalogMc
+	THEN
+		Mc._06_LEVEL.rLevel		:=Mc._06_LEVEL.s032_Perc.iAnalog;   
+	ELSE
+		Mc._06_LEVEL.rLevel		:= 0;		
+END_IF
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*Nivel Minimo*)
+PresenciaNivelMinMc:= TRUE;
+
+IF PresenciaNivelMinMc
+	THEN
+		Mc._06_LEVEL.xLvl_min	:= Mc._06_LEVEL.s031_Min.xPul;
+	ELSIF (Mc._06_LEVEL.iPFLvl_min>0 AND NOT PresenciaNivelMinMc) THEN
+		Mc._06_LEVEL.xLvl_min	:= (Mc._06_LEVEL.rLevel)>(Mc._06_LEVEL.iPFLvl_min);
+	ELSE
+		Mc._06_LEVEL.xLvl_min	:=FALSE;
+END_IF 
+(*-------------------------------------------------------------------------------------------------------*)
+(*Nivel Maximo*)
+PresenciaNivelMaxMc:= TRUE;
+IF  PresenciaNivelMaxMc
+	THEN
+		Mc._06_LEVEL.xLvl_max	:= Mc._06_LEVEL.s033_max.xPul;
+	ELSIF (Mc._06_LEVEL.iPFLvl_max>0 AND NOT PresenciaNivelMaxMc) THEN
+		Mc._06_LEVEL.xLvl_max	:=(Mc._06_LEVEL.rLevel)>(Mc._06_LEVEL.iPFLvl_max);
+	ELSE
+		Mc._06_LEVEL.xLvl_max	:= FALSE;
+END_IF
+(*-------------------------------------------------------------------------------------------------------*)
+(*Nivel 1*)
+PresenciaNivel_1_Mc:= TRUE;
+IF PresenciaNivel_1_Mc
+	THEN
+		Mc._06_LEVEL.xLvl_1	:= Mc._06_LEVEL.s036_L1.xPul;
+	ELSIF (Mc._06_LEVEL.iPFLvl_1>0 AND NOT PresenciaNivel_1_Mc) THEN
+		Mc._06_LEVEL.xLvl_1	:=(Mc._06_LEVEL.rLevel)>(Mc._06_LEVEL.iPFLvl_1);
+	ELSE
+		Mc._06_LEVEL.xLvl_1	:= FALSE;
+END_IF
+(*-------------------------------------------------------------------------------------------------------*)
+(*Nivel 2*)
+PresenciaNivel_2_Mc:=TRUE;
+
+IF PresenciaNivel_2_Mc
+	THEN
+		Mc._06_LEVEL.xLvl_2	:= Mc._06_LEVEL.s035_L2.xPul;
+	ELSIF (Mc._06_LEVEL.iPFLvl_2>0 AND NOT PresenciaNivel_2_Mc) THEN
+		Mc._06_LEVEL.xLvl_2	:=(Mc._06_LEVEL.rLevel)>(Mc._06_LEVEL.iPFLvl_2);
+	ELSE
+		Mc._06_LEVEL.xLvl_2	:= FALSE;
+END_IF
+(*-------------------------------------------------------------------------------------------------------*)
+(*Nivel 3*)
+IF PresenciaNivel_3_Mc
+	THEN
+		Mc._06_LEVEL.xLvl_3	:= Mc._06_LEVEL.s034_L3.xPul;
+	ELSIF (Mc._06_LEVEL.iPFLvl_3>0 AND NOT PresenciaNivel_2_Mc) THEN
+		Mc._06_LEVEL.xLvl_3	:=(Mc._06_LEVEL.rLevel)>(Mc._06_LEVEL.iPFLvl_3);
+	ELSE
+		Mc._06_LEVEL.xLvl_3	:= FALSE;
+END_IF
+(*-------------------------------------------------------------------------------------------------------*)
+(*Nivel Alto Recirculación*)
+NivelAltoRecircPorAnalog:=TRUE;
+
+IF (Mc._06_LEVEL.iPFLvl_Wh>0 AND NivelAltoRecircPorAnalog) THEN
+		Mc._06_LEVEL.xLvl_Wh	:=(Mc._06_LEVEL.rLevel)>(Mc._06_LEVEL.iPFLvl_Wh);
+	ELSE
+		Mc._06_LEVEL.xLvl_Wh	:= Mc._06_LEVEL.xLvl_3;
+END_IF
+(*-------------------------------------------------------------------------------------------------------*)
+(*-------------------------------------------------------------------------------------------------------*)
+(*Nivel Bajo Recirculación*)
+NivelBajoRecircPorAnalog:=TRUE;
+
+IF (Mc._06_LEVEL.iPFLvl_Wl>0 AND NivelBajoRecircPorAnalog) THEN
+		Mc._06_LEVEL.xLvl_Wl	:=(Mc._06_LEVEL.rLevel)>(Mc._06_LEVEL.iPFLvl_Wl);
+	ELSE
+		Mc._06_LEVEL.xLvl_Wl	:= Mc._06_LEVEL.xLvl_1;
+END_IF
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*-------------------------------------------------------------------------------------------------------*)
+(*Fallo niveles*)
+Mc._06_LEVEL.xFailLvl:= NOT(Mc._06_LEVEL.xLvl_min) AND
+					(	Mc._06_LEVEL.xLvl_2 OR
+						Mc._06_LEVEL.xLvl_3 OR
+						Mc._06_LEVEL.xLvl_1 OR
+						Mc._06_LEVEL.xLvl_max 
+					);
+
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*Ev Llena Indicador Nivel*)]]></ST>
+    </Implementation>
+    <LineIds Name="_06_Config_LEVEL">
+      <LineId Id="20" Count="2" />
+      <LineId Id="24" Count="3" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="28" Count="9" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="38" Count="9" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="48" Count="9" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="58" Count="9" />
+      <LineId Id="131" Count="1" />
+      <LineId Id="68" Count="19" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="88" Count="9" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="98" Count="18" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_FIN_CICLO" Id="{42483825-9c47-42bd-9808-7018f31193ad}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_FIN_CICLO
+VAR_INPUT
+
+	Func:E_funcio;
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	xA_FIN_CICLO: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	
+(* 10 Fin de ciclo*)
+
+xActv:=func.Actv_Funcio;
+ATL.PE.xEndBatch := xActv; 
+
+(* Alarma Fin de Ciclo *)
+xA_FIN_CICLO := xActv  ;]]></ST>
+    </Implementation>
+    <LineIds Name="F_FIN_CICLO">
+      <LineId Id="3" Count="2" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="6" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

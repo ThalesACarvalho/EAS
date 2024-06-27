@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="_13_T_PREP" Id="{e4c8b447-4afd-47c6-9706-bc96632adf51}">
+    <Declaration><![CDATA[TYPE _13_T_PREP :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	v081_Fill: dutValve;
+	v082_IntercFill: dutValve;
+	v083_Warm: dutValve;
+	v084_Drain: dutValve;
+	v085_Stirrer: dutValve;
+	v086_Transf: dutValve;
+	v087_Pcirc: dutValve;
+	v088_Recu: dutValve;
+	v089_Mixer: dutValve;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

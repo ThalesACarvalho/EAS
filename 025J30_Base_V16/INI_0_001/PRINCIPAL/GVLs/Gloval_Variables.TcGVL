@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <GVL Name="Gloval_Variables" Id="{7096d63f-2b29-4de3-af01-87f076d02520}">
+    <Declaration><![CDATA[VAR_GLOBAL PERSISTENT
+
+
+(* Variable maquina Discontinua*)
+	AN   AT %MW0			: ARRAY[1..128] OF DWORD;	(* Analogicas *)	
+	IN   AT %MW256			: ARRAY[1..128] OF BOOL; 	(* Inputs *) 		
+	OUT  AT %MW320			: ARRAY[1..128] OF BOOL;	(* Outputs 	*)	
+	PF   AT %MW384			: ARRAY[1..300] OF WORD;	(* Valores Parametros Fijos	*)	 
+
+	XB07 AT %MW684			: DWORD;		(* Metros teoricos lote *)		
+	XB13 AT %MW686			: DWORD;		(* Metros teoricos lote *)		
+
+	
+ 	XC01 AT %MX1388.0		: BOOL; 		(* Pulsador Manual *)		
+	XC02 AT %MX1390.0		: BOOL; 		(* Pulsador Automatic *)	
+	XC03 AT %MX1392.0		: BOOL; 		(* Pulsador Reset *)		
+	
+	XC06 AT %MX1394.0		: BOOL; 		(* Pulsador Paro Alarma *)			
+	XC07 AT %MX1396.0		: BOOL; 		(* Pulsador Continua Programa *)	
+	
+	XC12 AT %MX1398.0		: BOOL;			(* Pulsador Ciclo Modificado *)			
+	XC13 AT %MX1400.0		: BOOL; 		(* Pulsador Fin Funcion *)				
+	XC14 AT %MX1402.0		: BOOL; 		(* Pulsador En Añadidas *)				
+	XC15 AT %MX1404.0		: BOOL; 		(* Pulsador Fin En Añadidas *)			
+	XC17 AT %MW712			: WORD;			(* NuevoPaso *)							
+	XC18 AT %MW714			: STRING[10];	(* Pantalla Actual *)					
+	XC19 AT %MX1440.0		: BOOL;			(* Inicio Lote *)						
+	XC20 AT %MW722			: STRING[10];	(* Barcada *)							
+	XC21 AT %MW728			: DWORD; 			(* Num. Tarea *)					
+	XC22 AT %MW730			: STRING[36]; 		(* Receta *)						
+	XC23 AT %MW750	 		: STRING[50]; 		(* Descripción Receta *)			
+	XC24 AT %MW776			: STRING[10];		(* Ciclo *)							
+	XC25 AT %MW782			: STRING[50]; 		(* Descripción Ciclo *)				
+	XC26 AT %MW808			: WORD;				(* Funcion Manual A Finalizar *)	
+	XC27 AT %MW810			: DWORD;			(* Kg teoricos Lote *)				
+	XC28 AT %MW812			: DWORD;			(* Metros teorico lote *)			
+	XC31 AT %MX1628.0		: BOOL;			(* Error Dosificacion 1*)				
+	XC32 AT %MX1630.0		: BOOL;			(* Error Dosificación 2 *)				
+	XC33 AT %MW818			: ARRAY [1..10] OF WORD;(* Funcion Manual *)			
+	XC42 AT %MW828			: WORD; 			(* Numero Paralelo *)
+	XC43 AT %MW830			: WORD; 			(* Estado Paralelo *)
+	XC44 AT %MW832			: STRING[8]; 		(* Codigo Maquina *)				
+	XC45 AT %MW838			: STRING[30]; 		(* Descripción Maquina *)			
+	XC46 AT %MW854			: WORD;				(* Idioma*)							
+	XC48 AT %MX1694.0		: BOOL:=FALSE;	(* Reenviar Parametros Fijos*)
+	XC49 AT %MX1698.0		: BOOL:=FALSE;	(* Leer Parametros Fijos del PLC*)
+	XC50 AT %MW852			: DWORD;			(* Absorcion*)
+	XC51 AT %MX1724.0		: BOOL;			(* Dosificacion 1 con Producto  Manual*)
+	XC52 AT %MX1726.0		: BOOL;			(* Dosificacion 2 con Producto Manual*)
+	XC53 AT %MW866			: WORD;				(* Paso Inicial Ejecucion*)
+	XC54 AT %MX1734.0		: BOOL;			(*Pulsado botón automático*)			
+		
+	(*  	Nova Dosificacio  =================*)
+	XC60 AT %MW869		: ARRAY [1..4] OF BOOL; 		(* Pedir Dosificacion*)		
+	XC61 AT %MW872		: ARRAY [1..4] OF WORD;			(* Numero Dosificacion *)	
+	XC62 AT %MW876		: ARRAY [1..4] OF WORD; 		(* Tipo Dosificacion 1=Man 2=Auto 3=Mixta*)	
+	XC63 AT %MW880		: ARRAY [1..4] OF BOOL;			(* OK Peticion Dosificacion*)			
+	XC64 AT %MW882		: ARRAY [1..4] OF BOOL;			(* OK  Dosificacion*)				
+	XC65 AT %MW884		: ARRAY [1..4] OF BOOL;			(* Dosificacion con Producto  Manual *)	
+	XC66 AT %MW886		: ARRAY [1..4] OF BOOL;			(* Error Dosificación *)	
+	XC67 AT %MW888		: ARRAY [1..4] OF DWORD; 		(* Volumen dosificat*)		
+	XC69 AT %MW896		: ARRAY [1..4] OF BOOL;			(* tANQUE LIBRE *)		
+
+	//XC72 AT %MW898		:  BOOL;						(* Barcada Multiflex *)		
+	XC75 AT %MW900		: ARRAY [1..3] OF STRING[10];	(* Alarma(Id,Maq,Bda) *)		
+	//XC78 AT %MW918		:  BOOL;						(* Volver a ejecutar última barcada *)		
+
+	XC80 AT %MW920		 : ARRAY [1..4] OF WORD; 			(* Prioridad*)		
+	XC81 AT %MW924		 : ARRAY [1..4] OF BOOL;			(* Solo Dissolver *)			
+	XC82 AT %MW926 		: ARRAY [1..4] OF BOOL;			(* Intro B a dissolver *)			
+	//XC83 AT %MW930		:  BOOL;						(* Fin Barcada*)		
+	
+	XC90 AT %MW932		:  REAL;						(* Volumen cubeta*)		
+	XC91 AT %MW934		:  REAL;						(* Pantalla Inicial*)		
+			
+	XF01 AT %MW940		: ARRAY[1..64] OF WORD;			(* Fórmula: Preparación *)
+	XF02 AT %MW1004		: ARRAY[1..64] OF STRING[20];	(* Fórmula: Código de producto *) 
+	XF03 AT %MW1708		: ARRAY[1..64] OF STRING[30];	(* Fórmula: Fórmula: Descripción producto *)
+	XF04 AT %MW2732		: ARRAY[1..64] OF REAL;			(* Fórmula: Cantidad *)
+
+	XI04 AT %MW2860		: ARRAY[1..99] OF WORD; 		(* Funciones Incompatibles *)
+	XI05 AT %MW2960		: ARRAY[1..64] OF BOOL; 			(* Funciones Background *)
+	XI06 AT %MW3010		: ARRAY[1..640] OF WORD;		(* Funciones FinFuncion *)		
+	XI07 AT %MW3650		: ARRAY[1..2816] OF WORD;		(* Ciclo *)
+	
+	XL01 AT %MX12932.0		: BOOL; 		(* Pedir dosificación A*)				
+	XL02 AT %MX12936.0		: BOOL; 		(* En Automatico *)						
+	XL03 AT %MX12942.0		: BOOL; 		(* Pedir dosificación B*)					
+	XL09 AT %MW6472			: WORD;		(* Numero Preparación A *)					
+	XL10 AT %MW6474			: WORD; 		(* Numero Preparación B *)				
+	XL11 AT %MW6476			: WORD; 		(* Paso Actual *)						
+	XL12 AT %MW6478			: DWORD; 		(* Metros *)							
+	XL13 AT %MW6480			: ARRAY[1..12] OF WORD;	(* Funciones Activas *)			
+	XL14 AT %MW6492			: DWORD;		(* Litros consumidos en una barcada *)	
+	XL15 AT %MW6494			: DWORD;		(* Vapor consumidos en una barcada   *)	
+	XL16 AT %MW6496			: DWORD;		(* Kw consumidos en una barcada   *)	
+	XL18 AT %MW6498			: ARRAY[1..128] OF BOOL;(* Alarmas Activas *)			
+	XL30 AT %MW6562			: STRING[16];	(* Nombre programa PLC *)				
+	XL31 AT %MW6572			: DWORD;		(* Scan PLC *)							
+	XL34 AT %MW6574			: STRING[10];		(* Barcada Activa PLC *)							
+	XL35 AT %MW6580			: WORD;			(* Estado Maquina *)							
+	XL37 AT %MW6582			: ARRAY[1..128] OF BOOL;	(* Desabilitar Funciones *)							
+	XL99 AT %MW6646			: ARRAY[1..30] OF DWORD;	(* Paralelo: Estat Local *)							
+		
+	XOC  AT %MW6706		: ARRAY[1..5] OF DWORD;	(* Codigo operario *)			
+	XOD  AT %MW6716		: ARRAY[1..5] OF STRING[30];(* Descripcion operario *)	
+	
+	ZX	AT %MW7064		: ARRAY[1..500] OF BOOL;	(* Variables Bool *)
+	ZW	AT %MW7314		: ARRAY[1..500] OF WORD;	(* Variables Word *)
+	ZF	AT %MW7814		: ARRAY[1..500] OF REAL;	(* Variables Real *)
+	
+	
+	idT AT %MW8814 : ARRAY [1..100] OF WORD;
+	idN AT %MW9314 : ARRAY [1..100] OF WORD;
+	idSn AT %MW9814: ARRAY [1..100] OF WORD;
+
+	aCONSUM 	AT %MW10314	: ARRAY [1..50] OF REAL;
+	PF_CONSUM	AT %MW10414 : ARRAY [1..15] OF WORD;
+
+
+
+		
+	
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

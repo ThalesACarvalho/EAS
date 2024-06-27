@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_00_CIRC_PUMP" Id="{0c0b98b4-5ddc-432d-8e89-790651cb3d14}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _00_CIRC_PUMP
+VAR
+	xCondRun: BOOL;
+	xCondStop: BOOL;
+	xStopPump: BOOL;
+	Marcha: fBPumpC;
+	SpeedPump: fBPumpSpeed;
+	pPulseSel: R_trig;
+	iFacVelPump: INT := 50;
+	A: INT;
+	TON_ConsensoCP: TON;
+	xAFaltaConsensoCP: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[a:=a+1;
+
+(*++++MARCHA+++PARO+++++*)
+pPulseSel(CLK:=Mc._09_CPUMP.p457_SelRun.xPul ,);
+(*Condiciones de marcha*)
+xCondRun:= 	F_LLENADO.xStartPump  OR   	(*LLenado*)
+			F_ESPERA.xActv OR
+			(*F_INTRO_TK1.INTROTK1.xActvFunc OR*)
+			F_INTRO_TK2.xActv OR
+			(*F_RECIRCULA_TK1.Recirculacion1.xActvFunc OR*)
+			pPulseSel.Q									//Al poner la barra en run
+			;
+(*Condiciones de paro*)
+xCondStop:= F_LLENADO.xStopPump  OR   	(*LLenado*)
+			F_VACIADO.xStopPump OR 		(*VACIADO*)
+			ATL.PE.xEndBatch  (*OR					(*Fin CICLO*)
+			Mc.WINCH.W[1].xSeamStops OR				(*Paro por costura 1*)
+			Mc.WINCH.W[2].xSeamStops OR					(*Fin CICLO*)
+			_00_Winch.TON_Enredo.Q*);  			// Enredo con retardo
+
+(*Activar Bomba*)
+Marcha(
+	fP_Run:= 	Mc._09_CPUMP.p451_P_Run.xPul, 
+	fP_Stop:= 	Mc._09_CPUMP.p452_P_Stop.xPul, 
+	xP_ContProg:= Mc._00_GENERAL.p403_ContProg.xPul , 
+	xLvlSeg:= 	Mc._06_LEVEL.xLvl_min  , 
+	xSeg:= 		TRUE, 
+	xConditionRun:= xCondRun , 
+	xConditionStop:= xCondStop , 
+	iAutoMan:= WORD_TO_INT(ATL.PE.wAutoMan), 
+	 );
+
+
+(*++++++  VELOCIDAD BOMBA  ++++++++*)
+
+ SpeedPump( 	
+	xRun:=			TRUE , 
+	xAutoMan:=		Mc._09_CPUMP.p453_P_AutoMan.xPul , 
+	xUP_Speed:=		Mc._09_CPUMP.p454_P_UpVel.xPul , 
+	xDOWN_Speed:= 	Mc._09_CPUMP.p455_P_DownVel.xPul ,
+	rSP_Function:=	Mc._08_CIRC.rSP_SpeedPumpC , 
+	iFACTOR:=		iFacVelPump ,
+	
+	); 
+	
+(**************ALARMAS*****************)
+//Falta Consenso CP
+TON_ConsensoCP(IN:= marcha.Run, PT:= T#5S, Q=> , ET=> );
+xAFaltaConsensoCP:=	TON_ConsensoCP.Q AND NOT mc._09_CPUMP.b450_CircPump.xInCons;
+]]></ST>
+    </Implementation>
+    <LineIds Name="_00_CIRC_PUMP">
+      <LineId Id="3" Count="7" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="11" Count="14" />
+      <LineId Id="27" Count="19" />
+      <LineId Id="81" Count="1" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

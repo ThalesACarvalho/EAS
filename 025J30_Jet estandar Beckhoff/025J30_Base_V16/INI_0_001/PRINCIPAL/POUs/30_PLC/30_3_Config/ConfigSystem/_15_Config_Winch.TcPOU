@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_15_Config_Winch" Id="{b7c3f523-5260-4b1f-8bfd-254cc7168739}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _15_Config_Winch
+VAR
+	n: INT;
+	tTangle: ARRAY[1..6] OF Ton;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*-------------------------------------------------------------------------------------------------------*)
+
+
+
+(*------REPETICION POR CADA TORNIQUETE-------------------------------------------------------------------------------------------------*)
+FOR n:=1 TO Mc._15_WINCH.iPFNumWinch DO
+	//Enredo
+	tTangle[n](	IN:= 	(*Mc.WINCH.W[n].s07_Tangle.idDI.T*)1>0 AND		//Existe la entrada de enredo
+						Mc._15_WINCH.W[n].s07_Tangle.xPul , 				//Deteccion de enredo
+				PT:=	T#200MS  
+				);
+	Mc._15_WINCH.W[n].xTangle := tTangle[n].Q;
+
+END_FOR
+
+
+
+
+(*-------REPETICION POR CADA CUERDA --------------------------------------------------------------------------------------------------*)
+]]></ST>
+    </Implementation>
+    <LineIds Name="_15_Config_Winch">
+      <LineId Id="3" Count="1" />
+      <LineId Id="38" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

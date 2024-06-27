@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="F_VACIADO_TK2" Id="{0bc2863e-b618-43a8-ab73-a7041559b1bc}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM F_VACIADO_TK2
+VAR_INPUT
+	Func:E_funcio;
+END_VAR
+VAR
+	///Activa
+	xActv: BOOL;
+	
+	z_xValVaciado: BOOL;
+	z_BombaVaciado: BOOL;
+	tBombaTk: Ton;
+	xFiFunc: BOOL;
+	xDrainTk: BOOL;
+	srActivaVaciado: SR;
+	xVaciar: bool;
+	tVacia: TMP_P;
+	tMarchaBomba: TON;
+	tFinF: TP;
+	D: TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*ACTIVA FUNCIÓN*)
+xActv:=func.Actv_Funcio;
+
+
+srActivaVaciado(SET1:=xActv AND NOT xFiFunc, RESET:= xFiFunc OR NOT xActv ,Q1=> );
+
+xVaciar := srActivaVaciado.Q1 AND NOT tVacia.XQ;
+
+tVacia(
+	xIN:= srActivaVaciado.Q1 AND NOT MC._11_TK2.xLvl_min, 
+	xPausa:= , 
+	dwSegons:= INT_TO_WORD(Mc._11_TK2.iPFDreno) , 
+	xQ=> , 
+	dwTsegons=> , 
+	rTsegons=> );
+
+tMarchaBomba(IN:= xVaciar, PT:= T#2S, Q=> , ET=> );	
+
+(* Ev Vaciado Cubeta *)
+xDrainTk := xVaciar;
+
+tFinF(IN:= tVacia.XQ, PT:=T#1S , Q=>xFiFunc , ET=> );
+
+IF xFiFunc THEN
+	xActv := FALSE;
+END_IF
+
+
+(* FINALIZAR LA FUNCION *)
+xFiFunc:= F_VACIADO_TK2.xFiFunc;
+
+(*ACTIVAR SALIDA*)
+
+z_xValVaciado:=xDrainTk;
+
+tBombaTk(IN:= z_xValVaciado, PT:=INT_TO_TIME(Mc._11_TK2.iPFRetarBomba*1000) );
+
+z_BombaVaciado:=tBombaTk.Q;
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_VACIADO_TK2">
+      <LineId Id="47" Count="0" />
+      <LineId Id="3" Count="1" />
+      <LineId Id="53" Count="4" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="94" Count="5" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="62" Count="3" />
+      <LineId Id="68" Count="3" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="15" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="UPS" Id="{18299bcd-2a75-4115-98e7-825d7c95bdf9}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM UPS
+VAR
+	run:BOOL;
+	
+	fb_UPS_CX8190: FB_S_UPS_CX81xx;
+	fb_UPS_CX9020: FB_S_UPS_CX9020_U900;
+	xCargadas: BOOL;
+	xUltimas: BOOL;
+	xBackup: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*==============================================================*)
+(*		GESTION REMANENTES PARA CPU CX8190 O CX9020 					*)
+(*==============================================================*)
+(*
+fb_UPS_CX8190(
+	sNetID:= , 
+	iPLCPort:=851 , 
+	tTimeout:= , 
+	eUpsMode:= , 
+	ePersistentMode:= , 
+	tRecoverTime:= , 
+	bPowerFailDetect=> , 
+	eState=> );*)
+	
+	fb_UPS_CX9020(
+	sNetID:= , 
+	iPLCPort:=851 , 
+	tTimeout:= , 
+	eUpsMode:= , 
+	ePersistentMode:= , 
+	tRecoverTime:= , 
+	bPowerFailDetect=> , 
+	eState=> );
+
+IF _AppInfo.BootDataLoaded THEN
+	xCargadas:=TRUE;
+	ELSE
+		xCargadas:=FALSE;
+END_IF
+
+IF _AppInfo.OldBootData THEN
+	xUltimas:=FALSE;
+	xBackup:=TRUE;
+	ELSIF _AppInfo.BootDataLoaded THEN
+		xUltimas:=TRUE; 
+		xBackup:=FALSE;
+END_IF
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="UPS">
+      <LineId Id="6" Count="37" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

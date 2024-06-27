@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <GVL Name="_PE" Id="{82cc4c82-2a76-4751-92b7-08ad0e41a9d0}">
+    <Declaration><![CDATA[VAR_GLOBAL PERSISTENT 
+	
+ATL:ATL;
+
+END_VAR
+
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

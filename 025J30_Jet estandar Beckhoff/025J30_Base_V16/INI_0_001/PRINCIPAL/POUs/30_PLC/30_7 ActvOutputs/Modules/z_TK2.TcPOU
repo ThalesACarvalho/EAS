@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="z_TK2" Id="{ee3ea86c-2052-4d5d-aa7d-5a0fcbfc6df5}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM z_TK2
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*-------------------------------------------------------------------------------------------------------*)
+(*p250  Pre Aviso Manual Cubeta 2*)
+Mc._11_TK2.p250_OKprod.xPil:= F_RECIRCULA_TK2.z_PreAviso OR
+							F_INTRO_TK2.xTankNoOk;
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*b204  Marcha Bomba TK 2*)
+Mc._11_TK2.b204_Intro.XRun:= F_Vaciado_TK2.z_BombaVaciado OR
+							F_INTRO_TK2.z_PumpTK OR
+							F_RECIRCULA_TK2.z_PumpTK;
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v205  Ev. Vaciado con Bomba TK 2*)
+Mc._11_TK2.v205_Drain_Pump.xOpen:= F_VACIADO_TK2.z_xValVaciado OR
+									F_INTRO_TK2.z_DrainTK OR
+									F_RECIRCULA_TK2.z_DrainTK;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v206  Ev. Vaciado por Gravedad TK 2*)
+Mc._11_TK2.v206_Drain_grav.xOpen:= FALSE;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v203  Ev. Intercepta TK 2*)
+Mc._11_TK2.v203_IntercTK.xOpen:= F_INTRO_TK2.z_IntercepTK OR
+								F_RECIRCULA_TK2.z_IntercepTK;
+
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v201  Ev. Llenado TK 2*)
+Mc._11_TK2.v201_Fill.xOpen:= F_LLENADO_TK2.z_05_xCleanW OR
+							F_INTRO_TK2.z_FillTK OR
+							F_RECIRCULA_TK2.z_FillTK;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v202  Ev. Retorno Maq -> TK 2*)
+Mc._11_TK2.v202_RetMc.xOpen:= F_LLENADO_TK2.z_05_xMacW OR
+							F_RECIRCULA_TK2.z_RetMcTk;
+
+(*-------------------------------------------------------------------------------------------------------*)
+(*v209  Ev. Mezcla TK 2*)
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="z_TK2">
+      <LineId Id="3" Count="2" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="23" Count="2" />
+      <LineId Id="29" Count="3" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="39" Count="2" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="46" Count="2" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="52" Count="4" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

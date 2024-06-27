@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="_03_PRESS" Id="{2b8e11e2-f603-4bab-b59d-ce25b7826c54}">
+    <Declaration><![CDATA[TYPE _03_PRESS :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	v070_Vent: dutvalve;
+	v071_Load: dutvalve;
+	s072_Chargr: dutpul;
+	s073_Discharge: dutpul;
+	v074_Unload: dutvalve;
+	s075_Sensor: dutAIn;
+	///Presion de la maquina UF 
+	rPress: REAL;
+	///Presion de carga UF
+	xPrsLoad: BOOL;
+	///Presion de descarga UF
+	xPrsUnload: BOOL;
+	///Presion Seguridad P<0.2 UF
+	xPrsSeg: BOOL;
+	///OK Respiradero
+	xOKVent: BOOL;
+	///Fallo Valvula Respiradero
+	xFailVent: BOOL;
+	///+++++++++++++++++++++++++++++++++++++++
+	///PF- CONFIG
+	///+++++++++++++++++++++++++++++++++++++++
+	///Parametros configuracion señal analogica de Presion
+	IPF_FS_Press: INT;
+	///Parametros configuracion de los niveles de presion de maquina a trabés de la señal analogica de Presion
+	iPFPresLoad: INT;
+	iPFPresUnload: INT;
+	iPFPresSeg: INT;
+	///Valores operacionales
+	iPFTimeOKPresSeg: INT;
+	iPFTimeDelayVent: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="_00_PID" Id="{8e25eaf6-942c-48f9-abaf-7eaba7c2601b}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM _00_PID
+VAR
+	fPID: PID_FIXCYCLE;
+	rVAl_act: REAL;
+	r_SP: REAL;
+	r_KP: REAL := 40;
+	r_TN: REAL := 400;
+	r_TP: REAL := 10;
+	rY_man: REAL := 50;
+	rY_off: REAL := 0;
+	tY_min: REAL := 0;
+	rY_max: REAL := 100;
+	xMAn: BOOL;
+	xRES: BOOL;
+	rOUT: REAL;
+	xLim: BOOL;
+	xOver: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+
+
+//rVAl_act:=rVAl_act + (0.00001*(rOUT-20.0));
+
+IF Mc._09_CPUMP.p454_P_UpVel.xPul THEN
+	rVal_act:=rVAL_act+0.1;
+END_IF
+
+IF Mc._09_CPUMP.p455_P_DownVel.xPul THEN
+	rVal_act:=rVAL_act-0.1;
+END_IF
+
+IF rVal_act<0 THEN
+		rVal_act:=0;
+END_IF
+
+IF rVal_act>100 THEN
+		rVal_act:=100;
+END_IF
+
+xRes:= xOver;
+
+
+fPID(
+	ACTUAL:= 		rVAl_act, 
+	SET_POINT:= 	r_SP, 
+	KP:= 			r_KP, 
+	TN:= 			r_TN, 
+	TV:= 			r_TP, 
+	Y_MANUAL:= 		rY_man, 
+	Y_OFFSET:= 		rY_off, 
+	Y_MIN:= 		tY_min, 
+	Y_MAX:= 		rY_max, 
+	MANUAL:=		xMAn , 
+	RESET:= 		xRES, 
+	CYCLE:= 		0.01, 
+	Y=> 			rOUT, 
+	LIMITS_ACTIVE=> xLim, 
+	OVERFLOW=> 		xOver); 
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="_00_PID">
+      <LineId Id="3" Count="45" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

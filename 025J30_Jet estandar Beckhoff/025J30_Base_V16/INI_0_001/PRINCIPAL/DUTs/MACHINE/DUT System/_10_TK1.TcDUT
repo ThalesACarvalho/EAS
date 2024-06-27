@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="_10_TK1" Id="{adb4a33e-54e8-4e9e-8640-307cb8a3ea37}">
+    <Declaration><![CDATA[TYPE _10_TK1 :
+STRUCT
+	///+++++++++++++++++++++++++++++++++++++++
+	///HARD
+	///+++++++++++++++++++++++++++++++++++++++
+	v101_Fill: dutValve;
+	v102_RetMc: dutValve;
+	v103_IntercTK: dutValve;
+	b104_Intro: dutPump;
+	v105_Drain_Pump: dutValve;
+	v106_Drain_grav: dutValve;
+	v107_Warm: dutValve;
+	p108_Stirrer: dutPump;
+	v109_Mixer: dutValve;
+	v110_IntecIntro: dutValve;
+	v111_Fill_TP: dutValve;
+	v112_IntroTK2: dutValve;
+	s113_Level: dutAin;
+	s114_Temp: dutAin;
+	o115_Lev1: dutPul;
+	o116_Lev2: dutPul;
+	p150_OKprod: dutPul;
+	p151_P_Fill: dutPul;
+	p152_P_Drain: dutPul;
+	P153_P_RetMc: dutPul;
+	p154_P_IntroFast: dutPul;
+	p155_P_Warm: dutPul;
+	p156_P_IntroSlow: dutPul;
+	p157_P_Stirrer: dutPul;
+	p158_P_Mixer: dutPul;
+	p159_P_AutoMan: dutPul;
+	p160_P_TK1_TK2: dutPul;
+	///+++++++++++++++++++++++++++++++++++++++
+	///READINGS
+	///+++++++++++++++++++++++++++++++++++++++
+	xLvl_min: BOOL;
+	xLvl_max: BOOL;
+	rLvl: REAL;
+	xLvlHighCirc: BOOL;
+	xLvlLowCirc: BOOL;
+	xLvl_1: BOOL;
+	xLvl_2: BOOL;
+	xLvl_3: BOOL;
+	rQt: REAL;
+	rQr: REAL;
+	///+++++++++++++++++++++++++++++++++++++++
+	///CONFIG
+	///+++++++++++++++++++++++++++++++++++++++
+	iPFLvlAnaMin: INT;
+	iPFLvlAnaMax: INT;
+	iPFLvlMin: INT;
+	iPFLvlMax: INT;
+	iPFDescSonda: INT;
+	iPFDreno: INT;
+	iPF1rLav: INT;
+	iPF2nLav: INT;
+	iPF3rLav: INT;
+	iPFDifAlarma: INT;
+	iPFRetarBomba: INT;
+	iPFHighCirc: INT;
+	iPFLowCirc: INT;
+	/// Volum Tank (Liters)
+	iPFVolumTK: INT;
+	iPFLvl_1: INT;
+	iPFLvl_2: INT;
+	iPFLvl_3: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

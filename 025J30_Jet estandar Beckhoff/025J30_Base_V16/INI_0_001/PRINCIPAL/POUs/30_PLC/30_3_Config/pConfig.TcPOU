@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="pConfig" Id="{2c3f7d8a-30b7-4862-a5f6-252ffa676804}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM pConfig
+VAR
+	a: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*Configuracion Entradas y Salidas*)
+
+_14_Config_Consum();
+_00_Config_General();
+_00_Config_PE();
+_09_Config_CPump();
+_05_Config_Drain();
+_04_Config_Fill();
+_06_Config_LEVEL();
+_07_Config_Overflow();
+_03_Config_PRESS();
+_01_Config_SEG();
+_02_Config_TEMP();
+_10_Config_TK1();
+_11_Config_TK2();
+_15_Config_Winch();
+
+pIO();
+
+UPS();
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="pConfig">
+      <LineId Id="56" Count="3" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="60" Count="3" />
+      <LineId Id="65" Count="8" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="74" Count="1" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

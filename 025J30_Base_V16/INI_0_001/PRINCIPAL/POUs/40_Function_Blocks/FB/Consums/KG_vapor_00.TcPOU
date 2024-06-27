@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="KG_vapor_00" Id="{d54ff34a-257b-440c-97e4-ae0dc33d45a9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK KG_vapor_00
+VAR_INPUT
+	///Se esta realizando una subida de temperatura
+	Heat: BOOL;
+	///Se está manteniendo a una temperatura determinada
+	Keep: BOOL;
+	///Temperatura de setpoint 
+	T_sp: REAL;
+	///Temperatura actual
+	T_act: REAL;
+	///Estado de la bomba de circulacion. Debe estar en marcha
+	PumpRun: BOOL;
+	///Tiempo que debe estar la bomba en marcha para asegurar que la temperatura inicial es homogenea
+	PF_TmPRun: REAL;
+	///Litros totales de la barcada
+	Lit: REAL;
+	///Kilos de tejido
+	Kg_f: REAL;
+	///Reset de los calculos
+	Reset: BOOL;
+END_VAR
+VAR_OUTPUT
+	///Kg vapor consumidos 
+	KG_vapor: REAL;
+END_VAR
+VAR
+	PumpRunOK: BOOL;
+	T_PumpRun: TON;
+	Time_PF_TmPRun: TIME;
+	he: BOOL;
+	T_ini: REAL;
+	Kg_vapS_h2o: REAL;
+	Kg_vapS_tej: REAL;
+	Kg_vapS: REAL;
+	INICIO: BOOL;
+	///Valor Acumulado
+	VAL_ACUM: REAL;
+	///Valor Actual 
+	VAL_ACT: REAL;
+	PAUSE: BOOL;
+	F_heat: F_TRIG;
+	Kg_vapS_act: REAL;
+	Kg_vapS_acu: REAL;
+	IniciarCalc: BOOL;
+END_VAR
+VAR RETAIN
+	///Valor Total
+	VAL_TOT: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*///// INICIALIZACIÓN ////////*)
+
+(* CARGAR VALOR ACUMULADO EN ARRANQUE *)
+IF NOT(INICIO)
+	THEN
+		VAL_ACUM:= VAL_TOT;
+		INICIO:= TRUE;
+END_IF
+
+
+(* RESET*)
+
+IF RESET
+	THEN
+	VAL_ACUM := 0 ;
+	VAL_ACT  := 0 ;
+	VAL_TOT  := 0 ;
+	Kg_vapS_acu:=0;    		(*08/07/21*)
+	Kg_vapS_act:=0;    		(*08/07/21*)
+
+END_IF
+
+
+
+(*///// CALCULO ////////*)
+
+
+
+(*Bomba en marcha un tiempo determinado, para asegurar que la temperatura inicial es estable*)
+
+Time_PF_TmPRun:=REAL_TO_TIME(PF_TmPRun*1000);
+T_PumpRun(IN:=PumpRun , PT:= , Q=> PumpRunOK, ET=> );
+
+(*SUBIDA TEMPERATURA*)
+
+(*cargar valores iniciales*)
+
+IniciarCalc:= Heat AND PumpRunOK;
+
+IF NOT(IniciarCalc )
+	THEN
+		T_ini:=T_act;
+END_IF;
+
+
+
+(*CAlcula subida activa*)
+
+IF T_act > T_ini
+	THEN
+	(*Kg Vapor Agua*)
+	Kg_vapS_h2o:= ((T_act-T_ini)*Lit)/540;
+	(*Kg Vapor Teixit*)
+	Kg_vapS_tej:= ((T_act-T_ini)*kg_f*0.3)/540;
+	(*Kilogramos vapor en la subida*)
+	Kg_vapS_act:=Kg_vapS_h2o+Kg_vapS_tej;
+END_IF
+
+
+
+(*Actual mas acumulado*)
+Kg_vapS:= Kg_vapS_act+Kg_vapS_acu;
+
+(*Acumular valor al fin del calentamiento*)
+F_heat(CLK:= IniciarCalc );
+
+IF f_heat.Q
+	THEN
+	Kg_vapS_acu:=Kg_vapS;
+	Kg_vapS_act:=0;    		(*08/07/21*)
+END_IF
+
+(*MANTENIMIENTO TEMPERATURA*)
+
+
+
+
+(*//CARGAR VALOR ACTUAL//*)
+
+VAL_ACT:=Kg_vapS;
+
+
+(*///// CARGAR LA SALIDA ////////*)
+
+
+
+VAL_TOT:= VAL_ACT+ VAL_ACUM ;
+KG_vapor:= VAL_TOT;]]></ST>
+    </Implementation>
+    <LineIds Name="KG_vapor_00">
+      <LineId Id="3" Count="86" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
